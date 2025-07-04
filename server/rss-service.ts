@@ -45,8 +45,13 @@ export class RSSService {
         // Extract excerpt from content or contentSnippet
         const excerpt = this.extractExcerpt(item.contentSnippet || item.content || '');
         
-        // Try to get image from RSS content first, then from source domain, then default
+        // Try to get image from RSS content first, then from title, then URL domain, then default
         let heroImageUrl = this.extractImageUrl(item.content || '', item);
+        
+        // Try to get image based on the source mentioned in the title (prioritized for Google Alerts)
+        if (!heroImageUrl) {
+          heroImageUrl = this.getImageFromTitle(title);
+        }
         
         if (!heroImageUrl && item.link) {
           heroImageUrl = this.getImageBasedOnSource(item.link);
@@ -100,6 +105,19 @@ export class RSSService {
     // Remove common RSS feed prefixes and clean up title
     return title
       .replace(/^Google Alert - /, '')
+      .replace(/<[^>]*>/g, '') // Remove HTML tags like <b>, </b>
+      .replace(/&[^;]+;/g, (match) => {
+        // Decode common HTML entities
+        const entities: { [key: string]: string } = {
+          '&amp;': '&',
+          '&lt;': '<',
+          '&gt;': '>',
+          '&quot;': '"',
+          '&#39;': "'",
+          '&nbsp;': ' '
+        };
+        return entities[match] || match;
+      })
       .replace(/\s+/g, ' ')
       .trim();
   }
@@ -193,20 +211,62 @@ export class RSSService {
 
 
 
+  private getImageFromTitle(title: string): string | null {
+    const titleLower = title.toLowerCase();
+    
+    // Check for news sources mentioned in the title (usually at the end after a dash)
+    if (titleLower.includes('cnn') || titleLower.includes('cnn.com')) {
+      return 'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('bbc') || titleLower.includes('bbc.com')) {
+      return 'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('reuters') || titleLower.includes('reuters.com')) {
+      return 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('nbc news') || titleLower.includes('nbcnews')) {
+      return 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('techcrunch') || titleLower.includes('tech crunch')) {
+      return 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('verge') || titleLower.includes('theverge')) {
+      return 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('wired') || titleLower.includes('wired.com')) {
+      return 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('arstechnica') || titleLower.includes('ars technica')) {
+      return 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('venturebeat') || titleLower.includes('venture beat')) {
+      return 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('tvline') || titleLower.includes('tv line')) {
+      return 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop';
+    }
+    if (titleLower.includes('us news') || titleLower.includes('usnews')) {
+      return 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=400&fit=crop';
+    }
+    
+    return null;
+  }
+
   private getImageBasedOnSource(url: string): string | null {
     try {
       const domain = new URL(url).hostname.toLowerCase();
       
-      // Map common news sources to their typical social media images
+      // Map common news sources to different themed images
       const sourceImages: { [key: string]: string } = {
         'cnn.com': 'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&h=400&fit=crop',
         'bbc.com': 'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&h=400&fit=crop',
-        'reuters.com': 'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&h=400&fit=crop',
+        'reuters.com': 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=400&fit=crop',
+        'nbcnews.com': 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=400&fit=crop',
         'techcrunch.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
         'theverge.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
-        'wired.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
-        'arstechnica.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
-        'venturebeat.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
+        'wired.com': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop',
+        'arstechnica.com': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop',
+        'venturebeat.com': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop',
         'openai.com': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop',
         'anthropic.com': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop',
         'google.com': 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&h=400&fit=crop',
@@ -222,6 +282,7 @@ export class RSSService {
         }
       }
       
+      // For articles about specific AI topics, use contextual images
       return null;
     } catch {
       return null;
