@@ -1,0 +1,233 @@
+import { 
+  users, 
+  articles, 
+  executiveSummary, 
+  timelineItems, 
+  relatedArticles, 
+  rawFacts, 
+  perspectives,
+  type User, 
+  type InsertUser,
+  type Article,
+  type InsertArticle,
+  type ExecutiveSummary,
+  type InsertExecutiveSummary,
+  type TimelineItem,
+  type InsertTimelineItem,
+  type RelatedArticle,
+  type InsertRelatedArticle,
+  type RawFacts,
+  type InsertRawFacts,
+  type Perspective,
+  type InsertPerspective
+} from "@shared/schema";
+
+interface ArticleData {
+  article: Article;
+  executiveSummary: ExecutiveSummary;
+  timelineItems: TimelineItem[];
+  relatedArticles: RelatedArticle[];
+  rawFacts: RawFacts[];
+  perspectives: Perspective[];
+}
+
+export interface IStorage {
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  getArticleBySlug(slug: string): Promise<ArticleData | undefined>;
+}
+
+export class MemStorage implements IStorage {
+  private users: Map<number, User>;
+  private articles: Map<string, ArticleData>;
+  private currentUserId: number;
+
+  constructor() {
+    this.users = new Map();
+    this.articles = new Map();
+    this.currentUserId = 1;
+    this.initializeData();
+  }
+
+  private initializeData() {
+    // Initialize with the sample article data
+    const sampleArticle: Article = {
+      id: 1,
+      title: "OpenAI Announces GPT-5 with Revolutionary Reasoning Capabilities",
+      slug: "gpt-5-announcement",
+      excerpt: "OpenAI has officially announced the development of GPT-5, marking a significant leap forward in artificial intelligence capabilities with unprecedented reasoning abilities.",
+      content: `<p class="text-lg text-gray-700 leading-relaxed mb-6">OpenAI has officially announced the development of GPT-5, marking a significant leap forward in artificial intelligence capabilities. The new model demonstrates unprecedented reasoning abilities that could revolutionize how AI systems approach complex problem-solving tasks.</p>
+
+<p class="text-gray-700 leading-relaxed mb-6">According to OpenAI's latest research, GPT-5 shows remarkable improvements in logical reasoning, mathematical problem-solving, and chain-of-thought processing. The model's enhanced capabilities represent a fundamental shift in how AI systems can understand and manipulate abstract concepts.</p>
+
+<p class="text-gray-700 leading-relaxed mb-6">The announcement comes at a time when the AI industry is experiencing rapid growth and increasing competition. GPT-5's advanced reasoning capabilities are expected to set new standards for AI performance across various domains, from scientific research to creative applications.</p>`,
+      category: "Technology",
+      publishedAt: new Date("2024-12-20T10:00:00Z"),
+      readTime: 5,
+      sourceCount: 12,
+      heroImageUrl: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
+      authorName: "Tech News Team",
+      authorTitle: "AI Research Correspondents"
+    };
+
+    const sampleExecutiveSummary: ExecutiveSummary = {
+      id: 1,
+      articleId: 1,
+      points: [
+        "OpenAI announces GPT-5 with enhanced reasoning capabilities",
+        "GPT-5 shows 40% improvement in logical reasoning tasks",
+        "Enhanced mathematical problem-solving capabilities",
+        "Expected commercial release in Q2 2024"
+      ]
+    };
+
+    const sampleTimelineItems: TimelineItem[] = [
+      {
+        id: 1,
+        articleId: 1,
+        date: new Date("2024-12-20T00:00:00Z"),
+        title: "GPT-5 Announcement",
+        description: "OpenAI announces o3 model with advanced reasoning capabilities",
+        type: "announcement",
+        sourceLabel: "Source 9"
+      },
+      {
+        id: 2,
+        articleId: 1,
+        date: new Date("2025-02-12T00:00:00Z"),
+        title: "GPT-4.5 Announcement",
+        description: "OpenAI CEO Sam Altman announces GPT-4.5 (\"Orion\") as the last model without full chain-of-thought reasoning",
+        type: "announcement",
+        sourceLabel: "Source 9"
+      },
+      {
+        id: 3,
+        articleId: 1,
+        date: new Date("2025-04-07T00:00:00Z"),
+        title: "Release Delay",
+        description: "OpenAI delays GPT-5 release due to technical issues and high demand. Confirms work on new models o3 and o4-mini",
+        type: "announcement",
+        sourceLabel: "Source 9"
+      },
+      {
+        id: 4,
+        articleId: 1,
+        date: new Date("2025-06-10T00:00:00Z"),
+        title: "O3-Pro Release",
+        description: "OpenAI releases o3-pro API, its most expensive AI model to date",
+        type: "release",
+        sourceLabel: "Source 9"
+      }
+    ];
+
+    const sampleRelatedArticles: RelatedArticle[] = [
+      {
+        id: 1,
+        articleId: 1,
+        title: "OpenAI's Next Model: What to Expect",
+        excerpt: "Experts discuss the anticipated features and timeline for OpenAI's next major release, GPT-5.",
+        source: "AI News Daily",
+        imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120",
+        url: "/article/openai-next-model"
+      },
+      {
+        id: 2,
+        articleId: 1,
+        title: "The Future of AI Reasoning",
+        excerpt: "Analysis of recent advances in AI reasoning capabilities and their implications.",
+        source: "TechCrunch",
+        imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120",
+        url: "/article/future-ai-reasoning"
+      },
+      {
+        id: 3,
+        articleId: 1,
+        title: "AI Market Impact Analysis",
+        excerpt: "How GPT-5's advanced reasoning could reshape the AI industry landscape.",
+        source: "The Verge",
+        imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120",
+        url: "/article/ai-market-impact"
+      }
+    ];
+
+    const sampleRawFacts: RawFacts[] = [
+      {
+        id: 1,
+        articleId: 1,
+        category: "Performance Metrics",
+        facts: [
+          "40% improvement in reasoning tasks",
+          "25% better mathematical accuracy",
+          "30% enhanced logical consistency"
+        ]
+      },
+      {
+        id: 2,
+        articleId: 1,
+        category: "Technical Specifications",
+        facts: [
+          "Advanced transformer architecture",
+          "Multi-modal reasoning capabilities",
+          "Enhanced safety measures"
+        ]
+      }
+    ];
+
+    const samplePerspectives: Perspective[] = [
+      {
+        id: 1,
+        articleId: 1,
+        viewpoint: "Industry Experts",
+        description: "Praise the advancement in AI reasoning capabilities and potential applications",
+        color: "green"
+      },
+      {
+        id: 2,
+        articleId: 1,
+        viewpoint: "AI Safety Researchers",
+        description: "Emphasize the need for robust safety measures and ethical considerations",
+        color: "yellow"
+      },
+      {
+        id: 3,
+        articleId: 1,
+        viewpoint: "Tech Analysts",
+        description: "Analyze potential market impact and competitive positioning",
+        color: "blue"
+      }
+    ];
+
+    this.articles.set("gpt-5-announcement", {
+      article: sampleArticle,
+      executiveSummary: sampleExecutiveSummary,
+      timelineItems: sampleTimelineItems,
+      relatedArticles: sampleRelatedArticles,
+      rawFacts: sampleRawFacts,
+      perspectives: samplePerspectives
+    });
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.username === username,
+    );
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = this.currentUserId++;
+    const user: User = { ...insertUser, id };
+    this.users.set(id, user);
+    return user;
+  }
+
+  async getArticleBySlug(slug: string): Promise<ArticleData | undefined> {
+    return this.articles.get(slug);
+  }
+}
+
+export const storage = new MemStorage();

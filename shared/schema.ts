@@ -1,0 +1,110 @@
+import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+export const articles = pgTable("articles", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  excerpt: text("excerpt").notNull(),
+  content: text("content").notNull(),
+  category: text("category").notNull(),
+  publishedAt: timestamp("published_at").notNull(),
+  readTime: integer("read_time").notNull(),
+  sourceCount: integer("source_count").notNull(),
+  heroImageUrl: text("hero_image_url").notNull(),
+  authorName: text("author_name"),
+  authorTitle: text("author_title"),
+});
+
+export const executiveSummary = pgTable("executive_summary", {
+  id: serial("id").primaryKey(),
+  articleId: integer("article_id").notNull().references(() => articles.id),
+  points: text("points").array().notNull(),
+});
+
+export const timelineItems = pgTable("timeline_items", {
+  id: serial("id").primaryKey(),
+  articleId: integer("article_id").notNull().references(() => articles.id),
+  date: timestamp("date").notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  type: text("type").notNull(), // 'announcement', 'release', etc.
+  sourceLabel: text("source_label").notNull(),
+});
+
+export const relatedArticles = pgTable("related_articles", {
+  id: serial("id").primaryKey(),
+  articleId: integer("article_id").notNull().references(() => articles.id),
+  title: text("title").notNull(),
+  excerpt: text("excerpt").notNull(),
+  source: text("source").notNull(),
+  imageUrl: text("image_url").notNull(),
+  url: text("url").notNull(),
+});
+
+export const rawFacts = pgTable("raw_facts", {
+  id: serial("id").primaryKey(),
+  articleId: integer("article_id").notNull().references(() => articles.id),
+  category: text("category").notNull(),
+  facts: text("facts").array().notNull(),
+});
+
+export const perspectives = pgTable("perspectives", {
+  id: serial("id").primaryKey(),
+  articleId: integer("article_id").notNull().references(() => articles.id),
+  viewpoint: text("viewpoint").notNull(),
+  description: text("description").notNull(),
+  color: text("color").notNull(), // 'green', 'yellow', 'blue', etc.
+});
+
+export const insertArticleSchema = createInsertSchema(articles).omit({
+  id: true,
+});
+
+export const insertExecutiveSummarySchema = createInsertSchema(executiveSummary).omit({
+  id: true,
+});
+
+export const insertTimelineItemSchema = createInsertSchema(timelineItems).omit({
+  id: true,
+});
+
+export const insertRelatedArticleSchema = createInsertSchema(relatedArticles).omit({
+  id: true,
+});
+
+export const insertRawFactsSchema = createInsertSchema(rawFacts).omit({
+  id: true,
+});
+
+export const insertPerspectiveSchema = createInsertSchema(perspectives).omit({
+  id: true,
+});
+
+export type Article = typeof articles.$inferSelect;
+export type InsertArticle = z.infer<typeof insertArticleSchema>;
+export type ExecutiveSummary = typeof executiveSummary.$inferSelect;
+export type InsertExecutiveSummary = z.infer<typeof insertExecutiveSummarySchema>;
+export type TimelineItem = typeof timelineItems.$inferSelect;
+export type InsertTimelineItem = z.infer<typeof insertTimelineItemSchema>;
+export type RelatedArticle = typeof relatedArticles.$inferSelect;
+export type InsertRelatedArticle = z.infer<typeof insertRelatedArticleSchema>;
+export type RawFacts = typeof rawFacts.$inferSelect;
+export type InsertRawFacts = z.infer<typeof insertRawFactsSchema>;
+export type Perspective = typeof perspectives.$inferSelect;
+export type InsertPerspective = z.infer<typeof insertPerspectiveSchema>;
+
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
+});
+
+export const insertUserSchema = createInsertSchema(users).pick({
+  username: true,
+  password: true,
+});
+
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;
