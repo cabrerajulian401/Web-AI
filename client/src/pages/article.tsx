@@ -196,6 +196,13 @@ export default function ArticlePage() {
                   />
                 </div>
 
+                {/* Article Content */}
+                <div className="prose prose-lg max-w-none mb-8">
+                  <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                    OpenAI has officially announced the development of GPT-5, marking a significant leap forward in artificial intelligence capabilities with unprecedented reasoning abilities. The new model demonstrates remarkable improvements in logical reasoning, mathematical problem-solving, and chain-of-thought processing that could revolutionize how AI systems approach complex problem-solving tasks.
+                  </p>
+                </div>
+
                 {/* Executive Summary */}
                 <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg mb-8">
                   <h2 className="text-xl font-semibold text-brand-dark mb-4 flex items-center">
@@ -210,13 +217,6 @@ export default function ArticlePage() {
                       </li>
                     ))}
                   </ul>
-                </div>
-
-                {/* Article Content */}
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                    OpenAI has officially announced the development of GPT-5, marking a significant leap forward in artificial intelligence capabilities with unprecedented reasoning abilities. The new model demonstrates remarkable improvements in logical reasoning, mathematical problem-solving, and chain-of-thought processing that could revolutionize how AI systems approach complex problem-solving tasks.
-                  </p>
                 </div>
               </CardContent>
             </Card>
