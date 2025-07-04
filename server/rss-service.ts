@@ -8,6 +8,9 @@ interface RSSItem {
   content?: string;
   contentSnippet?: string;
   guid?: string;
+  mediaThumbnail?: any;
+  mediaContent?: any;
+  enclosure?: any;
 }
 
 export class RSSService {
@@ -15,7 +18,15 @@ export class RSSService {
   private feedUrl: string;
 
   constructor(feedUrl: string) {
-    this.parser = new Parser();
+    this.parser = new Parser({
+      customFields: {
+        item: [
+          ['media:thumbnail', 'mediaThumbnail'],
+          ['media:content', 'mediaContent'],
+          ['enclosure', 'enclosure']
+        ]
+      }
+    });
     this.feedUrl = feedUrl;
   }
 
@@ -33,8 +44,8 @@ export class RSSService {
         // Extract excerpt from content or contentSnippet
         const excerpt = this.extractExcerpt(item.contentSnippet || item.content || '');
         
-        // Try to extract image URL from content
-        const heroImageUrl = this.extractImageUrl(item.content || '') || this.getDefaultImage();
+        // Try to extract image URL from multiple sources
+        const heroImageUrl = this.extractImageUrl(item.content || '', item) || this.getDefaultImage();
         
         // Parse date
         const publishedAt = item.pubDate ? new Date(item.pubDate) : new Date();
@@ -90,24 +101,90 @@ export class RSSService {
     return stripped.length > 200 ? stripped.substring(0, 200) + '...' : stripped;
   }
 
-  private extractImageUrl(content: string): string | null {
-    // Try to extract image URL from HTML content
-    const imgMatch = content.match(/<img[^>]+src="([^"]+)"/i);
-    return imgMatch ? imgMatch[1] : null;
+  private extractImageUrl(content: string, item?: RSSItem): string | null {
+    // First check custom fields from RSS parser
+    if (item) {
+      // Check media:thumbnail
+      if (item.mediaThumbnail && typeof item.mediaThumbnail === 'object') {
+        const thumbnailUrl = item.mediaThumbnail.$ ? item.mediaThumbnail.$.url : item.mediaThumbnail;
+        if (typeof thumbnailUrl === 'string' && this.isValidImageUrl(thumbnailUrl)) {
+          return thumbnailUrl;
+        }
+      }
+      
+      // Check media:content
+      if (item.mediaContent && typeof item.mediaContent === 'object') {
+        const contentUrl = item.mediaContent.$ ? item.mediaContent.$.url : item.mediaContent;
+        if (typeof contentUrl === 'string' && this.isValidImageUrl(contentUrl)) {
+          return contentUrl;
+        }
+      }
+      
+      // Check enclosure for images
+      if (item.enclosure && typeof item.enclosure === 'object') {
+        const enclosureUrl = item.enclosure.$ ? item.enclosure.$.url : item.enclosure.url;
+        if (typeof enclosureUrl === 'string' && this.isValidImageUrl(enclosureUrl)) {
+          return enclosureUrl;
+        }
+      }
+    }
+    
+    if (!content) return null;
+    
+    // Multiple patterns to match different image formats in RSS feeds
+    const patterns = [
+      // Standard img tag
+      /<img[^>]+src="([^"]+)"/i,
+      /<img[^>]+src='([^']+)'/i,
+      // Media enclosures or thumbnails
+      /<media:thumbnail[^>]+url="([^"]+)"/i,
+      /<media:content[^>]+url="([^"]+)"/i,
+      // Google News specific patterns
+      /<img[^>]+src="([^"]*googleusercontent[^"]+)"/i,
+      // Any image URL in the content
+      /https?:\/\/[^\s<>"']+\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s<>"']*)?/i
+    ];
+    
+    for (const pattern of patterns) {
+      const match = content.match(pattern);
+      if (match && match[1]) {
+        // Clean up the URL
+        let imageUrl = match[1].trim();
+        
+        // Skip very small images (likely icons or tracking pixels)
+        if (imageUrl.includes('1x1') || imageUrl.includes('pixel')) {
+          continue;
+        }
+        
+        // Ensure it's a valid image URL
+        if (this.isValidImageUrl(imageUrl)) {
+          return imageUrl;
+        }
+      }
+    }
+    
+    return null;
+  }
+
+  private isValidImageUrl(url: string): boolean {
+    try {
+      const parsedUrl = new URL(url);
+      const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+      const path = parsedUrl.pathname.toLowerCase();
+      
+      // Check if URL ends with valid image extension or has image-related parameters
+      return validExtensions.some(ext => path.includes(ext)) || 
+             url.includes('image') || 
+             url.includes('photo') ||
+             url.includes('thumbnail');
+    } catch {
+      return false;
+    }
   }
 
   private getDefaultImage(): string {
-    // Array of AI-related stock images
-    const defaultImages = [
-      'https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600',
-      'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600',
-      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600',
-      'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600',
-      'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600',
-      'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600'
-    ];
-    
-    return defaultImages[Math.floor(Math.random() * defaultImages.length)];
+    // Use the provided placeholder image
+    return '/assets/placeholder_1751663094502.jpg';
   }
 
   private estimateReadTime(content: string): number {
