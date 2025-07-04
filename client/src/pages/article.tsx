@@ -73,7 +73,7 @@ export default function ArticlePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
+        <header className="bg-white border-b-2 border-black sticky top-0 z-50 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center space-x-6">
@@ -84,7 +84,10 @@ export default function ArticlePage() {
                     alt="TIMIO News" 
                     className="h-8 w-8 rounded-lg"
                   />
-                  <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
+                  <div>
+                    <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
+                    <p className="text-xs text-gray-600 mt-1">Truth. Trust. Transparency.</p>
+                  </div>
                 </div>
                 
                 <Skeleton className="h-6 w-32" />
@@ -132,7 +135,7 @@ export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
+      <header className="bg-white border-b-2 border-black sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-4">
             <div className="flex items-center justify-between">
@@ -144,7 +147,10 @@ export default function ArticlePage() {
                     alt="TIMIO News" 
                     className="h-8 w-8 rounded-lg"
                   />
-                  <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
+                  <div>
+                    <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
+                    <p className="text-xs text-gray-600 mt-1">Truth. Trust. Transparency.</p>
+                  </div>
                 </div>
                 <button 
                   onClick={handleBackToFeed}

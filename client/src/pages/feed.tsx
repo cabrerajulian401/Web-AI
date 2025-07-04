@@ -100,6 +100,7 @@ export default function FeedPage() {
               />
               <div>
                 <h1 className="text-2xl font-bold text-brand-dark">TIMIO News</h1>
+                <p className="text-sm text-gray-600">Truth. Trust. Transparency.</p>
               </div>
             </div>
             
