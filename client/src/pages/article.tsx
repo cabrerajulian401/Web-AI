@@ -240,9 +240,9 @@ export default function ArticlePage() {
                 title="Raw Facts"
                 icon="database"
                 content={
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-brand-dark mb-2">Political Context</h4>
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-gray-50 p-4 rounded-lg border-b-2 border-gray-300">
+                      <h4 className="font-semibold text-brand-dark mb-2 pb-2 border-b border-gray-200">Political Context</h4>
                       <ul className="text-sm text-gray-600 space-y-1">
                         <li>• Defense Secretary nomination pending Senate confirmation</li>
                         <li>• Previous military aid packages totaled $113 billion</li>
@@ -250,8 +250,8 @@ export default function ArticlePage() {
                         <li>• Joint Chiefs of Staff provided military assessment</li>
                       </ul>
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-brand-dark mb-2">Military Analysis</h4>
+                    <div className="bg-gray-50 p-4 rounded-lg border-b-2 border-gray-300">
+                      <h4 className="font-semibold text-brand-dark mb-2 pb-2 border-b border-gray-200">Military Analysis</h4>
                       <ul className="text-sm text-gray-600 space-y-1">
                         <li>• Pentagon recommended continued support</li>
                         <li>• Aid package included defensive weapons</li>
@@ -259,8 +259,8 @@ export default function ArticlePage() {
                         <li>• Timeline considerations factored into decision</li>
                       </ul>
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-brand-dark mb-2">Congressional Response</h4>
+                    <div className="bg-gray-50 p-4 rounded-lg border-b-2 border-gray-300">
+                      <h4 className="font-semibold text-brand-dark mb-2 pb-2 border-b border-gray-200">Congressional Response</h4>
                       <ul className="text-sm text-gray-600 space-y-1">
                         <li>• Bipartisan concerns raised in hearings</li>
                         <li>• House Armed Services Committee statement issued</li>
@@ -268,8 +268,8 @@ export default function ArticlePage() {
                         <li>• Budget implications under review</li>
                       </ul>
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-brand-dark mb-2">International Impact</h4>
+                    <div className="bg-gray-50 p-4 rounded-lg border-b-2 border-gray-300">
+                      <h4 className="font-semibold text-brand-dark mb-2 pb-2 border-b border-gray-200">International Impact</h4>
                       <ul className="text-sm text-gray-600 space-y-1">
                         <li>• NATO allies monitoring situation closely</li>
                         <li>• European partners express concern</li>
@@ -306,7 +306,7 @@ export default function ArticlePage() {
                           </p>
                           
                           <div className="space-y-4">
-                            <div>
+                            <div className="pb-4 border-b-2 border-gray-200">
                               <p className="text-blue-600 text-sm font-medium mb-2">UN ENVIRONMENT PROGRAMME (UNEP)</p>
                               <p className="italic text-gray-700 mb-2">
                                 "The world is on track for a temperature rise of 2.5°C to 2.9°C...We need to act now...or the impacts will be catastrophic."
@@ -405,22 +405,22 @@ export default function ArticlePage() {
                 title="Conflicting Info"
                 icon="users"
                 content={
-                  <div className="mt-6 space-y-4">
-                    <div className="border-l-4 border-red-500 pl-4">
+                  <div className="mt-6 space-y-6">
+                    <div className="border-l-4 border-red-500 pl-4 pb-4 border-b-2 border-gray-200">
                       <h4 className="font-semibold text-brand-dark mb-1">Timeline Discrepancy</h4>
                       <p className="text-gray-600 text-sm mb-2">NBC News reports the decision was made "immediately after taking office," while Reuters suggests it occurred "during the first week of transition."</p>
                       <div className="text-xs text-gray-500">
                         <span className="font-medium">Sources:</span> NBC News vs Reuters, January 2025
                       </div>
                     </div>
-                    <div className="border-l-4 border-orange-500 pl-4">
+                    <div className="border-l-4 border-orange-500 pl-4 pb-4 border-b-2 border-gray-200">
                       <h4 className="font-semibold text-brand-dark mb-1">Military Assessment Details</h4>
                       <p className="text-gray-600 text-sm mb-2">Pentagon sources claim the assessment "strongly recommended continuation," while administration officials describe it as "mixed with reservations."</p>
                       <div className="text-xs text-gray-500">
                         <span className="font-medium">Sources:</span> Defense Department vs White House officials
                       </div>
                     </div>
-                    <div className="border-l-4 border-yellow-500 pl-4">
+                    <div className="border-l-4 border-yellow-500 pl-4 pb-4 border-b-2 border-gray-200">
                       <h4 className="font-semibold text-brand-dark mb-1">Congressional Notification</h4>
                       <p className="text-gray-600 text-sm mb-2">Some reports indicate Congress was briefed "in advance," while others suggest notification came "after the decision was finalized."</p>
                       <div className="text-xs text-gray-500">
@@ -443,7 +443,9 @@ export default function ArticlePage() {
           {/* Sidebar */}
           <div className="lg:col-span-4 space-y-8">
             <Timeline items={timelineItems} />
+            <div className="border-t-2 border-gray-300 my-6"></div>
             <RelatedArticles articles={relatedArticles} />
+            <div className="border-t-2 border-gray-300 my-6"></div>
           </div>
         </div>
       </main>
