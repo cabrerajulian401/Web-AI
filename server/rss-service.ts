@@ -35,6 +35,8 @@ export class RSSService {
   async fetchArticles(): Promise<Article[]> {
     try {
       const feed = await this.parser.parseURL(this.feedUrl);
+      
+
 
       
       const articles = await Promise.all(feed.items.map(async (item: RSSItem, index: number) => {
@@ -52,7 +54,9 @@ export class RSSService {
         
         // Try to scrape image from the actual article URL (best quality)
         if (!heroImageUrl && item.link) {
-          heroImageUrl = await this.scrapeImageFromUrl(item.link);
+          // For Google Alerts URLs, extract the real URL first
+          const realUrl = this.extractRealUrlFromGoogleRedirect(item.link);
+          heroImageUrl = await this.scrapeImageFromUrl(realUrl || item.link);
         }
         
         // If scraping fails, use our placeholder
@@ -130,28 +134,49 @@ export class RSSService {
   }
 
   private extractImageUrl(content: string, item?: RSSItem): string | null {
-    // First check custom fields from RSS parser
+    // NewsBlur feeds often have better structured image data
     if (item) {
-      // Check media:thumbnail
-      if (item.mediaThumbnail && typeof item.mediaThumbnail === 'object') {
-        const thumbnailUrl = item.mediaThumbnail.$ ? item.mediaThumbnail.$.url : item.mediaThumbnail;
-        if (typeof thumbnailUrl === 'string' && this.isValidImageUrl(thumbnailUrl)) {
+      // Check media:thumbnail (common in NewsBlur)
+      if (item.mediaThumbnail) {
+        let thumbnailUrl = null;
+        if (typeof item.mediaThumbnail === 'object') {
+          thumbnailUrl = item.mediaThumbnail.$ ? item.mediaThumbnail.$.url : item.mediaThumbnail.url;
+        } else if (typeof item.mediaThumbnail === 'string') {
+          thumbnailUrl = item.mediaThumbnail;
+        }
+        
+        if (thumbnailUrl && this.isValidImageUrl(thumbnailUrl)) {
+
           return thumbnailUrl;
         }
       }
       
       // Check media:content
-      if (item.mediaContent && typeof item.mediaContent === 'object') {
-        const contentUrl = item.mediaContent.$ ? item.mediaContent.$.url : item.mediaContent;
-        if (typeof contentUrl === 'string' && this.isValidImageUrl(contentUrl)) {
+      if (item.mediaContent) {
+        let contentUrl = null;
+        if (typeof item.mediaContent === 'object') {
+          contentUrl = item.mediaContent.$ ? item.mediaContent.$.url : item.mediaContent.url;
+        } else if (typeof item.mediaContent === 'string') {
+          contentUrl = item.mediaContent;
+        }
+        
+        if (contentUrl && this.isValidImageUrl(contentUrl)) {
+
           return contentUrl;
         }
       }
       
       // Check enclosure for images
-      if (item.enclosure && typeof item.enclosure === 'object') {
-        const enclosureUrl = item.enclosure.$ ? item.enclosure.$.url : item.enclosure.url;
-        if (typeof enclosureUrl === 'string' && this.isValidImageUrl(enclosureUrl)) {
+      if (item.enclosure) {
+        let enclosureUrl = null;
+        if (typeof item.enclosure === 'object') {
+          enclosureUrl = item.enclosure.$ ? item.enclosure.$.url : item.enclosure.url;
+        } else if (typeof item.enclosure === 'string') {
+          enclosureUrl = item.enclosure;
+        }
+        
+        if (enclosureUrl && this.isValidImageUrl(enclosureUrl)) {
+
           return enclosureUrl;
         }
       }
@@ -288,6 +313,26 @@ export class RSSService {
       
     } catch (error) {
       console.log(`Error scraping image from ${url}:`, error);
+      return null;
+    }
+  }
+
+  private extractRealUrlFromGoogleRedirect(googleUrl: string): string | null {
+    try {
+      const url = new URL(googleUrl);
+      
+      // Extract the real URL from Google redirect parameters
+      if (url.hostname.includes('google.com') && url.searchParams.has('url')) {
+        const realUrl = url.searchParams.get('url');
+        if (realUrl) {
+
+          return decodeURIComponent(realUrl);
+        }
+      }
+      
+      // If it's not a Google redirect, return the original
+      return googleUrl;
+    } catch {
       return null;
     }
   }
