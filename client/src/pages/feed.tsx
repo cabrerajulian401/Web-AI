@@ -74,12 +74,9 @@ export default function FeedPage() {
             </div>
             
             <div className="hidden lg:block w-80 flex-shrink-0">
-              <div className="sticky top-24">
-                <img 
-                  src="/asseen-on.png" 
-                  alt="As seen on PBS and Automateed" 
-                  className="w-full h-auto rounded-lg shadow-lg"
-                />
+              <div className="sticky top-24 space-y-4">
+                <Skeleton className="w-full h-64 rounded-lg" />
+                <Skeleton className="w-full h-12 rounded-lg" />
               </div>
             </div>
           </div>
@@ -195,12 +192,20 @@ export default function FeedPage() {
 
           {/* Right sidebar - As seen on */}
           <div className="hidden lg:block w-80 flex-shrink-0">
-            <div className="sticky top-24">
+            <div className="sticky top-24 space-y-4">
               <img 
                 src="/asseen-on.png" 
                 alt="As seen on PBS and Automateed" 
                 className="w-full h-auto rounded-lg shadow-lg"
               />
+              <a 
+                href="https://timio.news" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block w-full bg-brand-blue hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg text-center transition-colors duration-200"
+              >
+                Learn More
+              </a>
             </div>
           </div>
         </div>
