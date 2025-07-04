@@ -262,6 +262,27 @@ export default function ArticlePage() {
                   </div>
                 }
               />
+
+              <ExpandableSection
+                title="Conflicting Info"
+                icon="users"
+                content={
+                  <div className="space-y-4">
+                    <div className="border-l-4 border-red-500 pl-4">
+                      <h4 className="font-semibold text-brand-dark mb-1">Source Discrepancy</h4>
+                      <p className="text-gray-600 text-sm">Some sources report different timeline details regarding the initial announcement</p>
+                    </div>
+                    <div className="border-l-4 border-orange-500 pl-4">
+                      <h4 className="font-semibold text-brand-dark mb-1">Data Variance</h4>
+                      <p className="text-gray-600 text-sm">Financial figures vary between sources, with some reporting preliminary estimates</p>
+                    </div>
+                    <div className="border-l-4 border-yellow-500 pl-4">
+                      <h4 className="font-semibold text-brand-dark mb-1">Unverified Claims</h4>
+                      <p className="text-gray-600 text-sm">Several claims are still awaiting official confirmation from primary sources</p>
+                    </div>
+                  </div>
+                }
+              />
             </div>
           </div>
 
