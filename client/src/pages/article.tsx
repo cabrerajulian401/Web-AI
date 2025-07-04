@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Share2, Clock, TrendingUp, Eye } from "lucide-react";
+import { ArrowLeft, Share2, Clock, TrendingUp, Eye, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,6 +8,7 @@ import { Timeline } from "@/components/ui/timeline";
 import { RelatedArticles } from "@/components/ui/related-articles";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
+import { useState } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 
@@ -23,6 +24,11 @@ interface ArticleData {
 export default function ArticlePage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  
+  // State for collapsible perspectives
+  const [activistExpanded, setActivistExpanded] = useState(false);
+  const [moderateExpanded, setModerateExpanded] = useState(false);
+  const [criticsExpanded, setCriticsExpanded] = useState(false);
   
   // Extract slug from URL path
   const currentPath = window.location.pathname;
@@ -247,96 +253,114 @@ export default function ArticlePage() {
                   <div className="space-y-4">
                     {/* Activists Perspective */}
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                      <div className="p-4 bg-blue-50 border-b border-blue-100">
+                      <button 
+                        onClick={() => setActivistExpanded(!activistExpanded)}
+                        className="w-full p-4 bg-blue-700 hover:bg-blue-800 transition-colors duration-200 text-left"
+                      >
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-lg text-brand-dark">Activists Call for Stronger UN Environmental Rules</h4>
-                          <span className="text-blue-600">▼</span>
+                          <h4 className="font-semibold text-lg text-white">Activists Call for Stronger UN Environmental Rules</h4>
+                          {activistExpanded ? <ChevronUp className="h-5 w-5 text-white" /> : <ChevronDown className="h-5 w-5 text-white" />}
                         </div>
-                        <p className="text-blue-600 text-sm mt-2">Sources: 3</p>
-                      </div>
-                      <div className="p-4 bg-gray-50">
-                        <p className="mb-4 border-l-4 border-blue-500 pl-4 text-brand-dark">
-                          The climate crisis requires urgent, coordinated action from the UN to limit emissions before its too late.
-                        </p>
-                        
-                        <div className="space-y-4">
-                          <div>
-                            <p className="text-blue-600 text-sm font-medium mb-2">UN ENVIRONMENT PROGRAMME (UNEP)</p>
-                            <p className="italic text-gray-700 mb-2">
-                              "The world is on track for a temperature rise of 2.5°C to 2.9°C...We need to act now...or the impacts will be catastrophic."
-                            </p>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors">
-                              Read the article
-                            </button>
-                          </div>
+                        <p className="text-blue-200 text-sm mt-2">Sources: 3</p>
+                      </button>
+                      
+                      {activistExpanded && (
+                        <div className="p-4 bg-gray-50">
+                          <p className="mb-4 border-l-4 border-blue-500 pl-4 text-brand-dark">
+                            The climate crisis requires urgent, coordinated action from the UN to limit emissions before its too late.
+                          </p>
                           
-                          <div>
-                            <p className="text-blue-600 text-sm font-medium mb-2">INTERGOVERNMENTAL PANEL ON CLIMATE CHANGE (IPCC)</p>
-                            <p className="italic text-gray-700 mb-2">
-                              "Limiting warming to 1.5°C will require rapid, far-reaching and unprecedented changes in all aspects of society. The next few years are probably the most important in our history."
-                            </p>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors">
-                              Read the article
-                            </button>
+                          <div className="space-y-4">
+                            <div>
+                              <p className="text-blue-600 text-sm font-medium mb-2">UN ENVIRONMENT PROGRAMME (UNEP)</p>
+                              <p className="italic text-gray-700 mb-2">
+                                "The world is on track for a temperature rise of 2.5°C to 2.9°C...We need to act now...or the impacts will be catastrophic."
+                              </p>
+                              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors">
+                                Read the article
+                              </button>
+                            </div>
+                            
+                            <div>
+                              <p className="text-blue-600 text-sm font-medium mb-2">INTERGOVERNMENTAL PANEL ON CLIMATE CHANGE (IPCC)</p>
+                              <p className="italic text-gray-700 mb-2">
+                                "Limiting warming to 1.5°C will require rapid, far-reaching and unprecedented changes in all aspects of society. The next few years are probably the most important in our history."
+                              </p>
+                              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors">
+                                Read the article
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )}
                     </div>
 
                     {/* Moderate Perspective */}
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                      <div className="p-4 bg-orange-50 border-b border-orange-100">
+                      <button 
+                        onClick={() => setModerateExpanded(!moderateExpanded)}
+                        className="w-full p-4 bg-orange-700 hover:bg-orange-800 transition-colors duration-200 text-left"
+                      >
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-lg text-brand-dark">UN Intervention Necessary, But it Must Be Realistic</h4>
-                          <span className="text-orange-600">▼</span>
+                          <h4 className="font-semibold text-lg text-white">UN Intervention Necessary, But it Must Be Realistic</h4>
+                          {moderateExpanded ? <ChevronUp className="h-5 w-5 text-white" /> : <ChevronDown className="h-5 w-5 text-white" />}
                         </div>
-                        <p className="text-orange-600 text-sm mt-2">Sources: 2</p>
-                      </div>
-                      <div className="p-4 bg-gray-50">
-                        <p className="mb-4 border-l-4 border-orange-500 pl-4 text-brand-dark">
-                          The UN should regulate climate change, but current approaches are flawed; reforms should focus on fairer rules, more effective monitoring, and multi-dimensional commitments.
-                        </p>
-                        
-                        <div className="space-y-4">
-                          <div>
-                            <p className="text-orange-600 text-sm font-medium mb-2">YALE ENVIRONMENT 360</p>
-                            <p className="italic text-gray-700 mb-2">
-                              "Some analysts say the U.N. methodology on offsets is a wrecking ball that will destroy hopes of achieving genuine net zero... It is 'essentially writing a blank cheque for forested countries intent on continuing to burn fossil fuels.'"
-                            </p>
-                            <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm transition-colors">
-                              Read the article
-                            </button>
+                        <p className="text-orange-200 text-sm mt-2">Sources: 2</p>
+                      </button>
+                      
+                      {moderateExpanded && (
+                        <div className="p-4 bg-gray-50">
+                          <p className="mb-4 border-l-4 border-orange-500 pl-4 text-brand-dark">
+                            The UN should regulate climate change, but current approaches are flawed; reforms should focus on fairer rules, more effective monitoring, and multi-dimensional commitments.
+                          </p>
+                          
+                          <div className="space-y-4">
+                            <div>
+                              <p className="text-orange-600 text-sm font-medium mb-2">YALE ENVIRONMENT 360</p>
+                              <p className="italic text-gray-700 mb-2">
+                                "Some analysts say the U.N. methodology on offsets is a wrecking ball that will destroy hopes of achieving genuine net zero... It is 'essentially writing a blank cheque for forested countries intent on continuing to burn fossil fuels.'"
+                              </p>
+                              <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm transition-colors">
+                                Read the article
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )}
                     </div>
 
                     {/* Critics Perspective */}
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                      <div className="p-4 bg-red-50 border-b border-red-100">
+                      <button 
+                        onClick={() => setCriticsExpanded(!criticsExpanded)}
+                        className="w-full p-4 bg-red-700 hover:bg-red-800 transition-colors duration-200 text-left"
+                      >
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-lg text-brand-dark">Critics Say UN Should Avoid Action on Fossil Fuels</h4>
-                          <span className="text-red-600">▼</span>
+                          <h4 className="font-semibold text-lg text-white">Critics Say UN Should Avoid Action on Fossil Fuels</h4>
+                          {criticsExpanded ? <ChevronUp className="h-5 w-5 text-white" /> : <ChevronDown className="h-5 w-5 text-white" />}
                         </div>
-                        <p className="text-red-600 text-sm mt-2">Sources: 1</p>
-                      </div>
-                      <div className="p-4 bg-gray-50">
-                        <p className="mb-4 border-l-4 border-red-500 pl-4 text-brand-dark">
-                          The UN shouldn't intervene in fossil fuel use; intervention would harm quality of life, economic growth, and energy access, especially in developing nations.
-                        </p>
-                        
-                        <div className="space-y-4">
-                          <div>
-                            <p className="text-red-600 text-sm font-medium mb-2">FORBES</p>
-                            <p className="italic text-gray-700 mb-2">
-                              "The UN's proposed restrictions on fossil fuels would deprive billions of affordable energy, which is essential to lifting people out of poverty"
-                            </p>
-                            <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm transition-colors">
-                              Read the article
-                            </button>
+                        <p className="text-red-200 text-sm mt-2">Sources: 1</p>
+                      </button>
+                      
+                      {criticsExpanded && (
+                        <div className="p-4 bg-gray-50">
+                          <p className="mb-4 border-l-4 border-red-500 pl-4 text-brand-dark">
+                            The UN shouldn't intervene in fossil fuel use; intervention would harm quality of life, economic growth, and energy access, especially in developing nations.
+                          </p>
+                          
+                          <div className="space-y-4">
+                            <div>
+                              <p className="text-red-600 text-sm font-medium mb-2">FORBES</p>
+                              <p className="italic text-gray-700 mb-2">
+                                "The UN's proposed restrictions on fossil fuels would deprive billions of affordable energy, which is essential to lifting people out of poverty"
+                              </p>
+                              <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm transition-colors">
+                                Read the article
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 }
