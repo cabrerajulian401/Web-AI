@@ -15,18 +15,22 @@ export function ExpandableSection({ title, icon, content, customIcon }: Expandab
   const renderIcon = () => {
     if (customIcon) {
       return (
-        <div className="h-8 w-8 bg-black rounded-full flex items-center justify-center mr-3">
+        <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center mr-3">
           <img 
             src={customIcon} 
             alt={title} 
-            className="h-5 w-5 object-contain"
+            className="h-6 w-6 object-contain"
           />
         </div>
       );
     }
     
     const IconComponent = icon === "database" ? Database : Users;
-    return <IconComponent className="h-5 w-5 mr-3 text-brand-blue" />;
+    return (
+      <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center mr-3">
+        <IconComponent className="h-6 w-6 text-white" />
+      </div>
+    );
   };
 
   return (

@@ -12,7 +12,7 @@ import { useState } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import execSummaryIcon from "@assets/hour clear_1751669332914.png";
-import conflictIcon from "@assets/conflictwhite_1751670658509.png";
+import conflictIcon from "@assets/image (4)_1751670771904.png";
 import pivotIcon from "@assets/Pivot Icon Clear_1751670260305.png";
 
 interface ArticleData {

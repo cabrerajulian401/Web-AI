@@ -101,6 +101,9 @@ Changelog:
 - July 04, 2025. Added sidebar with "As seen on PBS and Automateed" promotional image, changed all category tags to "News", updated main heading to "Today's Stories"
 - July 04, 2025. Fixed sidebar image loading issue by properly copying image to public directory and updating paths
 - July 04, 2025. Added "Learn More" button in sidebar linking to timio.news, implemented dummy placeholder data for timeline and related articles sections
+- July 04, 2025. Enhanced UI with custom icons: hourglass for Executive Summary, crossed spears for Conflicting Info, curved arrows for Different Perspectives, all displayed over black circles
+- July 04, 2025. Added prominent black dividers under Timeline and Related Articles headings, strengthened dividers in expandable sections
+- July 04, 2025. Increased all section icon sizes and applied consistent black circle backgrounds across all expandable sections
 
 ## User Preferences
 
