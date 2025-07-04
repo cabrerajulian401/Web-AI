@@ -202,7 +202,7 @@ export default function FeedPage() {
                 href="https://timio.news" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="block w-full bg-brand-blue hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg text-center transition-colors duration-200"
+                className="block w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 px-8 rounded-lg text-left transition-colors duration-200 text-lg"
               >
                 Learn More
               </a>
