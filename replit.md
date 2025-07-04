@@ -98,6 +98,7 @@ The application uses a relational database with the following main entities:
 Changelog:
 - July 04, 2025. Initial setup
 - July 04, 2025. Added main feed page with article grid layout, TIMIO News branding, and navigation between feed and article pages
+- July 04, 2025. Added sidebar with "As seen on" promotional image, changed all category tags to "News", reduced layout width for better presentation
 
 ## User Preferences
 
