@@ -11,7 +11,7 @@ import { useLocation } from "wouter";
 import { useState } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
-import execSummaryIcon from "@assets/hour clear_1751668570826.png";
+import execSummaryIcon from "@assets/hour clear_1751669332914.png";
 
 interface ArticleData {
   article: Article;
