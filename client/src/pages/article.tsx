@@ -11,6 +11,7 @@ import { useLocation } from "wouter";
 import { useState } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
+import execSummaryIcon from "@assets/hourclear (1)_1751668207267.png";
 
 interface ArticleData {
   article: Article;
@@ -212,7 +213,13 @@ export default function ArticlePage() {
                 {/* Executive Summary */}
                 <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg mb-8">
                   <h2 className="text-xl font-semibold text-brand-dark mb-4 flex items-center">
-                    <TrendingUp className="h-5 w-5 mr-2 text-brand-blue" />
+                    <div className="h-8 w-8 bg-black rounded-full flex items-center justify-center mr-2">
+                      <img 
+                        src={execSummaryIcon} 
+                        alt="Executive Summary" 
+                        className="h-5 w-5"
+                      />
+                    </div>
                     Executive Summary
                   </h2>
                   <ul className="space-y-3">
@@ -257,7 +264,7 @@ export default function ArticlePage() {
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setActivistExpanded(!activistExpanded)}
-                        className="w-full p-4 bg-blue-600 bg-opacity-60 hover:bg-opacity-70 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-blue-600 bg-opacity-75 hover:bg-opacity-85 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold text-lg text-white">Activists Call for Stronger UN Environmental Rules</h4>
@@ -301,7 +308,7 @@ export default function ArticlePage() {
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setModerateExpanded(!moderateExpanded)}
-                        className="w-full p-4 bg-orange-600 bg-opacity-60 hover:bg-opacity-70 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-orange-600 bg-opacity-75 hover:bg-opacity-85 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold text-lg text-white">UN Intervention Necessary, But it Must Be Realistic</h4>
@@ -335,7 +342,7 @@ export default function ArticlePage() {
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setCriticsExpanded(!criticsExpanded)}
-                        className="w-full p-4 bg-red-600 bg-opacity-60 hover:bg-opacity-70 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-red-600 bg-opacity-75 hover:bg-opacity-85 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold text-lg text-white">Critics Say UN Should Avoid Action on Fossil Fuels</h4>
