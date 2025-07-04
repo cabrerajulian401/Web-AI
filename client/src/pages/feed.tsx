@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Clock, TrendingUp, Eye, ArrowRight, Search } from "lucide-react";
 import { Link } from "wouter";
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import chromeIcon from "@assets/Google_Chrome_Web_Store_icon_2015 (2)_1751671046716.png";
 
@@ -25,47 +25,15 @@ interface FeedArticle {
 
 export default function FeedPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [page, setPage] = useState(1);
-  const [allArticles, setAllArticles] = useState<FeedArticle[]>([]);
-  const [hasMore, setHasMore] = useState(true);
   
   const { data: articles, isLoading } = useQuery<FeedArticle[]>({
-    queryKey: ['/api/feed', { search: searchTerm, page }],
-    enabled: true,
+    queryKey: ['/api/feed'],
   });
 
-  // Update articles when new data arrives
-  useEffect(() => {
-    if (articles) {
-      if (page === 1 || searchTerm) {
-        // Reset for new search or first page
-        setAllArticles(articles);
-      } else {
-        // Append for infinite scroll
-        setAllArticles(prev => [...prev, ...articles]);
-      }
-      setHasMore(articles.length === 20); // Assuming 20 per page
-    }
-  }, [articles, page, searchTerm]);
-
-  // Reset page when search changes
-  useEffect(() => {
-    setPage(1);
-    setAllArticles([]);
-  }, [searchTerm]);
-
-  // Infinite scroll handler
-  const handleScroll = useCallback(() => {
-    if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || isLoading || !hasMore || searchTerm) {
-      return;
-    }
-    setPage(prev => prev + 1);
-  }, [isLoading, hasMore, searchTerm]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+  const filteredArticles = articles?.filter(article => 
+    article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    article.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
 
   if (isLoading) {
     return (
@@ -181,7 +149,7 @@ export default function FeedPage() {
 
             {/* Articles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {allArticles.map((article) => (
+              {filteredArticles.map((article) => (
                 <Link key={article.id} href={`/article/${article.slug}`}>
                   <Card className="shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer group overflow-hidden h-full">
                     {/* Article Image */}
@@ -231,18 +199,8 @@ export default function FeedPage() {
               ))}
             </div>
 
-            {/* Loading more indicator */}
-            {isLoading && page > 1 && (
-              <div className="text-center py-8">
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-blue"></div>
-                  <span className="text-gray-600">Loading more articles...</span>
-                </div>
-              </div>
-            )}
-
             {/* Empty State */}
-            {allArticles.length === 0 && searchTerm && !isLoading && (
+            {filteredArticles.length === 0 && articles && articles.length > 0 && (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
                   <Search className="h-16 w-16 mx-auto" />
@@ -251,7 +209,7 @@ export default function FeedPage() {
                 <p className="text-gray-600">Try different keywords or browse all articles.</p>
               </div>
             )}
-            {allArticles.length === 0 && !searchTerm && !isLoading && (
+            {articles && articles.length === 0 && (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
                   <TrendingUp className="h-16 w-16 mx-auto" />
