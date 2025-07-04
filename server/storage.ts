@@ -291,12 +291,68 @@ export class MemStorage implements IStorage {
     };
 
     // Add placeholder data for other articles (we'll only implement the main article fully)
-    [article2, article3, article4, article5, article6].forEach(article => {
+    [article2, article3, article4, article5, article6].forEach((article, index) => {
       this.articles.set(article.slug, {
         article,
         executiveSummary: { id: article.id, articleId: article.id, points: ["Article summary coming soon"] },
-        timelineItems: [],
-        relatedArticles: [],
+        timelineItems: [
+          {
+            id: index * 10 + 1,
+            articleId: article.id,
+            date: new Date(Date.now() - 48 * 60 * 60 * 1000), // 2 days ago
+            title: "Development Announced",
+            description: "Initial announcement and industry reactions",
+            type: "announcement",
+            sourceLabel: "Official Source"
+          },
+          {
+            id: index * 10 + 2,
+            articleId: article.id,
+            date: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+            title: "Technical Details Released",
+            description: "More information becomes available",
+            type: "release",
+            sourceLabel: "Technical Documentation"
+          },
+          {
+            id: index * 10 + 3,
+            articleId: article.id,
+            date: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
+            title: "Market Impact",
+            description: "Industry analysts weigh in on implications",
+            type: "analysis",
+            sourceLabel: "Market Analysis"
+          }
+        ],
+        relatedArticles: [
+          {
+            id: index * 10 + 1,
+            articleId: article.id,
+            title: "Background: Previous Developments",
+            excerpt: "Context and background information on this developing story",
+            url: "https://example.com/background-" + article.slug,
+            source: "Tech Insider",
+            imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop"
+          },
+          {
+            id: index * 10 + 2,
+            articleId: article.id,
+            title: "Opinion: What Industry Leaders Think",
+            excerpt: "Expert perspectives on the implications and future impact",
+            url: "https://example.com/opinion-" + article.slug,
+            source: "Industry Weekly",
+            imageUrl: "https://images.unsplash.com/photo-1556761175-4b46a572b786?w=300&h=200&fit=crop"
+          },
+          {
+            id: index * 10 + 3,
+            articleId: article.id,
+            title: "Deep Dive: Technical Analysis",
+            excerpt: "Detailed technical breakdown and analysis of the development",
+            url: "https://example.com/analysis-" + article.slug,
+            source: "Technical Review",
+            imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop"
+          }
+        ],
         rawFacts: [],
         perspectives: []
       });
@@ -344,8 +400,73 @@ export class MemStorage implements IStorage {
             "Visit the source link for complete details"
           ]
         },
-        timelineItems: [],
-        relatedArticles: [],
+        timelineItems: [
+          {
+            id: 1,
+            articleId: rssArticle.id,
+            date: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+            title: "Initial Report",
+            description: "Story first reported by major news outlets",
+            type: "announcement",
+            sourceLabel: "News Outlets"
+          },
+          {
+            id: 2,
+            articleId: rssArticle.id,
+            date: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
+            title: "Expert Analysis",
+            description: "Industry experts provide initial commentary",
+            type: "analysis",
+            sourceLabel: "Expert Opinion"
+          },
+          {
+            id: 3,
+            articleId: rssArticle.id,
+            date: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
+            title: "Market Response",
+            description: "Financial markets react to the development",
+            type: "reaction",
+            sourceLabel: "Market Data"
+          },
+          {
+            id: 4,
+            articleId: rssArticle.id,
+            date: new Date(),
+            title: "Current Status",
+            description: "Latest updates and ongoing developments",
+            type: "update",
+            sourceLabel: "Live Coverage"
+          }
+        ],
+        relatedArticles: [
+          {
+            id: 1,
+            articleId: rssArticle.id,
+            title: "Related: Understanding the Background",
+            excerpt: "Context and background information on this developing story",
+            url: "https://example.com/background",
+            source: "Industry Journal",
+            imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop"
+          },
+          {
+            id: 2,
+            articleId: rssArticle.id,
+            title: "Analysis: What This Means for the Industry",
+            excerpt: "Expert perspectives on the implications and future impact",
+            url: "https://example.com/analysis",
+            source: "Tech Weekly",
+            imageUrl: "https://images.unsplash.com/photo-1556761175-4b46a572b786?w=300&h=200&fit=crop"
+          },
+          {
+            id: 3,
+            articleId: rssArticle.id,
+            title: "Expert Opinion: Future Implications",
+            excerpt: "Detailed analysis of long-term consequences and predictions",
+            url: "https://example.com/expert-opinion",
+            source: "Expert Views",
+            imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop"
+          }
+        ],
         rawFacts: [],
         perspectives: []
       };

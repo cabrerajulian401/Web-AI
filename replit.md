@@ -100,6 +100,7 @@ Changelog:
 - July 04, 2025. Added main feed page with article grid layout, TIMIO News branding, and navigation between feed and article pages
 - July 04, 2025. Added sidebar with "As seen on PBS and Automateed" promotional image, changed all category tags to "News", updated main heading to "Today's Stories"
 - July 04, 2025. Fixed sidebar image loading issue by properly copying image to public directory and updating paths
+- July 04, 2025. Added "Learn More" button in sidebar linking to timio.news, implemented dummy placeholder data for timeline and related articles sections
 
 ## User Preferences
 
