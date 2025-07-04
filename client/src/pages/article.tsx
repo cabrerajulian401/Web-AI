@@ -217,7 +217,7 @@ export default function ArticlePage() {
                       <img 
                         src={execSummaryIcon} 
                         alt="Executive Summary" 
-                        className="h-7 w-7"
+                        className="h-7 w-7 object-contain"
                       />
                     </div>
                     Executive Summary
