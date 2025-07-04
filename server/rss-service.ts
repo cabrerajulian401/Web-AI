@@ -461,7 +461,7 @@ export class RSSService {
     } else if (text.includes('enterprise') || text.includes('business') || text.includes('corporate')) {
       return 'Enterprise';
     } else {
-      return 'Technology';
+      return 'News';
     }
   }
 }

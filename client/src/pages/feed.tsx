@@ -32,7 +32,7 @@ export default function FeedPage() {
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center space-x-3">
                 <img 
@@ -51,13 +51,13 @@ export default function FeedPage() {
         </header>
 
         {/* Loading Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
             <Skeleton className="h-10 w-64 mb-2" />
             <Skeleton className="h-6 w-96" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[...Array(6)].map((_, index) => (
               <Card key={index} className="shadow-card overflow-hidden">
                 <Skeleton className="h-48 w-full" />
@@ -82,7 +82,7 @@ export default function FeedPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <img 
@@ -103,7 +103,7 @@ export default function FeedPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-brand-dark mb-2">
@@ -115,7 +115,7 @@ export default function FeedPage() {
         </div>
 
         {/* Articles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {articles?.map((article) => (
             <Link key={article.id} href={`/article/${article.slug}`}>
               <Card className="shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer group overflow-hidden h-full">
