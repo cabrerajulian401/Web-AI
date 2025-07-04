@@ -73,20 +73,20 @@ export default function ArticlePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <header className="bg-white border-b-2 border-black sticky top-0 z-50 shadow-sm">
+        <header className="bg-white border-b-2 border-black shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
+            <div className="flex items-center justify-between h-32">
               <div className="flex items-center space-x-6">
                 {/* Logo and Brand */}
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-6">
                   <img 
                     src={timioLogo} 
                     alt="TIMIO News" 
-                    className="h-8 w-8 rounded-lg"
+                    className="h-16 w-16 rounded-lg"
                   />
                   <div>
-                    <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
-                    <p className="text-xs text-gray-600 mt-1">Truth. Trust. Transparency.</p>
+                    <span className="text-2xl font-bold text-brand-dark">TIMIO News</span>
+                    <p className="text-sm text-gray-600 mt-1">Truth. Trust. Transparency.</p>
                   </div>
                 </div>
                 
@@ -135,21 +135,21 @@ export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b-2 border-black sticky top-0 z-50 shadow-sm">
+      <header className="bg-white border-b-2 border-black shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-4">
+          <div className="py-8">
             <div className="flex items-center justify-between">
               {/* Logo, Brand and Back Button */}
               <div className="flex flex-col space-y-2">
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-6">
                   <img 
                     src={timioLogo} 
                     alt="TIMIO News" 
-                    className="h-8 w-8 rounded-lg"
+                    className="h-16 w-16 rounded-lg"
                   />
                   <div>
-                    <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
-                    <p className="text-xs text-gray-600 mt-1">Truth. Trust. Transparency.</p>
+                    <span className="text-2xl font-bold text-brand-dark">TIMIO News</span>
+                    <p className="text-sm text-gray-600 mt-1">Truth. Trust. Transparency.</p>
                   </div>
                 </div>
                 <button 

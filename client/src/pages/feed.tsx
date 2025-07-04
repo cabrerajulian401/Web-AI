@@ -30,9 +30,9 @@ export default function FeedPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <header className="bg-white border-b-2 border-black sticky top-0 z-50 shadow-sm">
+        <header className="bg-white border-b-2 border-black shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
+            <div className="flex items-center justify-between h-32">
               <div className="flex items-center space-x-4">
                 <Skeleton className="h-12 w-12" />
                 <div>
@@ -89,18 +89,18 @@ export default function FeedPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b-2 border-black sticky top-0 z-50 shadow-sm">
+      <header className="bg-white border-b-2 border-black shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-32">
             <div className="flex items-center space-x-4">
               <img 
                 src={timioLogo} 
                 alt="TIMIO Logo" 
-                className="w-12 h-12"
+                className="w-24 h-24"
               />
               <div>
-                <h1 className="text-2xl font-bold text-brand-dark">TIMIO News</h1>
-                <p className="text-sm text-gray-600">Truth. Trust. Transparency.</p>
+                <h1 className="text-4xl font-bold text-brand-dark">TIMIO News</h1>
+                <p className="text-lg text-gray-600">Truth. Trust. Transparency.</p>
               </div>
             </div>
             
