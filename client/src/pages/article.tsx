@@ -131,31 +131,33 @@ export default function ArticlePage() {
       {/* Header */}
       <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-6">
-              {/* Logo and Brand */}
-              <div className="flex items-center space-x-3">
-                <img 
-                  src={timioLogo} 
-                  alt="TIMIO News" 
-                  className="h-8 w-8 rounded-lg"
-                />
-                <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
+          <div className="py-4">
+            <div className="flex items-center justify-between">
+              {/* Logo, Brand and Back Button */}
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-center space-x-3">
+                  <img 
+                    src={timioLogo} 
+                    alt="TIMIO News" 
+                    className="h-8 w-8 rounded-lg"
+                  />
+                  <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
+                </div>
+                <button 
+                  onClick={handleBackToFeed}
+                  className="flex items-center text-gray-600 hover:text-brand-blue transition-colors duration-200 font-medium text-sm"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </button>
               </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={handleBackToFeed}
-                className="flex items-center text-gray-600 hover:text-brand-blue transition-colors duration-200 font-medium"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </button>
-              <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
-                <Share2 className="h-4 w-4 mr-2" />
-                Share
-              </Button>
+              
+              <div className="flex items-center space-x-4">
+                <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -255,7 +257,7 @@ export default function ArticlePage() {
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setActivistExpanded(!activistExpanded)}
-                        className="w-full p-4 bg-blue-700 hover:bg-blue-800 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-blue-600 bg-opacity-80 hover:bg-opacity-90 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold text-lg text-white">Activists Call for Stronger UN Environmental Rules</h4>
@@ -299,7 +301,7 @@ export default function ArticlePage() {
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setModerateExpanded(!moderateExpanded)}
-                        className="w-full p-4 bg-orange-700 hover:bg-orange-800 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-orange-600 bg-opacity-80 hover:bg-opacity-90 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold text-lg text-white">UN Intervention Necessary, But it Must Be Realistic</h4>
@@ -333,7 +335,7 @@ export default function ArticlePage() {
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setCriticsExpanded(!criticsExpanded)}
-                        className="w-full p-4 bg-red-700 hover:bg-red-800 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-red-600 bg-opacity-80 hover:bg-opacity-90 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold text-lg text-white">Critics Say UN Should Avoid Action on Fossil Fuels</h4>
