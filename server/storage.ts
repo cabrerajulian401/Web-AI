@@ -302,8 +302,8 @@ export class MemStorage implements IStorage {
             date: new Date(Date.now() - 48 * 60 * 60 * 1000), // 2 days ago
             title: "Development Announced",
             description: "Initial announcement and industry reactions",
-            type: "announcement",
-            sourceLabel: "Official Source"
+            type: "",
+            sourceLabel: "TechCrunch"
           },
           {
             id: index * 10 + 2,
@@ -311,8 +311,8 @@ export class MemStorage implements IStorage {
             date: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
             title: "Technical Details Released",
             description: "More information becomes available",
-            type: "release",
-            sourceLabel: "Technical Documentation"
+            type: "",
+            sourceLabel: "The Verge"
           },
           {
             id: index * 10 + 3,
@@ -320,8 +320,8 @@ export class MemStorage implements IStorage {
             date: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
             title: "Market Impact",
             description: "Industry analysts weigh in on implications",
-            type: "analysis",
-            sourceLabel: "Market Analysis"
+            type: "",
+            sourceLabel: "Wall Street Journal"
           }
         ],
         relatedArticles: [
@@ -407,8 +407,8 @@ export class MemStorage implements IStorage {
             date: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
             title: "Initial Report",
             description: "Story first reported by major news outlets",
-            type: "announcement",
-            sourceLabel: "News Outlets"
+            type: "",
+            sourceLabel: "Reuters"
           },
           {
             id: 2,
@@ -416,8 +416,8 @@ export class MemStorage implements IStorage {
             date: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
             title: "Expert Analysis",
             description: "Industry experts provide initial commentary",
-            type: "analysis",
-            sourceLabel: "Expert Opinion"
+            type: "",
+            sourceLabel: "Bloomberg"
           },
           {
             id: 3,
@@ -425,8 +425,8 @@ export class MemStorage implements IStorage {
             date: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
             title: "Market Response",
             description: "Financial markets react to the development",
-            type: "reaction",
-            sourceLabel: "Market Data"
+            type: "",
+            sourceLabel: "CNN"
           },
           {
             id: 4,
@@ -434,8 +434,8 @@ export class MemStorage implements IStorage {
             date: new Date(),
             title: "Current Status",
             description: "Latest updates and ongoing developments",
-            type: "update",
-            sourceLabel: "Live Coverage"
+            type: "",
+            sourceLabel: "Associated Press"
           }
         ],
         relatedArticles: [
