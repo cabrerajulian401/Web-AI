@@ -77,7 +77,7 @@ export default function FeedPage() {
             <div className="hidden lg:block w-80 flex-shrink-0">
               <div className="sticky top-24">
                 <img 
-                  src="/attached_assets/asseen (1)_1751665134525.png" 
+                  src="/asseen-on.png" 
                   alt="As seen on PBS and Automateed" 
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
