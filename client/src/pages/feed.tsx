@@ -33,10 +33,9 @@ export default function FeedPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center space-x-3">
-                <Skeleton className="h-8 w-8 rounded-full" />
+                <Skeleton className="h-8 w-8" />
                 <div>
-                  <Skeleton className="h-6 w-24 mb-1" />
-                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-6 w-32" />
                 </div>
               </div>
               
@@ -99,11 +98,10 @@ export default function FeedPage() {
               <img 
                 src={timioLogo} 
                 alt="TIMIO Logo" 
-                className="w-8 h-8 rounded-full"
+                className="w-8 h-8"
               />
               <div>
-                <h1 className="text-lg font-bold text-brand-dark">TIMIO</h1>
-                <p className="text-xs text-muted">News</p>
+                <h1 className="text-lg font-bold text-brand-dark">TIMIO News</h1>
               </div>
             </div>
             
