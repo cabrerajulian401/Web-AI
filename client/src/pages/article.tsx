@@ -25,8 +25,13 @@ export default function ArticlePage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   
+  // Extract slug from URL path
+  const currentPath = window.location.pathname;
+  const slug = currentPath.split('/article/')[1] || 'gpt-5-announcement';
+  
   const { data: articleData, isLoading } = useQuery<ArticleData>({
-    queryKey: ["/api/article/gpt-5-announcement"],
+    queryKey: ["/api/article", slug],
+    queryFn: () => fetch(`/api/article/${slug}`).then(res => res.json()),
   });
 
   const handleShare = async () => {

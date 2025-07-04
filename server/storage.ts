@@ -21,6 +21,7 @@ import {
   type Perspective,
   type InsertPerspective
 } from "@shared/schema";
+import { RSSService } from "./rss-service";
 
 interface ArticleData {
   article: Article;
@@ -43,11 +44,16 @@ export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private articles: Map<string, ArticleData>;
   private currentUserId: number;
+  private rssService: RSSService;
+  private lastFetchTime: number = 0;
+  private cacheDuration: number = 5 * 60 * 1000; // 5 minutes cache
+  private rssArticles: Article[] = [];
 
   constructor() {
     this.users = new Map();
     this.articles = new Map();
     this.currentUserId = 1;
+    this.rssService = new RSSService('https://www.google.com/alerts/feeds/18329999330306112380/624266987313125830');
     this.initializeData();
   }
 
@@ -315,11 +321,56 @@ export class MemStorage implements IStorage {
   }
 
   async getArticleBySlug(slug: string): Promise<ArticleData | undefined> {
-    return this.articles.get(slug);
+    // First check if it's one of our detailed static articles
+    const staticArticle = this.articles.get(slug);
+    if (staticArticle) {
+      return staticArticle;
+    }
+
+    // If not found in static articles, check RSS articles
+    await this.getAllArticles(); // This will refresh RSS if needed
+    const rssArticle = this.rssArticles.find(article => article.slug === slug);
+    
+    if (rssArticle) {
+      // Create minimal article data structure for RSS articles
+      return {
+        article: rssArticle,
+        executiveSummary: {
+          id: rssArticle.id,
+          articleId: rssArticle.id,
+          points: [
+            "This article is sourced from Google Alerts RSS feed",
+            "Full analysis and summary available at the original source",
+            "Visit the source link for complete details"
+          ]
+        },
+        timelineItems: [],
+        relatedArticles: [],
+        rawFacts: [],
+        perspectives: []
+      };
+    }
+
+    return undefined;
   }
 
   async getAllArticles(): Promise<Article[]> {
-    return Array.from(this.articles.values()).map(articleData => articleData.article);
+    // Check if we need to refresh the RSS feed
+    const now = Date.now();
+    if (now - this.lastFetchTime > this.cacheDuration || this.rssArticles.length === 0) {
+      try {
+        console.log('Fetching fresh RSS data...');
+        this.rssArticles = await this.rssService.fetchArticles();
+        this.lastFetchTime = now;
+        console.log(`Fetched ${this.rssArticles.length} articles from RSS feed`);
+      } catch (error) {
+        console.error('Failed to fetch RSS articles:', error);
+        // If RSS fails, return the static articles as fallback
+        return Array.from(this.articles.values()).map(articleData => articleData.article);
+      }
+    }
+    
+    return this.rssArticles;
   }
 }
 
