@@ -113,20 +113,33 @@ export default function FeedPage() {
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <div className="relative w-80">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Search articles..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-gray-50 border-gray-200 focus:border-brand-blue"
-                />
+            <div className="flex flex-col items-end space-y-3">
+              <div className="flex flex-col items-end space-y-2">
+                <span className="text-sm font-medium text-gray-700">Generate your own research report</span>
+                <div className="relative w-80">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Enter a story to research"
+                    className="pl-10 bg-gray-50 border-gray-200 focus:border-brand-blue"
+                  />
+                </div>
               </div>
-              <Badge variant="secondary" className="bg-brand-blue text-white">
-                Live
-              </Badge>
+              <div className="flex items-center space-x-4">
+                <div className="relative w-80">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Search articles..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-gray-50 border-gray-200 focus:border-brand-blue"
+                  />
+                </div>
+                <Badge variant="secondary" className="bg-brand-blue text-white">
+                  Live
+                </Badge>
+              </div>
             </div>
           </div>
         </div>
