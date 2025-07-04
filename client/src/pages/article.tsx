@@ -242,123 +242,69 @@ export default function ArticlePage() {
                 title="Raw Facts"
                 icon="database"
                 content={
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-gray-50 p-4 rounded-lg border-b-2 border-gray-300">
-                      <h4 className="font-semibold text-brand-dark mb-2 pb-2 border-b border-gray-200">Political Context</h4>
-                      <ul className="text-sm text-gray-600 space-y-2">
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Defense Secretary nomination pending Senate confirmation 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Previous military aid packages totaled $113 billion 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Decision made during transition period 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Joint Chiefs of Staff provided military assessment 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-50 p-4 rounded-lg border-b-2 border-gray-300">
-                      <h4 className="font-semibold text-brand-dark mb-2 pb-2 border-b border-gray-200">Military Analysis</h4>
-                      <ul className="text-sm text-gray-600 space-y-2">
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Pentagon recommended continued support 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Aid package included defensive weapons 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Strategic implications assessed by DoD 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Timeline considerations factored into decision 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-50 p-4 rounded-lg border-b-2 border-gray-300">
-                      <h4 className="font-semibold text-brand-dark mb-2 pb-2 border-b border-gray-200">Congressional Response</h4>
-                      <ul className="text-sm text-gray-600 space-y-2">
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Bipartisan concerns raised in hearings 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>House Armed Services Committee statement issued 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Senate Foreign Relations involvement expected 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Budget implications under review 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-50 p-4 rounded-lg border-b-2 border-gray-300">
-                      <h4 className="font-semibold text-brand-dark mb-2 pb-2 border-b border-gray-200">International Impact</h4>
-                      <ul className="text-sm text-gray-600 space-y-2">
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>NATO allies monitoring situation closely 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>European partners express concern 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>UN Security Council briefing scheduled 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <input type="checkbox" checked readOnly className="mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Regional stability considerations noted 
-                            <a href="#" className="ml-1 text-blue-600 hover:underline">[Source]</a>
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
+                  <div className="mt-6">
+                    <ul className="text-sm text-gray-600 space-y-3">
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>Defense Secretary nomination pending Senate confirmation 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[Reuters]</a>
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>Previous military aid packages totaled $113 billion since 2022 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[Department of Defense]</a>
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>Decision announced during first week of January 2025 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[White House Press Office]</a>
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>Joint Chiefs of Staff provided military assessment to Secretary 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[Pentagon Briefing]</a>
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>Pentagon initially recommended continued support before reversal 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[CNN]</a>
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>Aid package included $200M in defensive weapons and equipment 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[Associated Press]</a>
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>Bipartisan concerns raised in House Armed Services Committee hearing 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[C-SPAN]</a>
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>NATO allies expressed concern in emergency session call 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[NATO Press Release]</a>
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>European Union coordinating response with member states 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[EU Council Statement]</a>
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <input type="checkbox" checked readOnly className="mt-0.5 mr-3 flex-shrink-0" />
+                        <span>UN Security Council briefing scheduled for next week 
+                          <a href="#" className="ml-1 text-blue-600 hover:underline">[UN News]</a>
+                        </span>
+                      </li>
+                    </ul>
                   </div>
                 }
               />

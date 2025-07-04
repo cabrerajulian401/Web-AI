@@ -30,7 +30,7 @@ export default function FeedPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
+        <header className="bg-white border-b-2 border-black sticky top-0 z-50 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center space-x-4">
@@ -89,7 +89,7 @@ export default function FeedPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
+      <header className="bg-white border-b-2 border-black sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -212,7 +212,7 @@ export default function FeedPage() {
                 href="https://chromewebstore.google.com/detail/timio-chrome-early-access/mkldmejplmgbjobhddcbilhfpcoholjh" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex items-center w-full bg-white hover:bg-gray-50 text-black border-2 border-black font-semibold py-3 px-6 rounded-lg text-left transition-colors duration-200 text-lg"
+                className="flex items-center w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-6 rounded-lg text-left transition-colors duration-200 text-lg"
               >
                 <img 
                   src={chromeIcon} 
