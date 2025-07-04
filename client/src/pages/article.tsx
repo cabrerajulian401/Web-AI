@@ -252,12 +252,12 @@ export default function ArticlePage() {
                 title="Different Perspectives"
                 icon="users"
                 content={
-                  <div className="space-y-4">
+                  <div className="space-y-4 mt-6">
                     {/* Activists Perspective */}
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setActivistExpanded(!activistExpanded)}
-                        className="w-full p-4 bg-blue-600 bg-opacity-80 hover:bg-opacity-90 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-blue-600 bg-opacity-60 hover:bg-opacity-70 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold text-lg text-white">Activists Call for Stronger UN Environmental Rules</h4>
@@ -301,7 +301,7 @@ export default function ArticlePage() {
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setModerateExpanded(!moderateExpanded)}
-                        className="w-full p-4 bg-orange-600 bg-opacity-80 hover:bg-opacity-90 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-orange-600 bg-opacity-60 hover:bg-opacity-70 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold text-lg text-white">UN Intervention Necessary, But it Must Be Realistic</h4>
@@ -335,7 +335,7 @@ export default function ArticlePage() {
                     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setCriticsExpanded(!criticsExpanded)}
-                        className="w-full p-4 bg-red-600 bg-opacity-80 hover:bg-opacity-90 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-red-600 bg-opacity-60 hover:bg-opacity-70 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
                           <h4 className="font-semibold text-lg text-white">Critics Say UN Should Avoid Action on Fossil Fuels</h4>
