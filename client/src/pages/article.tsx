@@ -9,6 +9,7 @@ import { Timeline } from "@/components/ui/timeline";
 import { RelatedArticles } from "@/components/ui/related-articles";
 import { useToast } from "@/hooks/use-toast";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
+import timioLogo from "@assets/App Icon_1751662407764.png";
 
 interface ArticleData {
   article: Article;
@@ -62,6 +63,16 @@ export default function ArticlePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center space-x-6">
+                {/* Logo and Brand */}
+                <div className="flex items-center space-x-3">
+                  <img 
+                    src={timioLogo} 
+                    alt="TIMIO News" 
+                    className="h-8 w-8 rounded-lg"
+                  />
+                  <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
+                </div>
+                
                 <Skeleton className="h-6 w-32" />
                 <Skeleton className="h-8 w-24" />
               </div>
@@ -110,18 +121,32 @@ export default function ArticlePage() {
       <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <nav className="flex items-center space-x-6">
-              <button 
-                onClick={handleBackToFeed}
-                className="flex items-center text-muted hover:text-brand-blue transition-colors duration-200"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Feed
-              </button>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                {article.category}
-              </Badge>
-            </nav>
+            <div className="flex items-center space-x-6">
+              {/* Logo and Brand */}
+              <div className="flex items-center space-x-3">
+                <img 
+                  src={timioLogo} 
+                  alt="TIMIO News" 
+                  className="h-8 w-8 rounded-lg"
+                />
+                <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
+              </div>
+              
+              {/* Navigation */}
+              <nav className="flex items-center space-x-4">
+                <button 
+                  onClick={handleBackToFeed}
+                  className="flex items-center text-muted hover:text-brand-blue transition-colors duration-200"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Feed
+                </button>
+                <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                  {article.category}
+                </Badge>
+              </nav>
+            </div>
+            
             <div className="flex items-center space-x-4">
               <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
                 <Share2 className="h-4 w-4 mr-2" />
