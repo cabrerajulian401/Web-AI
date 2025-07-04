@@ -189,10 +189,9 @@ export default function ArticlePage() {
 
                 {/* Article Content */}
                 <div className="prose prose-lg max-w-none">
-                  <div 
-                    className="text-gray-700 leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: article.content }}
-                  />
+                  <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                    OpenAI has officially announced the development of GPT-5, marking a significant leap forward in artificial intelligence capabilities with unprecedented reasoning abilities. The new model demonstrates remarkable improvements in logical reasoning, mathematical problem-solving, and chain-of-thought processing that could revolutionize how AI systems approach complex problem-solving tasks.
+                  </p>
                 </div>
               </CardContent>
             </Card>
