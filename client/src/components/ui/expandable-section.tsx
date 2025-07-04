@@ -31,7 +31,7 @@ export function ExpandableSection({ title, icon, content }: ExpandableSectionPro
       </button>
       
       {isOpen && (
-        <CardContent className="p-6 pt-0 border-t border-light animate-slide-up">
+        <CardContent className="p-6 pt-0 border-t-2 border-black animate-slide-up">
           {content}
         </CardContent>
       )}

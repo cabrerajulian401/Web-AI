@@ -9,7 +9,7 @@ interface RelatedArticlesProps {
 export function RelatedArticles({ articles }: RelatedArticlesProps) {
   return (
     <Card className="shadow-card p-6">
-      <h3 className="text-xl font-semibold text-brand-dark mb-6 flex items-center">
+      <h3 className="text-xl font-semibold text-brand-dark mb-6 pb-3 border-b-2 border-black flex items-center">
         <Newspaper className="h-5 w-5 mr-2 text-brand-blue" />
         Related Articles
       </h3>
