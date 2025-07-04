@@ -27,9 +27,10 @@ export function Timeline({ items }: TimelineProps) {
                   {new Date(item.date).toLocaleDateString()}
                 </span>
                 <span className="text-muted">•</span>
+                <span className="text-muted">Source:</span>
                 <a 
                   href="#" 
-                  className="text-brand-blue hover:underline font-medium"
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-medium transition-colors"
                   onClick={(e) => e.preventDefault()}
                 >
                   {item.sourceLabel}

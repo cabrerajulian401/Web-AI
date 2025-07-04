@@ -150,7 +150,7 @@ export default function FeedPage() {
                       <h3 className="text-xl font-semibold text-brand-dark mb-3 line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
                         {article.title}
                       </h3>
-                      <p className="text-muted mb-4 line-clamp-3 flex-grow">
+                      <p className="text-black mb-4 line-clamp-3 flex-grow">
                         {article.excerpt}
                       </p>
                       
