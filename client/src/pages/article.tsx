@@ -12,6 +12,8 @@ import { useState } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import execSummaryIcon from "@assets/hour clear_1751669332914.png";
+import conflictIcon from "@assets/conflictwhite_1751670658509.png";
+import pivotIcon from "@assets/Pivot Icon Clear_1751670260305.png";
 
 interface ArticleData {
   article: Article;
@@ -283,7 +285,8 @@ export default function ArticlePage() {
 
               <ExpandableSection
                 title="Different Perspectives"
-                icon="users"
+                icon="pivot"
+                customIcon={pivotIcon}
                 content={
                   <div className="space-y-4 mt-6">
                     {/* Activists Perspective */}
@@ -403,7 +406,8 @@ export default function ArticlePage() {
 
               <ExpandableSection
                 title="Conflicting Info"
-                icon="users"
+                icon="conflict"
+                customIcon={conflictIcon}
                 content={
                   <div className="mt-6 space-y-6">
                     <div className="border-l-4 border-red-500 pl-4 pb-4 border-b-2 border-gray-200">
