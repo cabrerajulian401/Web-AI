@@ -123,7 +123,7 @@ export default function FeedPage() {
                 Today's Stories
               </h1>
               <p className="text-lg text-black">
-                Stay informed with the latest developments in artificial intelligence
+                AI Driven Research on popular stories
               </p>
             </div>
 
@@ -205,7 +205,7 @@ export default function FeedPage() {
                 rel="noopener noreferrer"
                 className="block w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 px-8 rounded-lg text-left transition-colors duration-200 text-2xl"
               >
-                Learn More
+                Learn more about TIMIO News
               </a>
               
               <a 
