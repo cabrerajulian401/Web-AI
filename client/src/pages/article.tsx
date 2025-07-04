@@ -136,20 +136,16 @@ export default function ArticlePage() {
                 />
                 <span className="text-xl font-bold text-brand-dark">TIMIO News</span>
               </div>
-              
-              {/* Navigation */}
-              <nav className="flex items-center space-x-4">
-                <button 
-                  onClick={handleBackToFeed}
-                  className="flex items-center text-gray-600 hover:text-brand-blue transition-colors duration-200 font-medium"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Feed
-                </button>
-              </nav>
             </div>
             
             <div className="flex items-center space-x-4">
+              <button 
+                onClick={handleBackToFeed}
+                className="flex items-center text-gray-600 hover:text-brand-blue transition-colors duration-200 font-medium"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </button>
               <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
                 <Share2 className="h-4 w-4 mr-2" />
                 Share
