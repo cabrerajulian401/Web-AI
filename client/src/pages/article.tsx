@@ -213,11 +213,13 @@ export default function ArticlePage() {
                 {/* Executive Summary */}
                 <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg mb-8">
                   <h2 className="text-xl font-semibold text-brand-dark mb-4 flex items-center">
-                    <img 
-                      src={execSummaryIcon} 
-                      alt="Executive Summary" 
-                      className="h-8 w-8 mr-2"
-                    />
+                    <div className="h-8 w-8 bg-black rounded-full flex items-center justify-center mr-2">
+                      <img 
+                        src={execSummaryIcon} 
+                        alt="Executive Summary" 
+                        className="h-5 w-5"
+                      />
+                    </div>
                     Executive Summary
                   </h2>
                   <ul className="space-y-3">
