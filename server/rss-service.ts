@@ -37,7 +37,7 @@ export class RSSService {
       const feed = await this.parser.parseURL(this.feedUrl);
 
       
-      return feed.items.map((item: RSSItem, index: number) => {
+      const articles = await Promise.all(feed.items.map(async (item: RSSItem, index: number) => {
         // Extract a clean title
         const title = item.title || 'Untitled Article';
         
@@ -83,7 +83,9 @@ export class RSSService {
           authorName: 'Google Alerts',
           authorTitle: 'AI News Aggregator'
         };
-      });
+      }));
+      
+      return articles;
     } catch (error) {
       console.error('Error fetching RSS feed:', error);
       return [];
@@ -209,6 +211,101 @@ export class RSSService {
   }
 
 
+
+  private async scrapeImageFromUrl(url: string): Promise<string | null> {
+    try {
+
+      
+      // Set a shorter timeout for faster response
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        },
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        console.log(`Failed to fetch ${url}: ${response.status}`);
+        return null;
+      }
+
+      const html = await response.text();
+      const $ = cheerio.load(html);
+      
+      // Try multiple strategies to find the main image
+      let imageUrl = null;
+      
+      // 1. Try Open Graph image (most common for social media sharing)
+      imageUrl = $('meta[property="og:image"]').attr('content');
+      if (imageUrl && this.isValidImageUrl(imageUrl)) {
+        const absoluteUrl = this.makeAbsoluteUrl(imageUrl, url);
+
+        return absoluteUrl;
+      }
+      
+      // 2. Try Twitter card image
+      imageUrl = $('meta[name="twitter:image"]').attr('content');
+      if (imageUrl && this.isValidImageUrl(imageUrl)) {
+        return this.makeAbsoluteUrl(imageUrl, url);
+      }
+      
+      // 3. Try to find the largest image in the article
+      const images = $('img').toArray();
+      let bestImage = null;
+      let bestScore = 0;
+      
+      for (const img of images) {
+        const src = $(img).attr('src');
+        if (!src || !this.isValidImageUrl(src)) continue;
+        
+        // Score based on size attributes and position
+        const width = parseInt($(img).attr('width') || '0');
+        const height = parseInt($(img).attr('height') || '0');
+        const alt = $(img).attr('alt') || '';
+        
+        let score = 0;
+        if (width > 300 && height > 200) score += 10;
+        if (width > 600 && height > 400) score += 20;
+        if (alt.toLowerCase().includes('hero') || alt.toLowerCase().includes('featured')) score += 15;
+        if ($(img).parent().hasClass('hero') || $(img).parent().hasClass('featured')) score += 15;
+        
+        if (score > bestScore) {
+          bestScore = score;
+          bestImage = src;
+        }
+      }
+      
+      if (bestImage) {
+        return this.makeAbsoluteUrl(bestImage, url);
+      }
+      
+      return null;
+      
+    } catch (error) {
+      console.log(`Error scraping image from ${url}:`, error);
+      return null;
+    }
+  }
+
+  private makeAbsoluteUrl(imageUrl: string, baseUrl: string): string {
+    try {
+      // If it's already absolute, return as is
+      if (imageUrl.startsWith('http')) {
+        return imageUrl;
+      }
+      
+      // Make it absolute using the base URL
+      const base = new URL(baseUrl);
+      return new URL(imageUrl, base.origin).href;
+    } catch {
+      return imageUrl;
+    }
+  }
 
   private getImageFromTitle(title: string): string | null {
     const titleLower = title.toLowerCase();
