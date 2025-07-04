@@ -85,8 +85,8 @@ export default function ArticlePage() {
                     className="h-16 w-16 rounded-lg"
                   />
                   <div>
-                    <span className="text-2xl font-bold text-brand-dark">TIMIO News</span>
-                    <p className="text-sm text-gray-600 mt-1">Truth. Trust. Transparency.</p>
+                    <span className="text-5xl font-bold text-brand-dark">TIMIO News</span>
+                    <p className="text-xl text-gray-600 mt-2">Truth. Trust. Transparency.</p>
                   </div>
                 </div>
                 
@@ -148,8 +148,8 @@ export default function ArticlePage() {
                     className="h-16 w-16 rounded-lg"
                   />
                   <div>
-                    <span className="text-2xl font-bold text-brand-dark">TIMIO News</span>
-                    <p className="text-sm text-gray-600 mt-1">Truth. Trust. Transparency.</p>
+                    <span className="text-5xl font-bold text-brand-dark">TIMIO News</span>
+                    <p className="text-xl text-gray-600 mt-2">Truth. Trust. Transparency.</p>
                   </div>
                 </div>
                 <button 
