@@ -8,6 +8,7 @@ import { ExpandableSection } from "@/components/ui/expandable-section";
 import { Timeline } from "@/components/ui/timeline";
 import { RelatedArticles } from "@/components/ui/related-articles";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 
@@ -22,6 +23,7 @@ interface ArticleData {
 
 export default function ArticlePage() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   
   const { data: articleData, isLoading } = useQuery<ArticleData>({
     queryKey: ["/api/article/gpt-5-announcement"],
@@ -52,8 +54,7 @@ export default function ArticlePage() {
   };
 
   const handleBackToFeed = () => {
-    // In a real app, this would navigate to the feed
-    window.history.back();
+    setLocation("/");
   };
 
   if (isLoading) {
@@ -199,7 +200,7 @@ export default function ArticlePage() {
                 {/* Article Content */}
                 <div className="prose prose-lg max-w-none mb-8">
                   <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                    OpenAI has officially announced the development of GPT-5, marking a significant leap forward in artificial intelligence capabilities with unprecedented reasoning abilities. The new model demonstrates remarkable improvements in logical reasoning, mathematical problem-solving, and chain-of-thought processing that could revolutionize how AI systems approach complex problem-solving tasks.
+                    OpenAI has officially announced GPT-5. The new model demonstrates remarkable improvements in logical reasoning, problem-solving, and chain-of-thought that could revolutionize how AI systems approach problem-solving .
                   </p>
                 </div>
 

@@ -3,6 +3,17 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Get all articles for feed
+  app.get("/api/feed", async (req, res) => {
+    try {
+      const articles = await storage.getAllArticles();
+      res.json(articles);
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Get article by slug
   app.get("/api/article/:slug", async (req, res) => {
     try {

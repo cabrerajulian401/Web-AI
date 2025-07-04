@@ -36,6 +36,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   getArticleBySlug(slug: string): Promise<ArticleData | undefined>;
+  getAllArticles(): Promise<Article[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -206,6 +207,94 @@ export class MemStorage implements IStorage {
       rawFacts: sampleRawFacts,
       perspectives: samplePerspectives
     });
+
+    // Add more sample articles for the feed
+    const article2: Article = {
+      id: 2,
+      title: "Meta's LLaMA 3 Achieves Breakthrough in Multimodal AI",
+      slug: "meta-llama-3-multimodal",
+      excerpt: "Meta's latest LLaMA 3 model demonstrates significant improvements in understanding and generating content across text, images, and audio modalities.",
+      content: `<p>Meta's LLaMA 3 represents a major advancement in multimodal AI capabilities, offering unprecedented performance across various content types.</p>`,
+      category: "Technology",
+      publishedAt: new Date("2024-12-18T14:30:00Z"),
+      readTime: 7,
+      sourceCount: 15,
+      heroImageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
+      authorName: "AI Research Team",
+      authorTitle: "Meta AI Correspondents"
+    };
+
+    const article3: Article = {
+      id: 3,
+      title: "Google's Gemini Ultra Sets New Benchmarks in Code Generation",
+      slug: "google-gemini-ultra-coding",
+      excerpt: "Google's Gemini Ultra model achieves state-of-the-art performance on coding benchmarks, surpassing previous models in complex programming tasks.",
+      content: `<p>Google's Gemini Ultra has established new standards for AI-assisted code generation with remarkable accuracy and efficiency.</p>`,
+      category: "Technology",
+      publishedAt: new Date("2024-12-17T09:15:00Z"),
+      readTime: 6,
+      sourceCount: 8,
+      heroImageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
+      authorName: "Tech Analysis Team",
+      authorTitle: "Google AI Reporters"
+    };
+
+    const article4: Article = {
+      id: 4,
+      title: "Anthropic's Claude 3.5 Introduces Advanced Safety Features",
+      slug: "anthropic-claude-safety",
+      excerpt: "Anthropic unveils Claude 3.5 with enhanced safety mechanisms and improved alignment capabilities for enterprise applications.",
+      content: `<p>Anthropic's Claude 3.5 focuses on responsible AI development with robust safety features and alignment improvements.</p>`,
+      category: "AI Safety",
+      publishedAt: new Date("2024-12-16T11:45:00Z"),
+      readTime: 4,
+      sourceCount: 6,
+      heroImageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
+      authorName: "Safety Research Team",
+      authorTitle: "AI Ethics Correspondents"
+    };
+
+    const article5: Article = {
+      id: 5,
+      title: "Microsoft Copilot Integration Transforms Enterprise Workflows",
+      slug: "microsoft-copilot-enterprise",
+      excerpt: "Microsoft's Copilot AI integration across Office 365 and Azure services is revolutionizing how enterprises approach productivity and automation.",
+      content: `<p>Microsoft Copilot's enterprise integration is transforming business workflows with intelligent automation and productivity enhancements.</p>`,
+      category: "Enterprise",
+      publishedAt: new Date("2024-12-15T16:20:00Z"),
+      readTime: 5,
+      sourceCount: 10,
+      heroImageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
+      authorName: "Enterprise AI Team",
+      authorTitle: "Microsoft Correspondents"
+    };
+
+    const article6: Article = {
+      id: 6,
+      title: "Startup Raises $50M for Revolutionary AI Hardware Architecture",
+      slug: "ai-hardware-startup-funding",
+      excerpt: "A Silicon Valley startup secures major funding to develop next-generation AI chips designed specifically for transformer architectures.",
+      content: `<p>The startup's innovative approach to AI hardware promises significant improvements in performance and energy efficiency for large language models.</p>`,
+      category: "Funding",
+      publishedAt: new Date("2024-12-14T13:10:00Z"),
+      readTime: 3,
+      sourceCount: 5,
+      heroImageUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
+      authorName: "Venture Capital Team",
+      authorTitle: "Startup Correspondents"
+    };
+
+    // Add placeholder data for other articles (we'll only implement the main article fully)
+    [article2, article3, article4, article5, article6].forEach(article => {
+      this.articles.set(article.slug, {
+        article,
+        executiveSummary: { id: article.id, articleId: article.id, points: ["Article summary coming soon"] },
+        timelineItems: [],
+        relatedArticles: [],
+        rawFacts: [],
+        perspectives: []
+      });
+    });
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -227,6 +316,10 @@ export class MemStorage implements IStorage {
 
   async getArticleBySlug(slug: string): Promise<ArticleData | undefined> {
     return this.articles.get(slug);
+  }
+
+  async getAllArticles(): Promise<Article[]> {
+    return Array.from(this.articles.values()).map(articleData => articleData.article);
   }
 }
 

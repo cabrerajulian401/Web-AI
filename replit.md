@@ -97,6 +97,7 @@ The application uses a relational database with the following main entities:
 
 Changelog:
 - July 04, 2025. Initial setup
+- July 04, 2025. Added main feed page with article grid layout, TIMIO News branding, and navigation between feed and article pages
 
 ## User Preferences
 
