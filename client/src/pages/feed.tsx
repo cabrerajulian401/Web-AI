@@ -212,7 +212,7 @@ export default function FeedPage() {
                 href="https://chromewebstore.google.com/detail/timio-chrome-early-access/mkldmejplmgbjobhddcbilhfpcoholjh" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex items-center w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-6 rounded-lg text-left transition-colors duration-200 text-lg"
+                className="flex items-center w-full bg-white hover:bg-gray-50 text-black border-2 border-black font-semibold py-3 px-6 rounded-lg text-left transition-colors duration-200 text-lg"
               >
                 <img 
                   src={chromeIcon} 
