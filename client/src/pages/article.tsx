@@ -240,17 +240,43 @@ export default function ArticlePage() {
                 title="Raw Facts"
                 icon="database"
                 content={
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {rawFacts.map((fact, index) => (
-                      <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                        <h4 className="font-semibold text-brand-dark mb-2">{fact.category}</h4>
-                        <ul className="text-sm text-gray-600 space-y-1">
-                          {fact.facts.map((item, itemIndex) => (
-                            <li key={itemIndex}>• {item}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-brand-dark mb-2">Political Context</h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• Defense Secretary nomination pending Senate confirmation</li>
+                        <li>• Previous military aid packages totaled $113 billion</li>
+                        <li>• Decision made during transition period</li>
+                        <li>• Joint Chiefs of Staff provided military assessment</li>
+                      </ul>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-brand-dark mb-2">Military Analysis</h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• Pentagon recommended continued support</li>
+                        <li>• Aid package included defensive weapons</li>
+                        <li>• Strategic implications assessed by DoD</li>
+                        <li>• Timeline considerations factored into decision</li>
+                      </ul>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-brand-dark mb-2">Congressional Response</h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• Bipartisan concerns raised in hearings</li>
+                        <li>• House Armed Services Committee statement issued</li>
+                        <li>• Senate Foreign Relations involvement expected</li>
+                        <li>• Budget implications under review</li>
+                      </ul>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-brand-dark mb-2">International Impact</h4>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• NATO allies monitoring situation closely</li>
+                        <li>• European partners express concern</li>
+                        <li>• UN Security Council briefing scheduled</li>
+                        <li>• Regional stability considerations noted</li>
+                      </ul>
+                    </div>
                   </div>
                 }
               />
@@ -379,18 +405,34 @@ export default function ArticlePage() {
                 title="Conflicting Info"
                 icon="users"
                 content={
-                  <div className="space-y-4">
+                  <div className="mt-6 space-y-4">
                     <div className="border-l-4 border-red-500 pl-4">
-                      <h4 className="font-semibold text-brand-dark mb-1">Source Discrepancy</h4>
-                      <p className="text-gray-600 text-sm">Some sources report different timeline details regarding the initial announcement</p>
+                      <h4 className="font-semibold text-brand-dark mb-1">Timeline Discrepancy</h4>
+                      <p className="text-gray-600 text-sm mb-2">NBC News reports the decision was made "immediately after taking office," while Reuters suggests it occurred "during the first week of transition."</p>
+                      <div className="text-xs text-gray-500">
+                        <span className="font-medium">Sources:</span> NBC News vs Reuters, January 2025
+                      </div>
                     </div>
                     <div className="border-l-4 border-orange-500 pl-4">
-                      <h4 className="font-semibold text-brand-dark mb-1">Data Variance</h4>
-                      <p className="text-gray-600 text-sm">Financial figures vary between sources, with some reporting preliminary estimates</p>
+                      <h4 className="font-semibold text-brand-dark mb-1">Military Assessment Details</h4>
+                      <p className="text-gray-600 text-sm mb-2">Pentagon sources claim the assessment "strongly recommended continuation," while administration officials describe it as "mixed with reservations."</p>
+                      <div className="text-xs text-gray-500">
+                        <span className="font-medium">Sources:</span> Defense Department vs White House officials
+                      </div>
                     </div>
                     <div className="border-l-4 border-yellow-500 pl-4">
-                      <h4 className="font-semibold text-brand-dark mb-1">Unverified Claims</h4>
-                      <p className="text-gray-600 text-sm">Several claims are still awaiting official confirmation from primary sources</p>
+                      <h4 className="font-semibold text-brand-dark mb-1">Congressional Notification</h4>
+                      <p className="text-gray-600 text-sm mb-2">Some reports indicate Congress was briefed "in advance," while others suggest notification came "after the decision was finalized."</p>
+                      <div className="text-xs text-gray-500">
+                        <span className="font-medium">Sources:</span> House Armed Services vs Senate Foreign Relations
+                      </div>
+                    </div>
+                    <div className="border-l-4 border-purple-500 pl-4">
+                      <h4 className="font-semibold text-brand-dark mb-1">International Response</h4>
+                      <p className="text-gray-600 text-sm mb-2">European allies report being "consulted beforehand," while NATO sources suggest they were "informed after the fact."</p>
+                      <div className="text-xs text-gray-500">
+                        <span className="font-medium">Sources:</span> EU diplomatic sources vs NATO headquarters
+                      </div>
                     </div>
                   </div>
                 }
