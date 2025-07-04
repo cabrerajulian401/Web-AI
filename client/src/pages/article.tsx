@@ -141,7 +141,7 @@ export default function ArticlePage() {
               <nav className="flex items-center space-x-4">
                 <button 
                   onClick={handleBackToFeed}
-                  className="flex items-center text-muted hover:text-brand-blue transition-colors duration-200"
+                  className="flex items-center text-gray-600 hover:text-brand-blue transition-colors duration-200 font-medium"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Feed
