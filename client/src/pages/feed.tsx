@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Clock, TrendingUp, Eye, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import timioLogo from "@assets/App Icon_1751662407764.png";
+import chromeIcon from "@assets/Google_Chrome_Web_Store_icon_2015 (2)_1751671046716.png";
 
 interface FeedArticle {
   id: number;
@@ -202,9 +203,23 @@ export default function FeedPage() {
                 href="https://timio.news" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="block w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 px-8 rounded-lg text-left transition-colors duration-200 text-xl"
+                className="block w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 px-8 rounded-lg text-left transition-colors duration-200 text-2xl"
               >
                 Learn More
+              </a>
+              
+              <a 
+                href="https://chromewebstore.google.com/detail/timio-chrome-early-access/mkldmejplmgbjobhddcbilhfpcoholjh" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-6 rounded-lg text-left transition-colors duration-200 text-lg"
+              >
+                <img 
+                  src={chromeIcon} 
+                  alt="Chrome Web Store" 
+                  className="w-6 h-6 mr-3"
+                />
+                Try the TIMIO Chrome Extension
               </a>
             </div>
           </div>
