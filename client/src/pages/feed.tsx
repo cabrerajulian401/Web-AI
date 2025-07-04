@@ -120,27 +120,27 @@ export default function FeedPage() {
         <div className="flex gap-8">
           {/* Left side - Articles */}
           <div className="flex-1 max-w-4xl">
+            {/* Research Input */}
+            <div className="flex flex-col items-center space-y-4 mb-12">
+              <h2 className="text-3xl font-bold text-gray-800 text-center">Generate your own research report</h2>
+              <div className="relative w-full max-w-2xl">
+                <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Enter a story to research"
+                  className="w-full pl-16 pr-6 py-4 text-xl bg-white border-2 border-gray-300 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 rounded-xl shadow-lg"
+                />
+              </div>
+            </div>
+
             {/* Page Header */}
             <div className="mb-8">
               <h1 className="text-3xl md:text-4xl font-bold text-brand-dark mb-2">
                 Today's Stories
               </h1>
-              <p className="text-lg text-black mb-6">
+              <p className="text-lg text-black">
                 AI Driven Research on popular stories
               </p>
-              
-              {/* Research Input */}
-              <div className="flex flex-col space-y-3 mb-6">
-                <h2 className="text-xl font-bold text-gray-800">Generate your own research report</h2>
-                <div className="relative w-96">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="Enter a story to research"
-                    className="pl-12 pr-4 py-3 text-lg bg-white border-2 border-gray-300 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 rounded-lg shadow-sm"
-                  />
-                </div>
-              </div>
             </div>
 
             {/* Articles Grid */}
