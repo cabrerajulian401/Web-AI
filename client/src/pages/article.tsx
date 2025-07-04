@@ -253,12 +253,99 @@ export default function ArticlePage() {
                 icon="users"
                 content={
                   <div className="space-y-4">
-                    {perspectives.map((perspective, index) => (
-                      <div key={index} className={`border-l-4 border-${perspective.color}-500 pl-4`}>
-                        <h4 className="font-semibold text-brand-dark mb-1">{perspective.viewpoint}</h4>
-                        <p className="text-gray-600 text-sm">{perspective.description}</p>
+                    {/* Activists Perspective */}
+                    <div className="bg-blue-600 rounded-lg overflow-hidden">
+                      <div className="p-4 text-white">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-semibold text-lg">Activists Call for Stronger UN Environmental Rules</h4>
+                          <span className="text-white">▼</span>
+                        </div>
+                        <p className="text-blue-200 text-sm mt-2">Sources: 3</p>
                       </div>
-                    ))}
+                      <div className="bg-gray-800 p-4 text-white">
+                        <p className="mb-4 border-l-4 border-blue-400 pl-4">
+                          The climate crisis requires urgent, coordinated action from the UN to limit emissions before its too late.
+                        </p>
+                        
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-blue-400 text-sm font-medium mb-2">UN ENVIRONMENT PROGRAMME (UNEP)</p>
+                            <p className="italic text-gray-300 mb-2">
+                              "The world is on track for a temperature rise of 2.5°C to 2.9°C...We need to act now...or the impacts will be catastrophic."
+                            </p>
+                            <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm transition-colors">
+                              Read the article
+                            </button>
+                          </div>
+                          
+                          <div>
+                            <p className="text-blue-400 text-sm font-medium mb-2">INTERGOVERNMENTAL PANEL ON CLIMATE CHANGE (IPCC)</p>
+                            <p className="italic text-gray-300 mb-2">
+                              "Limiting warming to 1.5°C will require rapid, far-reaching and unprecedented changes in all aspects of society. The next few years are probably the most important in our history."
+                            </p>
+                            <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm transition-colors">
+                              Read the article
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Moderate Perspective */}
+                    <div className="bg-orange-600 rounded-lg overflow-hidden">
+                      <div className="p-4 text-white">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-semibold text-lg">UN Intervention Necessary, But it Must Be Realistic</h4>
+                          <span className="text-white">▼</span>
+                        </div>
+                        <p className="text-orange-200 text-sm mt-2">Sources: 2</p>
+                      </div>
+                      <div className="bg-gray-800 p-4 text-white">
+                        <p className="mb-4 border-l-4 border-orange-400 pl-4">
+                          The UN should regulate climate change, but current approaches are flawed; reforms should focus on fairer rules, more effective monitoring, and multi-dimensional commitments.
+                        </p>
+                        
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-orange-400 text-sm font-medium mb-2">YALE ENVIRONMENT 360</p>
+                            <p className="italic text-gray-300 mb-2">
+                              "Some analysts say the U.N. methodology on offsets is a wrecking ball that will destroy hopes of achieving genuine net zero... It is 'essentially writing a blank cheque for forested countries intent on continuing to burn fossil fuels.'"
+                            </p>
+                            <button className="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-sm transition-colors">
+                              Read the article
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Critics Perspective */}
+                    <div className="bg-red-600 rounded-lg overflow-hidden">
+                      <div className="p-4 text-white">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-semibold text-lg">Critics Say UN Should Avoid Action on Fossil Fuels</h4>
+                          <span className="text-white">▼</span>
+                        </div>
+                        <p className="text-red-200 text-sm mt-2">Sources: 1</p>
+                      </div>
+                      <div className="bg-gray-800 p-4 text-white">
+                        <p className="mb-4 border-l-4 border-red-400 pl-4">
+                          The UN shouldn't intervene in fossil fuel use; intervention would harm quality of life, economic growth, and energy access, especially in developing nations.
+                        </p>
+                        
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-red-400 text-sm font-medium mb-2">FORBES</p>
+                            <p className="italic text-gray-300 mb-2">
+                              "The UN's proposed restrictions on fossil fuels would deprive billions of affordable energy, which is essential to lifting people out of poverty"
+                            </p>
+                            <button className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm transition-colors">
+                              Read the article
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 }
               />
