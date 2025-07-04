@@ -37,7 +37,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   getArticleBySlug(slug: string): Promise<ArticleData | undefined>;
-  getAllArticles(): Promise<Article[]>;
+  getAllArticles(search?: string, page?: number, limit?: number): Promise<Article[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -475,7 +475,7 @@ export class MemStorage implements IStorage {
     return undefined;
   }
 
-  async getAllArticles(): Promise<Article[]> {
+  async getAllArticles(search?: string, page: number = 1, limit: number = 20): Promise<Article[]> {
     // Check if we need to refresh the RSS feed
     const now = Date.now();
     if (now - this.lastFetchTime > this.cacheDuration || this.rssArticles.length === 0) {
@@ -487,11 +487,32 @@ export class MemStorage implements IStorage {
       } catch (error) {
         console.error('Failed to fetch RSS articles:', error);
         // If RSS fails, return the static articles as fallback
-        return Array.from(this.articles.values()).map(articleData => articleData.article);
+        const staticArticles = Array.from(this.articles.values()).map(articleData => articleData.article);
+        return this.filterAndPaginate(staticArticles, search, page, limit);
       }
     }
     
-    return this.rssArticles;
+    return this.filterAndPaginate(this.rssArticles, search, page, limit);
+  }
+
+  private filterAndPaginate(articles: Article[], search?: string, page: number = 1, limit: number = 20): Article[] {
+    let filteredArticles = articles;
+    
+    // Apply search filter if provided
+    if (search && search.trim()) {
+      const searchLower = search.toLowerCase();
+      filteredArticles = articles.filter(article => 
+        article.title.toLowerCase().includes(searchLower) ||
+        article.excerpt.toLowerCase().includes(searchLower) ||
+        article.category.toLowerCase().includes(searchLower)
+      );
+    }
+    
+    // Apply pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    
+    return filteredArticles.slice(startIndex, endIndex);
   }
 }
 
