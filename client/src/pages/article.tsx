@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Share2, Clock, TrendingUp, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ExpandableSection } from "@/components/ui/expandable-section";
@@ -147,9 +146,6 @@ export default function ArticlePage() {
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Feed
                 </button>
-                <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                  {article.category}
-                </Badge>
               </nav>
             </div>
             
