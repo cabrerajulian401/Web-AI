@@ -40,7 +40,49 @@
   --blue-800: hsl(213, 94%, 68%);
   --green-100: hsl(149, 80%, 90%);
   --green-800: hsl(158, 64%, 52%);
+
+  /* Theme System Variables */
+  --page-bg: rgb(249, 250, 251);
+  --divider-color: rgb(0, 0, 0);
+  --divider-width: 2px;
+  --icon-bg: rgb(0, 0, 0);
+  --border-color: rgb(209, 213, 219);
+  --border-width: 2px;
+  --border-focus-color: rgb(59, 130, 246);
+  --report-card-bg: rgb(255, 255, 255);
+  --report-card-border: rgb(209, 213, 219);
+  --article-card-bg: rgb(255, 255, 255);
+  --article-card-border: rgb(209, 213, 219);
+  --article-card-hover-bg: rgb(249, 250, 251);
+  --sidebar-text-color: rgb(75, 85, 99);
+  --sidebar-bg: rgb(255, 255, 255);
+  --sidebar-border-color: rgb(209, 213, 219);
+  --header-text-color: rgb(17, 24, 39);
+  --headline-text-color: rgb(17, 24, 39);
+  --research-card-header-text-color: rgb(55, 65, 81);
+  --body-text-color: rgb(75, 85, 99);
+  --muted-text-color: rgb(156, 163, 175);
 }
+
+/* Theme System Utility Classes */
+.theme-page-bg { background-color: var(--page-bg); }
+.theme-divider { border-color: var(--divider-color); border-width: var(--divider-width); }
+.theme-icon-bg { background-color: var(--icon-bg); }
+.theme-border { border-color: var(--border-color); border-width: var(--border-width); }
+.theme-border-focus:focus { border-color: var(--border-focus-color); }
+.theme-report-card-bg { background-color: var(--report-card-bg); }
+.theme-report-card-border { border-color: var(--report-card-border); }
+.theme-article-card-bg { background-color: var(--article-card-bg); }
+.theme-article-card-border { border-color: var(--article-card-border); }
+.theme-article-card-hover:hover { background-color: var(--article-card-hover-bg); }
+.theme-sidebar-text { color: var(--sidebar-text-color); }
+.theme-sidebar-bg { background-color: var(--sidebar-bg); }
+.theme-sidebar-border { border-color: var(--sidebar-border-color); }
+.theme-header-text { color: var(--header-text-color); }
+.theme-headline-text { color: var(--headline-text-color); }
+.theme-research-card-header-text { color: var(--research-card-header-text-color); }
+.theme-body-text { color: var(--body-text-color); }
+.theme-muted-text { color: var(--muted-text-color); }
 
 .dark {
   --background: hsl(240, 10%, 3.9%);
