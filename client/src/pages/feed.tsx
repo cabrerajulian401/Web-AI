@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Clock, TrendingUp, Eye, ArrowRight, Search } from "lucide-react";
 import { Link } from "wouter";
-import { useState } from "react";
+
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import chromeIcon from "@assets/Google_Chrome_Web_Store_icon_2015 (2)_1751671046716.png";
 
@@ -24,16 +24,9 @@ interface FeedArticle {
 }
 
 export default function FeedPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  
   const { data: articles, isLoading } = useQuery<FeedArticle[]>({
     queryKey: ['/api/feed'],
   });
-
-  const filteredArticles = articles?.filter(article => 
-    article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    article.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
 
   if (isLoading) {
     return (
@@ -113,33 +106,21 @@ export default function FeedPage() {
               </div>
             </div>
             
-            <div className="flex flex-col items-end space-y-3">
-              <div className="flex flex-col items-end space-y-2">
-                <span className="text-sm font-medium text-gray-700">Generate your own research report</span>
-                <div className="relative w-80">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <div className="flex items-center space-x-6">
+              <div className="flex flex-col space-y-3">
+                <h2 className="text-xl font-bold text-gray-800">Generate your own research report</h2>
+                <div className="relative w-96">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
                     type="text"
                     placeholder="Enter a story to research"
-                    className="pl-10 bg-gray-50 border-gray-200 focus:border-brand-blue"
+                    className="pl-12 pr-4 py-3 text-lg bg-white border-2 border-gray-300 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 rounded-lg shadow-sm"
                   />
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="relative w-80">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="Search articles..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-gray-50 border-gray-200 focus:border-brand-blue"
-                  />
-                </div>
-                <Badge variant="secondary" className="bg-brand-blue text-white">
-                  Live
-                </Badge>
-              </div>
+              <Badge variant="secondary" className="bg-brand-blue text-white px-3 py-1">
+                Live
+              </Badge>
             </div>
           </div>
         </div>
@@ -162,7 +143,7 @@ export default function FeedPage() {
 
             {/* Articles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredArticles.map((article) => (
+              {articles?.map((article) => (
                 <Link key={article.id} href={`/article/${article.slug}`}>
                   <Card className="shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer group overflow-hidden h-full">
                     {/* Article Image */}
@@ -213,15 +194,6 @@ export default function FeedPage() {
             </div>
 
             {/* Empty State */}
-            {filteredArticles.length === 0 && articles && articles.length > 0 && (
-              <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
-                  <Search className="h-16 w-16 mx-auto" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No articles match your search</h3>
-                <p className="text-gray-600">Try different keywords or browse all articles.</p>
-              </div>
-            )}
             {articles && articles.length === 0 && (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
