@@ -124,7 +124,7 @@ export default function FeedPage() {
             {/* Page Header */}
             <div className="mb-8">
               <h1 className="text-3xl md:text-4xl font-bold text-brand-dark mb-2">
-                Latest AI News
+                Today's Stories
               </h1>
               <p className="text-lg text-muted">
                 Stay informed with the latest developments in artificial intelligence
