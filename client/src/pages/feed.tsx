@@ -148,8 +148,8 @@ export default function FeedPage() {
                     </div>
 
                     {/* Article Content */}
-                    <CardContent className="p-6 flex flex-col flex-grow">
-                      <h3 className="text-xl font-semibold text-brand-dark mb-3 line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
+                    <CardContent className="p-4 flex flex-col flex-grow">
+                      <h3 className="text-xl font-semibold text-brand-dark mb-2 line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
                         {article.title}
                       </h3>
                       <p className="text-black mb-4 line-clamp-3 flex-grow">

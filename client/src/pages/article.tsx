@@ -203,7 +203,7 @@ export default function ArticlePage() {
                 </div>
 
                 {/* Hero Image */}
-                <div className="mb-8">
+                <div className="mb-4">
                   <img 
                     src={article.heroImageUrl}
                     alt={article.title}
@@ -219,7 +219,7 @@ export default function ArticlePage() {
                 </div>
 
                 {/* Executive Summary */}
-                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg mb-8">
+                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg mb-4">
                   <h2 className="text-xl font-semibold text-brand-dark mb-4 flex items-center">
                     <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center mr-3">
                       <img 
