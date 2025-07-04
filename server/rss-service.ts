@@ -33,6 +33,7 @@ export class RSSService {
   async fetchArticles(): Promise<Article[]> {
     try {
       const feed = await this.parser.parseURL(this.feedUrl);
+
       
       return feed.items.map((item: RSSItem, index: number) => {
         // Extract a clean title
@@ -44,8 +45,16 @@ export class RSSService {
         // Extract excerpt from content or contentSnippet
         const excerpt = this.extractExcerpt(item.contentSnippet || item.content || '');
         
-        // Try to extract image URL from multiple sources
-        const heroImageUrl = this.extractImageUrl(item.content || '', item) || this.getDefaultImage();
+        // Try to get image from RSS content first, then from source domain, then default
+        let heroImageUrl = this.extractImageUrl(item.content || '', item);
+        
+        if (!heroImageUrl && item.link) {
+          heroImageUrl = this.getImageBasedOnSource(item.link);
+        }
+        
+        if (!heroImageUrl) {
+          heroImageUrl = this.getDefaultImage();
+        }
         
         // Parse date
         const publishedAt = item.pubDate ? new Date(item.pubDate) : new Date();
@@ -179,6 +188,43 @@ export class RSSService {
              url.includes('thumbnail');
     } catch {
       return false;
+    }
+  }
+
+
+
+  private getImageBasedOnSource(url: string): string | null {
+    try {
+      const domain = new URL(url).hostname.toLowerCase();
+      
+      // Map common news sources to their typical social media images
+      const sourceImages: { [key: string]: string } = {
+        'cnn.com': 'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&h=400&fit=crop',
+        'bbc.com': 'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&h=400&fit=crop',
+        'reuters.com': 'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&h=400&fit=crop',
+        'techcrunch.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
+        'theverge.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
+        'wired.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
+        'arstechnica.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
+        'venturebeat.com': 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop',
+        'openai.com': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop',
+        'anthropic.com': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop',
+        'google.com': 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&h=400&fit=crop',
+        'microsoft.com': 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&h=400&fit=crop',
+        'meta.com': 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&h=400&fit=crop',
+        'facebook.com': 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&h=400&fit=crop'
+      };
+      
+      // Check if we have a specific image for this domain
+      for (const [sourceDomain, imageUrl] of Object.entries(sourceImages)) {
+        if (domain.includes(sourceDomain)) {
+          return imageUrl;
+        }
+      }
+      
+      return null;
+    } catch {
+      return null;
     }
   }
 
