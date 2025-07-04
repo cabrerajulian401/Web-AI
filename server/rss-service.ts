@@ -1,5 +1,7 @@
 import Parser from 'rss-parser';
 import type { Article } from '@shared/schema';
+import fetch from 'node-fetch';
+import * as cheerio from 'cheerio';
 
 interface RSSItem {
   title?: string;
@@ -45,18 +47,15 @@ export class RSSService {
         // Extract excerpt from content or contentSnippet
         const excerpt = this.extractExcerpt(item.contentSnippet || item.content || '');
         
-        // Try to get image from RSS content first, then from title, then URL domain, then default
+        // Try to get image from RSS content first, then from actual article URL
         let heroImageUrl = this.extractImageUrl(item.content || '', item);
         
-        // Try to get image based on the source mentioned in the title (prioritized for Google Alerts)
-        if (!heroImageUrl) {
-          heroImageUrl = this.getImageFromTitle(title);
-        }
-        
+        // Try to scrape image from the actual article URL (best quality)
         if (!heroImageUrl && item.link) {
-          heroImageUrl = this.getImageBasedOnSource(item.link);
+          heroImageUrl = await this.scrapeImageFromUrl(item.link);
         }
         
+        // If scraping fails, use our placeholder
         if (!heroImageUrl) {
           heroImageUrl = this.getDefaultImage();
         }
