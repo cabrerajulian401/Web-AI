@@ -32,10 +32,10 @@ export default function FeedPage() {
         <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <div className="flex items-center space-x-3">
-                <Skeleton className="h-8 w-8" />
+              <div className="flex items-center space-x-4">
+                <Skeleton className="h-12 w-12" />
                 <div>
-                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-8 w-40" />
                 </div>
               </div>
               
@@ -94,14 +94,14 @@ export default function FeedPage() {
       <header className="bg-white border-b border-light sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <img 
                 src={timioLogo} 
                 alt="TIMIO Logo" 
-                className="w-8 h-8"
+                className="w-12 h-12"
               />
               <div>
-                <h1 className="text-lg font-bold text-brand-dark">TIMIO News</h1>
+                <h1 className="text-2xl font-bold text-brand-dark">TIMIO News</h1>
               </div>
             </div>
             
@@ -124,7 +124,7 @@ export default function FeedPage() {
               <h1 className="text-3xl md:text-4xl font-bold text-brand-dark mb-2">
                 Today's Stories
               </h1>
-              <p className="text-lg text-muted">
+              <p className="text-lg text-black">
                 Stay informed with the latest developments in artificial intelligence
               </p>
             </div>
