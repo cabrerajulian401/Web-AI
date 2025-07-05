@@ -168,26 +168,24 @@ export default function ArticlePage() {
                   </div>
                 </div>
 
-                {/* Executive Summary */}
-                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg">
-                  <h2 className="text-xl font-semibold text-brand-dark mb-4 flex items-center">
-                    <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center mr-3">
-                      <img 
-                        src={execSummaryIcon} 
-                        alt="Executive Summary" 
-                        className="h-7 w-7 object-contain"
-                      />
-                    </div>
-                    Executive Summary
-                  </h2>
-                  <ul className="space-y-3">
-                    {executiveSummary.points.map((point, index) => (
-                      <li key={index} className="flex items-start">
-                        <div className="h-2 w-2 bg-brand-blue rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">{point}</span>
-                      </li>
-                    ))}
-                  </ul>
+                {/* Executive Summary - Collapsible */}
+                <div className="p-6">
+                  <ExpandableSection
+                    title="Executive Summary"
+                    icon="users"
+                    customIcon={execSummaryIcon}
+                    defaultOpen={true}
+                    content={
+                      <ul className="space-y-3">
+                        {executiveSummary.points.map((point, index) => (
+                          <li key={index} className="flex items-start">
+                            <div className="h-2 w-2 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0" />
+                            <span className="text-gray-700">{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    }
+                  />
                 </div>
               </CardContent>
             </Card>

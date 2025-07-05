@@ -242,11 +242,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       points: [
         "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2025",
         "Bill includes permanent tax cuts, especially benefiting businesses and high earners",
-        "Largest reductions to Medicaid, SNAP, and ACA since their creation",
-        "Estimated 12 million could lose health insurance by 2034 (CBO)",
-        "Work requirements for Medicaid and SNAP expanded",
-        "Bill passed on strict party lines, with only two House Republicans voting no",
-        "Massive lobbying and advertising campaigns preceded the vote",
+        "Large reductions to Medicaid, SNAP, and ACA; millions may lose insurance",
+        "Massive funding boost for border enforcement, ICE, and defense",
         "Protests and political backlash began immediately after passage"
       ]
     };

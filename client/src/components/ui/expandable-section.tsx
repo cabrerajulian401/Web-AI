@@ -7,10 +7,11 @@ interface ExpandableSectionProps {
   icon: "database" | "users" | "conflict" | "pivot";
   content: React.ReactNode;
   customIcon?: string;
+  defaultOpen?: boolean;
 }
 
-export function ExpandableSection({ title, icon, content, customIcon }: ExpandableSectionProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function ExpandableSection({ title, icon, content, customIcon, defaultOpen = false }: ExpandableSectionProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   const renderIcon = () => {
     if (customIcon) {
