@@ -38,7 +38,7 @@ export default function FeedPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <header className="theme-article-card-bg shadow-sm border-b-2 theme-divider">
+        <header className="theme-header-bg shadow-sm border-b-2 theme-divider">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-32">
               <div className="flex items-center space-x-4">
@@ -98,7 +98,7 @@ export default function FeedPage() {
   return (
     <div className="min-h-screen theme-page-bg">
       {/* Header */}
-      <header className="theme-article-card-bg shadow-sm border-b-2 theme-divider">
+      <header className="theme-header-bg shadow-sm border-b-2 theme-divider">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-32">
             <div className="flex items-center space-x-4">

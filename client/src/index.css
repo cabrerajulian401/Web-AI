@@ -78,6 +78,7 @@
 .theme-sidebar-text { color: var(--sidebar-text-color); }
 .theme-sidebar-bg { background-color: var(--sidebar-bg); }
 .theme-sidebar-border { border-color: var(--sidebar-border-color); }
+.theme-header-bg { background-color: var(--header-bg); }
 .theme-header-text { color: var(--header-text-color); }
 .theme-headline-text { color: var(--headline-text-color); }
 .theme-research-card-header-text { color: var(--research-card-header-text-color); }

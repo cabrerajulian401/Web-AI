@@ -28,6 +28,9 @@ export interface ThemeConfig {
   sidebarBackground: string;
   sidebarBorderColor: string;
   
+  // Header
+  headerBackground: string;
+  
   // Text colors
   headerTextColor: string;
   headlineTextColor: string;
@@ -69,6 +72,9 @@ export const defaultTheme: ThemeConfig = {
   sidebarBackground: 'transparent',
   sidebarBorderColor: 'transparent',
   
+  // Header
+  headerBackground: 'rgb(255, 255, 255)', // white
+  
   // Text colors
   headerTextColor: 'rgb(17, 24, 39)', // gray-900
   headlineTextColor: 'rgb(17, 24, 39)', // gray-900
@@ -96,6 +102,7 @@ export const darkTheme: ThemeConfig = {
   sidebarTextColor: 'rgb(209, 213, 219)', // gray-300
   sidebarBackground: 'transparent',
   sidebarBorderColor: 'transparent',
+  headerBackground: 'rgb(31, 41, 55)', // gray-800
   headerTextColor: 'rgb(255, 255, 255)', // white
   headlineTextColor: 'rgb(255, 255, 255)', // white
   researchCardHeaderTextColor: 'rgb(209, 213, 219)', // gray-300
@@ -121,7 +128,8 @@ export const blueTheme: ThemeConfig = {
   sidebarTextColor: 'rgb(30, 64, 175)', // blue-800
   sidebarBackground: 'transparent',
   sidebarBorderColor: 'transparent',
-  headerTextColor: 'rgb(30, 58, 138)', // blue-900
+  headerBackground: 'rgb(37, 99, 235)', // blue-600
+  headerTextColor: 'rgb(255, 255, 255)', // white for header text
   headlineTextColor: 'rgb(30, 58, 138)', // blue-900
   researchCardHeaderTextColor: 'rgb(37, 99, 235)', // blue-600
   bodyTextColor: 'rgb(30, 64, 175)', // blue-800
@@ -146,6 +154,7 @@ export const navyTheme: ThemeConfig = {
   sidebarTextColor: 'rgb(255, 255, 255)', // white
   sidebarBackground: 'transparent',
   sidebarBorderColor: 'transparent',
+  headerBackground: 'rgb(22, 32, 67)', // #162043
   headerTextColor: 'rgb(255, 255, 255)', // white for header text
   headlineTextColor: 'rgb(17, 24, 39)', // black for card headlines
   researchCardHeaderTextColor: 'rgb(17, 24, 39)', // black for card headers
@@ -187,6 +196,7 @@ export class ThemeManager {
     root.style.setProperty('--sidebar-text-color', this.currentTheme.sidebarTextColor);
     root.style.setProperty('--sidebar-bg', this.currentTheme.sidebarBackground);
     root.style.setProperty('--sidebar-border-color', this.currentTheme.sidebarBorderColor);
+    root.style.setProperty('--header-bg', this.currentTheme.headerBackground);
     root.style.setProperty('--header-text-color', this.currentTheme.headerTextColor);
     root.style.setProperty('--headline-text-color', this.currentTheme.headlineTextColor);
     root.style.setProperty('--research-card-header-text-color', this.currentTheme.researchCardHeaderTextColor);

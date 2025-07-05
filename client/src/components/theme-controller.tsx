@@ -251,7 +251,12 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
             </div>
 
             <div className="space-y-3">
-              <h3 className="font-medium text-sm text-gray-700">Sidebar</h3>
+              <h3 className="font-medium text-sm text-gray-700">Header & Sidebar</h3>
+              <ColorInput 
+                label="Header Background" 
+                property="headerBackground" 
+                value={workingTheme.headerBackground} 
+              />
               <ColorInput 
                 label="Sidebar Background" 
                 property="sidebarBackground" 
