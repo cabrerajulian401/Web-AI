@@ -48,16 +48,8 @@ export class RSSService {
     try {
       console.log('Fetching recent trending US political news from newsdata.io...');
       
-      // Recent trending US Political keywords for current events
-      const politicalKeywords = [
-        'breaking political news', 'trending politics', 'latest Congress', 'recent Senate vote',
-        'Biden news today', 'Trump latest', 'White House breaking', 'Capitol Hill today',
-        'political breaking news', 'election news', 'campaign update', 'primary results',
-        'House vote today', 'Senate hearing', 'Supreme Court decision', 'federal court ruling',
-        'political scandal', 'controversy', 'investigation', 'committee vote',
-        'gubernatorial race', 'mayoral election', 'political rally', 'campaign trail',
-        'policy announcement', 'executive order', 'political statement', 'press conference'
-      ].join(' OR ');
+      // Simplified US Political keywords for current events
+      const politicalKeywords = 'Trump OR Biden OR Congress OR Senate OR House OR politics OR election OR campaign OR White House';
       
       const response = await fetch(
         `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&country=us&size=20&prioritydomain=top`
