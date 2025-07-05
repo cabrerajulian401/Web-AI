@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Share2, Clock, TrendingUp, Eye, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, Share2, Clock, TrendingUp, Eye, ChevronDown, ChevronUp, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ExpandableSection } from "@/components/ui/expandable-section";
 import { Timeline } from "@/components/ui/timeline";
 import { RelatedArticles } from "@/components/ui/related-articles";
+import { ThemeController } from "@/components/theme-controller";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { useState } from "react";
@@ -27,6 +28,7 @@ interface ArticleData {
 export default function ArticlePage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const [showThemeController, setShowThemeController] = useState(false);
   
   // State for collapsible perspectives
   const [activistExpanded, setActivistExpanded] = useState(false);
@@ -165,6 +167,15 @@ export default function ArticlePage() {
                 <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowThemeController(!showThemeController)}
+                  className="flex items-center gap-2"
+                >
+                  <Settings className="h-4 w-4" />
+                  Theme
                 </Button>
               </div>
             </div>
@@ -485,6 +496,23 @@ export default function ArticlePage() {
           </div>
         </div>
       </main>
+      
+      {/* Theme Controller */}
+      {showThemeController && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative">
+            <ThemeController />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowThemeController(false)}
+              className="absolute -top-2 -right-2 rounded-full p-2 bg-white shadow-lg"
+            >
+              ×
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

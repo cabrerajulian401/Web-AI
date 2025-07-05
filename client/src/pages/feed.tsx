@@ -3,8 +3,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { Clock, TrendingUp, Eye, ArrowRight, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Clock, TrendingUp, Eye, ArrowRight, Search, Settings } from "lucide-react";
 import { Link } from "wouter";
+import { ThemeController } from "@/components/theme-controller";
+import { useState } from "react";
 
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import chromeIcon from "@assets/Google_Chrome_Web_Store_icon_2015 (2)_1751671046716.png";
@@ -27,6 +30,7 @@ export default function FeedPage() {
   const { data: articles, isLoading } = useQuery<FeedArticle[]>({
     queryKey: ['/api/feed'],
   });
+  const [showThemeController, setShowThemeController] = useState(false);
 
   if (isLoading) {
     return (
@@ -43,6 +47,7 @@ export default function FeedPage() {
               </div>
               
               <div className="flex items-center space-x-4">
+                <Skeleton className="h-10 w-20" />
                 <Skeleton className="h-10 w-20" />
               </div>
             </div>
@@ -110,6 +115,15 @@ export default function FeedPage() {
               <Badge variant="secondary" className="bg-brand-blue text-white px-3 py-1">
                 Live
               </Badge>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowThemeController(!showThemeController)}
+                className="flex items-center gap-2"
+              >
+                <Settings className="h-4 w-4" />
+                Theme
+              </Button>
             </div>
           </div>
         </div>
@@ -241,6 +255,23 @@ export default function FeedPage() {
           </div>
         </div>
       </main>
+      
+      {/* Theme Controller */}
+      {showThemeController && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative">
+            <ThemeController />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowThemeController(false)}
+              className="absolute -top-2 -right-2 rounded-full p-2 bg-white shadow-lg"
+            >
+              ×
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
