@@ -34,7 +34,7 @@ export function ExpandableSection({ title, icon, content, customIcon }: Expandab
   };
 
   return (
-    <Card className="bg-white border border-gray-200 shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden">
+    <Card className="bg-white border-2 border-gray-200 shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full p-6 text-left hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
@@ -51,7 +51,7 @@ export function ExpandableSection({ title, icon, content, customIcon }: Expandab
       </button>
       
       {isOpen && (
-        <CardContent className="p-6 pt-0 theme-divider border-t animate-slide-up">
+        <CardContent className="p-6 pt-0 bg-transparent border-t border-gray-200 animate-slide-up">
           {content}
         </CardContent>
       )}
