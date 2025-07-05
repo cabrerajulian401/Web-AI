@@ -204,6 +204,13 @@ export class RSSService {
               const hasExcludedContent = excludeKeywords.some(keyword => articleText.includes(keyword));
               
               if (hasStrongUSIndicator && !hasExcludedContent) {
+                // Log image availability for debugging
+                if (article.image) {
+                  console.log(`Article "${article.title}" has image: ${article.image}`);
+                } else {
+                  console.log(`Article "${article.title}" has no image, using placeholder`);
+                }
+                
                 const individualArticle: Article = {
                   id: articleId++,
                   title: this.cleanTitle(article.title),
@@ -319,7 +326,7 @@ export class RSSService {
 
   private getDefaultImage(): string {
     // Use the provided placeholder image
-    return '/placeholder_1751663094502.jpg';
+    return '/assets/placeholder_1751663094502.jpg';
   }
 
   private estimateReadTime(content: string): number {
