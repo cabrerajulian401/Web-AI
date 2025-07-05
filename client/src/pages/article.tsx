@@ -223,12 +223,7 @@ export default function ArticlePage() {
                   />
                 </div>
 
-                {/* Article Content */}
-                <div className="prose prose-lg max-w-none mb-8">
-                  <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                    OpenAI has officially announced GPT-5. The new model demonstrates remarkable improvements in logical reasoning, problem-solving, and chain-of-thought that could revolutionize how AI systems approach problem-solving .
-                  </p>
-                </div>
+
 
                 {/* Executive Summary */}
                 <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg mb-4">
