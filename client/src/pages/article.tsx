@@ -139,47 +139,6 @@ export default function ArticlePage() {
             {/* Combined Header and Article Hero */}
             <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
               <CardContent className="p-0">
-                {/* Header Section */}
-                <div className="theme-header-bg p-6 border-b theme-divider">
-                  <div className="flex items-center justify-between">
-                    {/* Logo, Brand and Back Button */}
-                    <div className="flex flex-col space-y-1">
-                      <div className="flex items-center space-x-3">
-                        <img 
-                          src={timioLogo} 
-                          alt="TIMIO News" 
-                          className="h-8 w-8 rounded-lg"
-                        />
-                        <div>
-                          <span className="text-xl font-bold theme-header-text">TIMIO News</span>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={handleBackToFeed}
-                        className="flex items-center theme-muted-text hover:text-brand-blue transition-colors duration-200 font-medium text-sm"
-                      >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back
-                      </button>
-                    </div>
-                    
-                    <div className="flex items-center space-x-4">
-                      <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
-                        <Share2 className="h-4 w-4 mr-2" />
-                        Share
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setShowThemeController(!showThemeController)}
-                        className="flex items-center gap-2"
-                      >
-                        <Settings className="h-4 w-4" />
-                        Theme
-                      </Button>
-                    </div>
-                  </div>
-                </div>
                 {/* Hero Image with Overlay */}
                 <div className="relative overflow-hidden">
                   <img 
@@ -190,8 +149,40 @@ export default function ArticlePage() {
                   {/* Semitransparent mask */}
                   <div className="absolute inset-0 bg-black bg-opacity-40"></div>
                   
+                  {/* Action buttons positioned in top-right corner */}
+                  <div className="absolute top-4 right-4 flex items-center space-x-3">
+                    <button 
+                      onClick={handleBackToFeed}
+                      className="flex items-center bg-black bg-opacity-50 hover:bg-opacity-70 text-white px-3 py-2 rounded-lg transition-colors duration-200 font-medium text-sm"
+                    >
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Back
+                    </button>
+                    <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Share
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowThemeController(!showThemeController)}
+                      className="flex items-center gap-2 bg-white bg-opacity-90 hover:bg-opacity-100"
+                    >
+                      <Settings className="h-4 w-4" />
+                      Theme
+                    </Button>
+                  </div>
+                  
                   {/* Headline overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <img 
+                        src={timioLogo} 
+                        alt="TIMIO News" 
+                        className="h-6 w-6 rounded-lg"
+                      />
+                      <span className="text-lg font-bold text-white">TIMIO News</span>
+                    </div>
                     <p className="text-xl font-bold text-blue-300 mb-3 tracking-wide">RESEARCH REPORT</p>
                     <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
                       {article.title}
