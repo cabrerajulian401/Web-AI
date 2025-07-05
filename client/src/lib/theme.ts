@@ -77,13 +77,13 @@ export const defaultTheme: ThemeConfig = {
   headerBackground: 'rgb(255, 255, 255)', // white
   
   // Text colors
-  headerTextColor: 'rgb(17, 24, 39)', // gray-900
+  headerTextColor: 'rgb(0, 0, 0)', // black
   headlineTextColor: 'rgb(17, 24, 39)', // gray-900
   researchCardHeaderTextColor: 'rgb(55, 65, 81)', // gray-700
   bodyTextColor: 'rgb(75, 85, 99)', // gray-600
   mutedTextColor: 'rgb(156, 163, 175)', // gray-400
   researchPromptTextColor: 'rgb(17, 24, 39)', // gray-900
-  researchReportLabelColor: 'rgb(107, 114, 128)', // gray-500
+  researchReportLabelColor: 'rgb(59, 130, 246)', // blue-500
   taglineTextColor: 'rgb(31, 41, 55)', // gray-800 - darker on default
 };
 
@@ -105,13 +105,13 @@ export const darkTheme: ThemeConfig = {
   sidebarBackground: 'transparent',
   sidebarBorderColor: 'transparent',
   headerBackground: 'rgb(31, 41, 55)', // gray-800
-  headerTextColor: 'rgb(255, 255, 255)', // white
+  headerTextColor: 'rgb(0, 0, 0)', // black
   headlineTextColor: 'rgb(255, 255, 255)', // white
   researchCardHeaderTextColor: 'rgb(209, 213, 219)', // gray-300
   bodyTextColor: 'rgb(156, 163, 175)', // gray-400
   mutedTextColor: 'rgb(107, 114, 128)', // gray-500
   researchPromptTextColor: 'rgb(255, 255, 255)', // white
-  researchReportLabelColor: 'rgb(209, 213, 219)', // gray-300
+  researchReportLabelColor: 'rgb(59, 130, 246)', // blue-500
   taglineTextColor: 'rgb(209, 213, 219)', // gray-300
 };
 
@@ -132,13 +132,13 @@ export const blueTheme: ThemeConfig = {
   sidebarBackground: 'transparent',
   sidebarBorderColor: 'transparent',
   headerBackground: 'rgb(37, 99, 235)', // blue-600
-  headerTextColor: 'rgb(255, 255, 255)', // white for header text
+  headerTextColor: 'rgb(0, 0, 0)', // black
   headlineTextColor: 'rgb(30, 58, 138)', // blue-900
   researchCardHeaderTextColor: 'rgb(37, 99, 235)', // blue-600
   bodyTextColor: 'rgb(30, 64, 175)', // blue-800
   mutedTextColor: 'rgb(96, 165, 250)', // blue-400
   researchPromptTextColor: 'rgb(30, 58, 138)', // blue-900
-  researchReportLabelColor: 'rgb(37, 99, 235)', // blue-600
+  researchReportLabelColor: 'rgb(59, 130, 246)', // blue-500
   taglineTextColor: 'rgb(30, 58, 138)', // blue-900
 };
 
@@ -159,13 +159,13 @@ export const navyTheme: ThemeConfig = {
   sidebarBackground: 'transparent',
   sidebarBorderColor: 'transparent',
   headerBackground: 'rgb(22, 32, 67)', // #162043
-  headerTextColor: 'rgb(255, 255, 255)', // white for header text
+  headerTextColor: 'rgb(0, 0, 0)', // black
   headlineTextColor: 'rgb(17, 24, 39)', // black for card headlines
   researchCardHeaderTextColor: 'rgb(17, 24, 39)', // black for card headers
   bodyTextColor: 'rgb(55, 65, 81)', // dark gray for card body text
   mutedTextColor: 'rgb(107, 114, 128)', // muted gray for card meta text
   researchPromptTextColor: 'rgb(255, 255, 255)', // white for main research prompt
-  researchReportLabelColor: 'rgb(107, 114, 128)', // muted gray for card labels
+  researchReportLabelColor: 'rgb(59, 130, 246)', // blue-500
   taglineTextColor: 'rgb(255, 255, 255)', // white on navy theme
 };
 
