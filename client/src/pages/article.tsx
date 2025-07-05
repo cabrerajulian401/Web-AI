@@ -199,21 +199,48 @@ export default function ArticlePage() {
                 icon="database"
                 content={
                   <div className="mt-6">
-                    {rawFacts.map((factGroup, groupIndex) => (
-                      <div key={groupIndex} className="mb-8">
-                        <h4 className="text-lg font-semibold text-gray-900 mb-4 border-b-2 border-gray-200 pb-2">
-                          {factGroup.category}
-                        </h4>
-                        <ul className="text-base text-gray-800 space-y-3">
-                          {factGroup.facts.map((fact, factIndex) => (
-                            <li key={factIndex} className="flex items-start">
-                              <input type="checkbox" checked readOnly className="mt-1.5 mr-4 flex-shrink-0 w-4 h-4 accent-blue-600" />
-                              <span className="leading-relaxed">{fact}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+                    {rawFacts.map((factGroup, groupIndex) => {
+                      const categoryIcons = {
+                        "Legislative": "📋",
+                        "Financial Impact": "💰",
+                        "Voting Record": "🗳️"
+                      };
+                      
+                      const categoryColors = {
+                        "Legislative": "bg-blue-50 border-blue-200",
+                        "Financial Impact": "bg-green-50 border-green-200", 
+                        "Voting Record": "bg-purple-50 border-purple-200"
+                      };
+                      
+                      const headerColors = {
+                        "Legislative": "bg-blue-600 text-white",
+                        "Financial Impact": "bg-green-600 text-white",
+                        "Voting Record": "bg-purple-600 text-white"
+                      };
+                      
+                      const categoryIcon = categoryIcons[factGroup.category as keyof typeof categoryIcons] || "📊";
+                      const categoryColor = categoryColors[factGroup.category as keyof typeof categoryColors] || "bg-gray-50 border-gray-200";
+                      const headerColor = headerColors[factGroup.category as keyof typeof headerColors] || "bg-gray-600 text-white";
+                      
+                      return (
+                        <div key={groupIndex} className={`mb-6 rounded-lg border-2 ${categoryColor} overflow-hidden shadow-sm`}>
+                          <div className={`${headerColor} px-4 py-3 flex items-center`}>
+                            <span className="text-lg mr-3">{categoryIcon}</span>
+                            <h4 className="text-lg font-bold">{factGroup.category}</h4>
+                          </div>
+                          <div className="p-4">
+                            <ul className="space-y-4">
+                              {factGroup.facts.map((fact, factIndex) => (
+                                <li key={factIndex} className="flex items-start bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
+                                  <div className="mt-1.5 mr-4 flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full"></div>
+                                  <span className="leading-relaxed text-gray-800 font-medium">{fact}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 }
               />
