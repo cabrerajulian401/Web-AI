@@ -104,18 +104,18 @@ export class RSSService {
     try {
       console.log('Fetching recent trending US political events from NewsAPI.ai Event Registry...');
       
-      // NewsAPI.ai Event Registry parameters for US political events
+      // NewsAPI.ai Event Registry parameters - broader search then filter for US politics
       const requestBody = {
         action: 'getEvents',
-        keyword: 'biden OR trump OR congress OR senate OR "white house"',
-        lang: 'eng',
+        keyword: 'politics',
+        lang: 'eng', 
         eventsSortBy: 'date',
-        eventsCount: 15,
+        eventsCount: 50,
         includeEventTitle: true,
         includeEventSummary: true,
         includeEventArticleCounts: true,
         includeEventArticles: true,
-        eventArticlesCount: 2,
+        eventArticlesCount: 1,
         apiKey: this.apiKey
       };
       

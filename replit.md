@@ -109,6 +109,7 @@ Changelog:
 - July 05, 2025. Separated header background from card background colors in theme system, implemented navy theme header with #162043 color, removed black borders from research cards, converted header borders to clean dividers using absolute positioning
 - July 05, 2025. Switched from Google News RSS to newsdata.io API for recent trending US political news, implemented breaking news keywords (trending politics, latest Congress, Biden news today, Trump latest, etc.), added 24-hour timeframe filter for recent events, updated sample data with current political developments like Speaker challenges, legal cases, campaign updates, and congressional investigations
 - July 05, 2025. Enhanced US political events filtering system with improved keyword matching for US political content, implemented hybrid approach combining API results with sample data when API returns limited diversity, added duplicate detection based on article titles, and created robust fallback system ensuring minimum 7 diverse US political articles are always available
+- July 05, 2025. Successfully migrated from newsdata.io to NewsAPI.ai Event Registry for superior political events data. Implemented broader search strategy fetching 50 global political events then filtering for US-related content using keywords like 'trump', 'biden', 'congress', 'washington'. System now returns 21 diverse political articles including Trump administration updates, trade relations, congressional activities, and international political developments affecting the US
 
 ## User Preferences
 
