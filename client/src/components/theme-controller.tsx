@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DraggableColorPicker } from '@/components/ui/draggable-color-picker';
 import { Palette, RotateCcw, Move, X } from 'lucide-react';
 import { ThemeConfig, defaultTheme } from '@/lib/theme';
 
@@ -83,24 +84,11 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
     property: keyof ThemeConfig; 
     value: string; 
   }) => (
-    <div className="space-y-2">
-      <Label className="text-sm font-medium">{label}</Label>
-      <div className="flex gap-2">
-        <Input
-          type="color"
-          value={value.includes('rgb') ? rgbToHex(value) : value}
-          onChange={(e) => handleColorChange(property, e.target.value)}
-          className="w-16 h-8 p-1 border rounded"
-        />
-        <Input
-          type="text"
-          value={value}
-          onChange={(e) => handleColorChange(property, e.target.value)}
-          className="flex-1 text-xs font-mono"
-          placeholder="Color value"
-        />
-      </div>
-    </div>
+    <DraggableColorPicker
+      label={label}
+      value={value}
+      onChange={(color) => handleColorChange(property, color)}
+    />
   );
 
   return (
@@ -249,18 +237,6 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
       </div>
     </Card>
   );
-}
-
-// Helper function to convert RGB to hex for color input
-function rgbToHex(rgb: string): string {
-  const match = rgb.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-  if (!match) return rgb;
-  
-  const r = parseInt(match[1]);
-  const g = parseInt(match[2]);
-  const b = parseInt(match[3]);
-  
-  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
 
 // Development-only theme controller (shows only in development)
