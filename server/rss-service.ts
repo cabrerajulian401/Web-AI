@@ -46,31 +46,31 @@ export class RSSService {
 
   async fetchArticles(): Promise<Article[]> {
     try {
-      console.log('Fetching trending events from newsdata.io...');
+      console.log('Fetching political news from newsdata.io...');
       
-      // Event-related keywords to focus on trending events rather than regular news
-      const eventKeywords = [
-        'breakthrough', 'announces', 'launches', 'releases', 'unveils', 
-        'summit', 'conference', 'event', 'festival', 'championship',
-        'protest', 'demonstration', 'rally', 'march', 'strike',
-        'merger', 'acquisition', 'IPO', 'funding', 'investment',
-        'disaster', 'emergency', 'crisis', 'accident', 'incident'
+      // Political keywords to focus on political events and news
+      const politicalKeywords = [
+        'politics', 'election', 'government', 'congress', 'senate', 'parliament',
+        'president', 'prime minister', 'vote', 'campaign', 'policy', 'legislation',
+        'bill', 'law', 'court', 'supreme court', 'judge', 'ruling',
+        'democrat', 'republican', 'party', 'political', 'administration',
+        'white house', 'capitol', 'debate', 'speech', 'statement'
       ].join(' OR ');
       
       const response = await fetch(
-        `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(eventKeywords)}&language=en&size=20&prioritydomain=top`
+        `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&size=20&prioritydomain=top`
       );
       
       if (!response.ok) {
         console.log(`NewsData API error: ${response.status} ${response.statusText}`);
-        console.log('Falling back to sample trending events data...');
+        console.log('Falling back to sample political news data...');
         return this.getSampleEventData();
       }
       
       const data = await response.json() as NewsDataResponse;
       
       if (data.status !== 'success') {
-        console.log('NewsData API returned error status, falling back to sample data...');
+        console.log('NewsData API returned error status, falling back to sample political news data...');
         return this.getSampleEventData();
       }
       
@@ -102,7 +102,7 @@ export class RSSService {
       return articles;
     } catch (error) {
       console.error('Error fetching from newsdata.io:', error);
-      console.log('Using sample trending events data...');
+      console.log('Using sample political news data...');
       return this.getSampleEventData();
     }
   }
@@ -177,43 +177,43 @@ export class RSSService {
   }
 
   private getSampleEventData(): Article[] {
-    // Sample trending events data focused on current news events
+    // Sample political events and news data
     const sampleEvents = [
       {
-        title: "Tech Giants Announce Major AI Summit for Industry Standards",
-        description: "Leading technology companies including Google, Microsoft, and OpenAI announce a joint summit to establish AI development standards and safety protocols.",
-        category: "Technology",
-        image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop"
+        title: "Senate Passes Landmark Infrastructure Bill After Heated Debate",
+        description: "The U.S. Senate approves a comprehensive infrastructure package worth $1.2 trillion, focusing on roads, bridges, and broadband expansion across the nation.",
+        category: "Politics",
+        image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&h=400&fit=crop"
       },
       {
-        title: "Global Climate Conference Reaches Historic Agreement",
-        description: "World leaders at COP29 reach a groundbreaking agreement on carbon reduction targets and renewable energy funding initiatives.",
-        category: "World",
+        title: "Supreme Court to Hear Major Constitutional Case on Voting Rights",
+        description: "The Supreme Court announces it will review a critical voting rights case that could reshape election laws across multiple states.",
+        category: "Politics",
+        image: "https://images.unsplash.com/photo-1589578527966-fdac0f44566c?w=800&h=400&fit=crop"
+      },
+      {
+        title: "Congressional Leaders Reach Bipartisan Agreement on Budget",
+        description: "House and Senate leadership from both parties announce a rare bipartisan deal to avoid government shutdown and fund key programs.",
+        category: "Politics",
+        image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=400&fit=crop"
+      },
+      {
+        title: "Presidential Campaign Announces New Policy Platform",
+        description: "Leading presidential candidate unveils comprehensive policy agenda covering healthcare, education, and economic reform initiatives.",
+        category: "Politics",
+        image: "https://images.unsplash.com/photo-1596368743298-413cca6f4d61?w=800&h=400&fit=crop"
+      },
+      {
+        title: "Governor Signs Controversial Climate Legislation",
+        description: "State governor signs sweeping climate action bill despite opposition, setting ambitious carbon neutrality targets for the next decade.",
+        category: "Politics",
         image: "https://images.unsplash.com/photo-1569163139394-de4e4f43e4e0?w=800&h=400&fit=crop"
       },
       {
-        title: "Major Breakthrough in Quantum Computing Research",
-        description: "Scientists at MIT announce a significant advancement in quantum error correction, bringing practical quantum computers closer to reality.",
-        category: "Science",
-        image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&h=400&fit=crop"
-      },
-      {
-        title: "Championship Finals Draw Record Global Viewership",
-        description: "The World Cup finals break viewership records with over 1.5 billion people tuning in worldwide, making it the most-watched sporting event in history.",
-        category: "Sports",
-        image: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=800&h=400&fit=crop"
-      },
-      {
-        title: "International Trade Summit Unveils New Economic Partnership",
-        description: "Leaders from 20 nations announce a new trade partnership aimed at strengthening global supply chains and economic cooperation.",
-        category: "Business",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop"
-      },
-      {
-        title: "Space Agency Launches Revolutionary Mars Mission",
-        description: "NASA and ESA launch joint mission to Mars with advanced rovers designed to search for signs of ancient life and prepare for human exploration.",
-        category: "Science",
-        image: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&h=400&fit=crop"
+        title: "Political Debate Draws Record Television Audience",
+        description: "The prime-time political debate attracts over 80 million viewers, making it one of the most-watched political events in recent history.",
+        category: "Politics",
+        image: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=800&h=400&fit=crop"
       }
     ];
 
