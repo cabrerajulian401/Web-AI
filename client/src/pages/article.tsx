@@ -75,7 +75,8 @@ export default function ArticlePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen theme-page-bg">
-        <header className="theme-header-bg shadow-sm border-b-2 theme-divider">
+        <header className="theme-header-bg shadow-sm relative">
+          <div className="absolute bottom-0 left-0 right-0 h-0.5 theme-divider"></div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-32">
               <div className="flex items-center space-x-6">
@@ -137,7 +138,8 @@ export default function ArticlePage() {
   return (
     <div className="min-h-screen theme-page-bg">
       {/* Header */}
-      <header className="theme-header-bg shadow-sm border-b-2 theme-divider">
+      <header className="theme-header-bg shadow-sm relative">
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 theme-divider"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-8">
             <div className="flex items-center justify-between">

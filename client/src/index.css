@@ -66,7 +66,7 @@
 
 /* Theme System Utility Classes */
 .theme-page-bg { background-color: var(--page-bg); }
-.theme-divider { border-color: var(--divider-color); border-width: var(--divider-width); }
+.theme-divider { background-color: var(--divider-color); }
 .theme-icon-bg { background-color: var(--icon-bg); }
 .theme-border { border-color: var(--border-color); border-width: var(--border-width); }
 .theme-border-focus:focus { border-color: var(--border-focus-color); }
