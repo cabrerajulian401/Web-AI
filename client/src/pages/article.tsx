@@ -141,19 +141,19 @@ export default function ArticlePage() {
       <header className="theme-header-bg shadow-sm relative">
         <div className="absolute bottom-0 left-0 right-0 h-0.5 theme-divider"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-8">
+          <div className="py-2">
             <div className="flex items-center justify-between">
               {/* Logo, Brand and Back Button */}
-              <div className="flex flex-col space-y-2">
-                <div className="flex items-center space-x-6">
+              <div className="flex flex-col space-y-1">
+                <div className="flex items-center space-x-3">
                   <img 
                     src={timioLogo} 
                     alt="TIMIO News" 
-                    className="h-16 w-16 rounded-lg"
+                    className="h-8 w-8 rounded-lg"
                   />
                   <div>
-                    <span className="text-5xl font-bold theme-header-text">TIMIO News</span>
-                    <p className="text-xl theme-muted-text mt-2">Truth. Trust. Transparency.</p>
+                    <span className="text-xl font-bold theme-header-text">TIMIO News</span>
+                    <p className="text-sm theme-muted-text">Truth. Trust. Transparency.</p>
                   </div>
                 </div>
                 <button 
