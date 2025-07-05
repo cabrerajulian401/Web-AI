@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DraggableColorPicker } from '@/components/ui/draggable-color-picker';
 import { Palette, RotateCcw, Move, X } from 'lucide-react';
-import { ThemeConfig, defaultTheme } from '@/lib/theme';
+import { ThemeConfig, defaultTheme, darkTheme, blueTheme, navyTheme, ThemeManager } from '@/lib/theme';
 
 interface ThemeControllerProps {
   onClose?: () => void;
@@ -135,7 +135,56 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
       <div className="max-h-[500px] overflow-y-auto">
         <CardContent className="space-y-4">
         
-
+        {/* Preset Themes */}
+        <div className="space-y-3 pb-4 border-b border-gray-200">
+          <h3 className="font-medium text-sm text-gray-700">Preset Themes</h3>
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                ThemeManager.useDefaultTheme();
+                setWorkingTheme(defaultTheme);
+              }}
+              className="text-xs"
+            >
+              Default Light
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                ThemeManager.useDarkTheme();
+                setWorkingTheme(darkTheme);
+              }}
+              className="text-xs"
+            >
+              Dark
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                ThemeManager.useBlueTheme();
+                setWorkingTheme(blueTheme);
+              }}
+              className="text-xs"
+            >
+              Blue
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                ThemeManager.useNavyTheme();
+                setWorkingTheme(navyTheme);
+              }}
+              className="text-xs"
+            >
+              Navy
+            </Button>
+          </div>
+        </div>
 
         {/* Color Settings in Grid Layout */}
         <div className="grid grid-cols-2 gap-6">

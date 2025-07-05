@@ -105,6 +105,7 @@ Changelog:
 - July 04, 2025. Added prominent black dividers under Timeline and Related Articles headings, strengthened dividers in expandable sections
 - July 04, 2025. Increased all section icon sizes and applied consistent black circle backgrounds across all expandable sections
 - July 04, 2025. Built comprehensive theme system with CSS custom properties, ThemeManager class, and theme controller component for easy color scheme testing. Added theme settings button to headers on both feed and article pages
+- July 05, 2025. Enhanced theme system with preset options (Default Light, Dark, Blue, Navy), added "Research Report:" labels to feed articles with dedicated color control, made sidebar transparent by default, and improved color organization in theme controller
 
 ## User Preferences
 

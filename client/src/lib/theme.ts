@@ -130,6 +130,31 @@ export const blueTheme: ThemeConfig = {
   researchReportLabelColor: 'rgb(37, 99, 235)', // blue-600
 };
 
+export const navyTheme: ThemeConfig = {
+  pageBackground: 'rgb(22, 32, 67)', // #162043
+  dividerColor: 'rgb(255, 255, 255)', // white
+  dividerWidth: '2px',
+  iconBackground: 'rgb(255, 255, 255)', // white
+  borderColor: 'rgb(255, 255, 255)', // white
+  borderWidth: '2px',
+  borderFocusColor: 'rgb(255, 255, 255)', // white
+  reportCardBackground: 'rgb(30, 45, 90)', // darker navy
+  reportCardBorder: 'rgb(255, 255, 255)', // white
+  articleCardBackground: 'rgb(30, 45, 90)', // darker navy
+  articleCardBorder: 'rgb(255, 255, 255)', // white
+  articleCardHoverBackground: 'rgb(40, 55, 100)', // lighter navy
+  sidebarTextColor: 'rgb(255, 255, 255)', // white
+  sidebarBackground: 'transparent',
+  sidebarBorderColor: 'transparent',
+  headerTextColor: 'rgb(255, 255, 255)', // white
+  headlineTextColor: 'rgb(255, 255, 255)', // white
+  researchCardHeaderTextColor: 'rgb(255, 255, 255)', // white
+  bodyTextColor: 'rgb(229, 231, 235)', // gray-200
+  mutedTextColor: 'rgb(156, 163, 175)', // gray-400
+  researchPromptTextColor: 'rgb(255, 255, 255)', // white
+  researchReportLabelColor: 'rgb(209, 213, 219)', // gray-300
+};
+
 // Theme management
 export class ThemeManager {
   private static currentTheme: ThemeConfig = defaultTheme;
@@ -175,4 +200,5 @@ export class ThemeManager {
   static useDefaultTheme() { this.setTheme(defaultTheme); }
   static useDarkTheme() { this.setTheme(darkTheme); }
   static useBlueTheme() { this.setTheme(blueTheme); }
+  static useNavyTheme() { this.setTheme(navyTheme); }
 }
