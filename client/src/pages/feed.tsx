@@ -141,7 +141,7 @@ export default function FeedPage() {
             {/* Research Input */}
             <div className="flex flex-col items-center space-y-6 mb-12">
               <h2 className="text-3xl font-bold theme-research-prompt-text text-center">
-                Generate your own research report
+                Generate a report on any event
               </h2>
               <div className="relative w-full max-w-2xl">
                 {/* Enhanced background with gradient */}
@@ -160,9 +160,6 @@ export default function FeedPage() {
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-gray-500 text-center max-w-xl">
-                Powered by AI • Get instant analysis and insights on any topic
-              </p>
             </div>
 
             {/* Page Header */}
