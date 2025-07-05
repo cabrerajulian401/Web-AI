@@ -190,25 +190,9 @@ export default function ArticlePage() {
           <div className="lg:col-span-8">
             {/* Article Hero */}
             <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
-              <CardContent className="p-8">
-                {/* Article Meta */}
-                <div className="flex flex-wrap items-center gap-4 text-sm theme-muted-text mb-6">
-                  <span className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
-                    Published {new Date(article.publishedAt).toLocaleDateString()}
-                  </span>
-                  <span className="flex items-center">
-                    <TrendingUp className="h-4 w-4 mr-1" />
-                    {article.sourceCount} sources analyzed
-                  </span>
-                  <span className="flex items-center">
-                    <Eye className="h-4 w-4 mr-1" />
-                    {article.readTime} min read
-                  </span>
-                </div>
-
+              <CardContent className="p-0">
                 {/* Hero Image with Overlay */}
-                <div className="relative overflow-hidden rounded-lg shadow-lg mb-4">
+                <div className="relative overflow-hidden">
                   <img 
                     src={article.heroImageUrl}
                     alt={article.title}
@@ -231,30 +215,6 @@ export default function ArticlePage() {
                       {article.title}
                     </h1>
                   </div>
-                </div>
-
-
-
-                {/* Executive Summary */}
-                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg mb-4">
-                  <h2 className="text-xl font-semibold text-brand-dark mb-4 flex items-center">
-                    <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center mr-3">
-                      <img 
-                        src={execSummaryIcon} 
-                        alt="Executive Summary" 
-                        className="h-7 w-7 object-contain"
-                      />
-                    </div>
-                    Executive Summary
-                  </h2>
-                  <ul className="space-y-3">
-                    {executiveSummary.points.map((point, index) => (
-                      <li key={index} className="flex items-start">
-                        <div className="h-2 w-2 bg-brand-blue rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-700">{point}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </CardContent>
             </Card>
