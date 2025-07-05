@@ -17,6 +17,7 @@ export function DraggableColorPicker({ value, onChange, label }: DraggableColorP
     { name: 'White', value: '#ffffff' },
     { name: 'Black', value: '#000000' },
     { name: 'Navy', value: '#162043' },
+    { name: 'Transparent', value: 'transparent' },
   ];
 
   useEffect(() => {
@@ -152,8 +153,17 @@ export function DraggableColorPicker({ value, onChange, label }: DraggableColorP
               {presetColors.map((preset) => (
                 <button
                   key={preset.value}
-                  className="w-8 h-8 rounded border-2 border-gray-300 hover:border-gray-400 transition-colors"
-                  style={{ backgroundColor: preset.value }}
+                  className={`w-8 h-8 rounded border-2 border-gray-300 hover:border-gray-400 transition-colors ${
+                    preset.value === 'transparent' ? 'bg-transparent bg-checkerboard' : ''
+                  }`}
+                  style={{ 
+                    backgroundColor: preset.value === 'transparent' ? 'transparent' : preset.value,
+                    backgroundImage: preset.value === 'transparent' 
+                      ? 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)'
+                      : undefined,
+                    backgroundSize: preset.value === 'transparent' ? '8px 8px' : undefined,
+                    backgroundPosition: preset.value === 'transparent' ? '0 0, 0 4px, 4px -4px, -4px 0px' : undefined
+                  }}
                   onClick={() => onChange(preset.value)}
                   title={preset.name}
                 />

@@ -94,7 +94,7 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
   return (
     <Card 
       ref={cardRef}
-      className="w-96 shadow-xl bg-white max-h-96 overflow-hidden select-none"
+      className="w-[600px] shadow-xl bg-white max-h-[600px] overflow-hidden select-none"
       style={{
         position: 'fixed',
         left: `${position.x}px`,
@@ -132,106 +132,131 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
           )}
         </div>
       </CardHeader>
-      <div className="max-h-80 overflow-y-auto">
+      <div className="max-h-[500px] overflow-y-auto">
         <CardContent className="space-y-4">
-        <div className="space-y-3">
-          <h3 className="font-medium text-sm text-gray-700">Page & Layout</h3>
-          <ColorInput 
-            label="Page Background" 
-            property="pageBackground" 
-            value={workingTheme.pageBackground} 
-          />
-          <ColorInput 
-            label="Divider Color" 
-            property="dividerColor" 
-            value={workingTheme.dividerColor} 
-          />
-          <ColorInput 
-            label="Icon Background" 
-            property="iconBackground" 
-            value={workingTheme.iconBackground} 
-          />
+        
+        {/* Text Settings */}
+        <div className="space-y-3 pb-4 border-b border-gray-200">
+          <h3 className="font-medium text-sm text-gray-700">Content Settings</h3>
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Research Section Text</Label>
+            <Input
+              type="text"
+              value={workingTheme.researchSectionText || "Generate your own research report"}
+              onChange={(e) => handleColorChange('researchSectionText' as keyof ThemeConfig, e.target.value)}
+              className="text-sm"
+              placeholder="Enter research section text"
+            />
+          </div>
         </div>
 
-        <div className="space-y-3">
-          <h3 className="font-medium text-sm text-gray-700">Borders</h3>
-          <ColorInput 
-            label="Border Color" 
-            property="borderColor" 
-            value={workingTheme.borderColor} 
-          />
-          <ColorInput 
-            label="Focus Border" 
-            property="borderFocusColor" 
-            value={workingTheme.borderFocusColor} 
-          />
-        </div>
+        {/* Color Settings in Grid Layout */}
+        <div className="grid grid-cols-2 gap-6">
+          {/* Left Column */}
+          <div className="space-y-4">
+            <div className="space-y-3">
+              <h3 className="font-medium text-sm text-gray-700">Page & Layout</h3>
+              <ColorInput 
+                label="Page Background" 
+                property="pageBackground" 
+                value={workingTheme.pageBackground} 
+              />
+              <ColorInput 
+                label="Divider Color" 
+                property="dividerColor" 
+                value={workingTheme.dividerColor} 
+              />
+              <ColorInput 
+                label="Icon Background" 
+                property="iconBackground" 
+                value={workingTheme.iconBackground} 
+              />
+            </div>
 
-        <div className="space-y-3">
-          <h3 className="font-medium text-sm text-gray-700">Cards</h3>
-          <ColorInput 
-            label="Report Card Background" 
-            property="reportCardBackground" 
-            value={workingTheme.reportCardBackground} 
-          />
-          <ColorInput 
-            label="Report Card Border" 
-            property="reportCardBorder" 
-            value={workingTheme.reportCardBorder} 
-          />
-          <ColorInput 
-            label="Article Card Background" 
-            property="articleCardBackground" 
-            value={workingTheme.articleCardBackground} 
-          />
-          <ColorInput 
-            label="Article Card Border" 
-            property="articleCardBorder" 
-            value={workingTheme.articleCardBorder} 
-          />
-        </div>
+            <div className="space-y-3">
+              <h3 className="font-medium text-sm text-gray-700">Cards</h3>
+              <ColorInput 
+                label="Report Card Background" 
+                property="reportCardBackground" 
+                value={workingTheme.reportCardBackground} 
+              />
+              <ColorInput 
+                label="Report Card Border" 
+                property="reportCardBorder" 
+                value={workingTheme.reportCardBorder} 
+              />
+              <ColorInput 
+                label="Article Card Background" 
+                property="articleCardBackground" 
+                value={workingTheme.articleCardBackground} 
+              />
+              <ColorInput 
+                label="Article Card Border" 
+                property="articleCardBorder" 
+                value={workingTheme.articleCardBorder} 
+              />
+            </div>
+          </div>
 
-        <div className="space-y-3">
-          <h3 className="font-medium text-sm text-gray-700">Sidebar</h3>
-          <ColorInput 
-            label="Sidebar Background" 
-            property="sidebarBackground" 
-            value={workingTheme.sidebarBackground} 
-          />
-          <ColorInput 
-            label="Sidebar Text" 
-            property="sidebarTextColor" 
-            value={workingTheme.sidebarTextColor} 
-          />
-          <ColorInput 
-            label="Sidebar Border" 
-            property="sidebarBorderColor" 
-            value={workingTheme.sidebarBorderColor} 
-          />
-        </div>
+          {/* Right Column */}
+          <div className="space-y-4">
+            <div className="space-y-3">
+              <h3 className="font-medium text-sm text-gray-700">Borders</h3>
+              <ColorInput 
+                label="Border Color" 
+                property="borderColor" 
+                value={workingTheme.borderColor} 
+              />
+              <ColorInput 
+                label="Focus Border" 
+                property="borderFocusColor" 
+                value={workingTheme.borderFocusColor} 
+              />
+            </div>
 
-        <div className="space-y-3">
-          <h3 className="font-medium text-sm text-gray-700">Text Colors</h3>
-          <ColorInput 
-            label="Header Text" 
-            property="headerTextColor" 
-            value={workingTheme.headerTextColor} 
-          />
-          <ColorInput 
-            label="Headline Text" 
-            property="headlineTextColor" 
-            value={workingTheme.headlineTextColor} 
-          />
-          <ColorInput 
-            label="Body Text" 
-            property="bodyTextColor" 
-            value={workingTheme.bodyTextColor} 
-          />
-          <ColorInput 
-            label="Muted Text" 
-            property="mutedTextColor" 
-            value={workingTheme.mutedTextColor} 
-          />
+            <div className="space-y-3">
+              <h3 className="font-medium text-sm text-gray-700">Sidebar</h3>
+              <ColorInput 
+                label="Sidebar Background" 
+                property="sidebarBackground" 
+                value={workingTheme.sidebarBackground} 
+              />
+              <ColorInput 
+                label="Sidebar Text" 
+                property="sidebarTextColor" 
+                value={workingTheme.sidebarTextColor} 
+              />
+              <ColorInput 
+                label="Sidebar Border" 
+                property="sidebarBorderColor" 
+                value={workingTheme.sidebarBorderColor} 
+              />
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="font-medium text-sm text-gray-700">Text Colors</h3>
+              <ColorInput 
+                label="Header Text" 
+                property="headerTextColor" 
+                value={workingTheme.headerTextColor} 
+              />
+              <ColorInput 
+                label="Headline Text" 
+                property="headlineTextColor" 
+                value={workingTheme.headlineTextColor} 
+              />
+              <ColorInput 
+                label="Body Text" 
+                property="bodyTextColor" 
+                value={workingTheme.bodyTextColor} 
+              />
+              <ColorInput 
+                label="Muted Text" 
+                property="mutedTextColor" 
+                value={workingTheme.mutedTextColor} 
+              />
+            </div>
+          </div>
         </div>
         </CardContent>
       </div>

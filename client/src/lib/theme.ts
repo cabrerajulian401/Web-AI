@@ -34,6 +34,9 @@ export interface ThemeConfig {
   researchCardHeaderTextColor: string;
   bodyTextColor: string;
   mutedTextColor: string;
+  
+  // Content settings
+  researchSectionText?: string;
 }
 
 // Default theme (current colors)
