@@ -169,24 +169,22 @@ export default function ArticlePage() {
                 </div>
 
                 {/* Executive Summary - Collapsible */}
-                <div className="p-6">
-                  <ExpandableSection
-                    title="Executive Summary"
-                    icon="users"
-                    customIcon={execSummaryIcon}
-                    defaultOpen={true}
-                    content={
-                      <ul className="space-y-3">
-                        {executiveSummary.points.map((point, index) => (
-                          <li key={index} className="flex items-start">
-                            <div className="h-2 w-2 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0" />
-                            <span className="text-gray-700">{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    }
-                  />
-                </div>
+                <ExpandableSection
+                  title="Executive Summary"
+                  icon="users"
+                  customIcon={execSummaryIcon}
+                  defaultOpen={true}
+                  content={
+                    <ul className="space-y-3">
+                      {executiveSummary.points.map((point, index) => (
+                        <li key={index} className="flex items-start">
+                          <div className="h-2 w-2 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0" />
+                          <span className="text-gray-700">{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  }
+                />
               </CardContent>
             </Card>
 
