@@ -262,7 +262,7 @@ export default function ArticlePage() {
                 icon="database"
                 content={
                   <div className="mt-6">
-                    <ul className="text-lg theme-body-text space-y-5">
+                    <ul className="text-lg text-gray-800 space-y-5">
                       <li className="flex items-start">
                         <input type="checkbox" checked readOnly className="mt-1.5 mr-4 flex-shrink-0 w-5 h-5 accent-blue-600" />
                         <span className="leading-relaxed">Defense Secretary nomination pending Senate confirmation 
@@ -335,16 +335,16 @@ export default function ArticlePage() {
                 content={
                   <div className="space-y-4 mt-6">
                     {/* Activists Perspective */}
-                    <div className="theme-article-card-bg theme-muted-text rounded-lg overflow-hidden shadow-sm border">
+                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setActivistExpanded(!activistExpanded)}
-                        className="w-full p-4 bg-blue-600 bg-opacity-20 hover:bg-opacity-30 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-blue-600 bg-opacity-75 hover:bg-opacity-85 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-lg theme-headline-text">Activists Call for Stronger UN Environmental Rules</h4>
-                          {activistExpanded ? <ChevronUp className="h-5 w-5 theme-headline-text" /> : <ChevronDown className="h-5 w-5 theme-headline-text" />}
+                          <h4 className="font-semibold text-lg text-white">Activists Call for Stronger UN Environmental Rules</h4>
+                          {activistExpanded ? <ChevronUp className="h-5 w-5 text-white" /> : <ChevronDown className="h-5 w-5 text-white" />}
                         </div>
-                        <p className="theme-muted-text text-sm mt-2">Sources: 3</p>
+                        <p className="text-blue-200 text-sm mt-2">Sources: 3</p>
                       </button>
                       
                       {activistExpanded && (
@@ -379,16 +379,16 @@ export default function ArticlePage() {
                     </div>
 
                     {/* Moderate Perspective */}
-                    <div className="theme-article-card-bg theme-muted-text rounded-lg overflow-hidden shadow-sm border">
+                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setModerateExpanded(!moderateExpanded)}
-                        className="w-full p-4 bg-orange-600 bg-opacity-20 hover:bg-opacity-30 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-orange-600 bg-opacity-75 hover:bg-opacity-85 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-lg theme-headline-text">UN Intervention Necessary, But it Must Be Realistic</h4>
-                          {moderateExpanded ? <ChevronUp className="h-5 w-5 theme-headline-text" /> : <ChevronDown className="h-5 w-5 theme-headline-text" />}
+                          <h4 className="font-semibold text-lg text-white">UN Intervention Necessary, But it Must Be Realistic</h4>
+                          {moderateExpanded ? <ChevronUp className="h-5 w-5 text-white" /> : <ChevronDown className="h-5 w-5 text-white" />}
                         </div>
-                        <p className="theme-muted-text text-sm mt-2">Sources: 2</p>
+                        <p className="text-orange-200 text-sm mt-2">Sources: 2</p>
                       </button>
                       
                       {moderateExpanded && (
@@ -413,16 +413,16 @@ export default function ArticlePage() {
                     </div>
 
                     {/* Critics Perspective */}
-                    <div className="theme-article-card-bg theme-muted-text rounded-lg overflow-hidden shadow-sm border">
+                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                       <button 
                         onClick={() => setCriticsExpanded(!criticsExpanded)}
-                        className="w-full p-4 bg-red-600 bg-opacity-20 hover:bg-opacity-30 transition-colors duration-200 text-left"
+                        className="w-full p-4 bg-red-600 bg-opacity-75 hover:bg-opacity-85 transition-colors duration-200 text-left"
                       >
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-lg theme-headline-text">Critics Say UN Should Avoid Action on Fossil Fuels</h4>
-                          {criticsExpanded ? <ChevronUp className="h-5 w-5 theme-headline-text" /> : <ChevronDown className="h-5 w-5 theme-headline-text" />}
+                          <h4 className="font-semibold text-lg text-white">Critics Say UN Should Avoid Action on Fossil Fuels</h4>
+                          {criticsExpanded ? <ChevronUp className="h-5 w-5 text-white" /> : <ChevronDown className="h-5 w-5 text-white" />}
                         </div>
-                        <p className="theme-muted-text text-sm mt-2">Sources: 1</p>
+                        <p className="text-red-200 text-sm mt-2">Sources: 1</p>
                       </button>
                       
                       {criticsExpanded && (
