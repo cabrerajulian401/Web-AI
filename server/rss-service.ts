@@ -60,7 +60,7 @@ export class RSSService {
       ].join(' OR ');
       
       const response = await fetch(
-        `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&country=us&size=20&timeframe=24&prioritydomain=top`
+        `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&country=us&size=20&prioritydomain=top`
       );
       
       if (!response.ok) {
