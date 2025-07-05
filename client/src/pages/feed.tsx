@@ -94,9 +94,9 @@ export default function FeedPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen theme-page-bg">
       {/* Header */}
-      <header className="bg-white border-b-2 border-black shadow-sm">
+      <header className="theme-article-card-bg theme-divider border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-32">
             <div className="flex items-center space-x-4">
@@ -106,8 +106,8 @@ export default function FeedPage() {
                 className="w-24 h-24"
               />
               <div>
-                <h1 className="text-4xl font-bold text-brand-dark">TIMIO News</h1>
-                <p className="text-lg text-gray-600">Truth. Trust. Transparency.</p>
+                <h1 className="text-4xl font-bold theme-header-text">TIMIO News</h1>
+                <p className="text-lg theme-body-text">Truth. Trust. Transparency.</p>
               </div>
             </div>
             
@@ -136,7 +136,7 @@ export default function FeedPage() {
           <div className="flex-1 max-w-4xl">
             {/* Research Input */}
             <div className="flex flex-col items-center space-y-4 mb-12">
-              <h2 className="text-3xl font-bold text-gray-800 text-center">Generate your own research report</h2>
+              <h2 className="text-3xl font-bold theme-research-card-header-text text-center">Generate your own research report</h2>
               <div className="relative w-full max-w-2xl">
                 <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
                 <Input
@@ -149,10 +149,10 @@ export default function FeedPage() {
 
             {/* Page Header */}
             <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold text-brand-dark mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold theme-header-text mb-2">
                 Today's Stories
               </h1>
-              <p className="text-lg text-black">
+              <p className="text-lg theme-body-text">
                 AI Driven Research on popular stories
               </p>
             </div>
@@ -161,7 +161,7 @@ export default function FeedPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {articles?.map((article) => (
                 <Link key={article.id} href={`/article/${article.slug}`}>
-                  <Card className="shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer group overflow-hidden h-full">
+                  <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover border-2 shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer group overflow-hidden h-full">
                     {/* Article Image */}
                     <div className="relative overflow-hidden">
                       <img 
@@ -178,10 +178,10 @@ export default function FeedPage() {
 
                     {/* Article Content */}
                     <CardContent className="p-4 flex flex-col flex-grow">
-                      <h3 className="text-xl font-semibold text-brand-dark mb-2 line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
+                      <h3 className="text-xl font-semibold theme-headline-text mb-2 line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
                         {article.title}
                       </h3>
-                      <p className="text-black mb-4 line-clamp-3 flex-grow">
+                      <p className="theme-body-text mb-4 line-clamp-3 flex-grow">
                         {article.excerpt}
                       </p>
                       
@@ -223,7 +223,7 @@ export default function FeedPage() {
 
           {/* Right sidebar - As seen on */}
           <div className="hidden lg:block w-80 flex-shrink-0">
-            <div className="sticky top-24 space-y-4">
+            <div className="sticky top-24 space-y-4 theme-sidebar-bg theme-sidebar-border border p-4 rounded-lg">
               <img 
                 src="/asseen-on.png" 
                 alt="As seen on PBS and Automateed" 

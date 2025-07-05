@@ -27,31 +27,31 @@ export function ExpandableSection({ title, icon, content, customIcon }: Expandab
     
     const IconComponent = icon === "database" ? Database : Users;
     return (
-      <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center mr-3">
+      <div className="h-10 w-10 theme-icon-bg rounded-full flex items-center justify-center mr-3">
         <IconComponent className="h-6 w-6 text-white" />
       </div>
     );
   };
 
   return (
-    <Card className="shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden">
+    <Card className="theme-report-card-bg theme-report-card-border border-2 shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full p-6 text-left hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
       >
         <div className="flex items-center">
           {renderIcon()}
-          <h3 className="text-xl font-semibold text-brand-dark">{title}</h3>
+          <h3 className="text-xl font-semibold theme-research-card-header-text">{title}</h3>
         </div>
         <ChevronDown 
-          className={`h-5 w-5 text-muted transition-transform duration-200 ${
+          className={`h-5 w-5 theme-muted-text transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
           }`}
         />
       </button>
       
       {isOpen && (
-        <CardContent className="p-6 pt-0 border-t-2 border-black animate-slide-up">
+        <CardContent className="p-6 pt-0 theme-divider border-t animate-slide-up">
           {content}
         </CardContent>
       )}
