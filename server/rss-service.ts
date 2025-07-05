@@ -46,19 +46,21 @@ export class RSSService {
 
   async fetchArticles(): Promise<Article[]> {
     try {
-      console.log('Fetching political news from newsdata.io...');
+      console.log('Fetching US political news from newsdata.io...');
       
-      // Political keywords to focus on political events and news
+      // US Political keywords to focus on American political events and news
       const politicalKeywords = [
-        'politics', 'election', 'government', 'congress', 'senate', 'parliament',
-        'president', 'prime minister', 'vote', 'campaign', 'policy', 'legislation',
-        'bill', 'law', 'court', 'supreme court', 'judge', 'ruling',
-        'democrat', 'republican', 'party', 'political', 'administration',
-        'white house', 'capitol', 'debate', 'speech', 'statement'
+        'US politics', 'American politics', 'Congress', 'Senate', 'House Representatives',
+        'President Biden', 'White House', 'Capitol Hill', 'Washington DC',
+        'Democrat', 'Republican', 'GOP', 'Democratic Party', 'Republican Party',
+        'Supreme Court', 'federal court', 'US election', 'midterm', 'presidential election',
+        'Governor', 'Mayor', 'state legislature', 'federal government',
+        'Trump', 'Biden', 'Harris', 'Speaker House', 'Senate Majority Leader',
+        'filibuster', 'committee hearing', 'confirmation', 'impeachment'
       ].join(' OR ');
       
       const response = await fetch(
-        `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&size=20&prioritydomain=top`
+        `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&country=us&size=20&prioritydomain=top`
       );
       
       if (!response.ok) {
@@ -177,42 +179,42 @@ export class RSSService {
   }
 
   private getSampleEventData(): Article[] {
-    // Sample political events and news data
+    // Sample US political events and news data
     const sampleEvents = [
       {
-        title: "Senate Passes Landmark Infrastructure Bill After Heated Debate",
-        description: "The U.S. Senate approves a comprehensive infrastructure package worth $1.2 trillion, focusing on roads, bridges, and broadband expansion across the nation.",
-        category: "Politics",
+        title: "House Republicans Push Forward with Border Security Bill",
+        description: "House GOP leaders advance comprehensive border security legislation despite Democratic opposition, setting up potential Senate showdown.",
+        category: "US Politics",
         image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&h=400&fit=crop"
       },
       {
-        title: "Supreme Court to Hear Major Constitutional Case on Voting Rights",
-        description: "The Supreme Court announces it will review a critical voting rights case that could reshape election laws across multiple states.",
-        category: "Politics",
+        title: "Biden Administration Announces New Climate Executive Order",
+        description: "President Biden signs executive order targeting federal emissions reduction and clean energy procurement across government agencies.",
+        category: "US Politics",
         image: "https://images.unsplash.com/photo-1589578527966-fdac0f44566c?w=800&h=400&fit=crop"
       },
       {
-        title: "Congressional Leaders Reach Bipartisan Agreement on Budget",
-        description: "House and Senate leadership from both parties announce a rare bipartisan deal to avoid government shutdown and fund key programs.",
-        category: "Politics",
+        title: "Senate Judiciary Committee Confirms Federal Judge Nomination",
+        description: "Committee approves Biden's nominee for federal appeals court in party-line vote, moving confirmation to full Senate floor.",
+        category: "US Politics",
         image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=400&fit=crop"
       },
       {
-        title: "Presidential Campaign Announces New Policy Platform",
-        description: "Leading presidential candidate unveils comprehensive policy agenda covering healthcare, education, and economic reform initiatives.",
-        category: "Politics",
+        title: "Trump Holds Rally in Key Swing State Ahead of Primary",
+        description: "Former President Trump campaigns in Iowa, criticizing current administration policies and previewing 2024 election strategy.",
+        category: "US Politics",
         image: "https://images.unsplash.com/photo-1596368743298-413cca6f4d61?w=800&h=400&fit=crop"
       },
       {
-        title: "Governor Signs Controversial Climate Legislation",
-        description: "State governor signs sweeping climate action bill despite opposition, setting ambitious carbon neutrality targets for the next decade.",
-        category: "Politics",
+        title: "California Governor Vetoes Controversial Tech Regulation Bill",
+        description: "Governor Newsom vetoes Silicon Valley regulation measure, citing concerns about innovation and economic competitiveness.",
+        category: "US Politics",
         image: "https://images.unsplash.com/photo-1569163139394-de4e4f43e4e0?w=800&h=400&fit=crop"
       },
       {
-        title: "Political Debate Draws Record Television Audience",
-        description: "The prime-time political debate attracts over 80 million viewers, making it one of the most-watched political events in recent history.",
-        category: "Politics",
+        title: "Congressional Hearing on Social Media Draws Bipartisan Criticism",
+        description: "House committee grills tech executives on content moderation practices, with lawmakers from both parties expressing concerns.",
+        category: "US Politics",
         image: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=800&h=400&fit=crop"
       }
     ];

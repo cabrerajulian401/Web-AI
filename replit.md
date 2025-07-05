@@ -107,7 +107,7 @@ Changelog:
 - July 04, 2025. Built comprehensive theme system with CSS custom properties, ThemeManager class, and theme controller component for easy color scheme testing. Added theme settings button to headers on both feed and article pages
 - July 05, 2025. Enhanced theme system with preset options (Default Light, Dark, Blue, Navy), added "Research Report:" labels to feed articles with dedicated color control, made sidebar transparent by default, and improved color organization in theme controller
 - July 05, 2025. Separated header background from card background colors in theme system, implemented navy theme header with #162043 color, removed black borders from research cards, converted header borders to clean dividers using absolute positioning
-- July 05, 2025. Switched from Google News RSS to newsdata.io API for focused political news and events, implemented political keyword filtering, added fallback system with sample political news data, updated feed to focus on politics, government, elections, and policy-related content
+- July 05, 2025. Switched from Google News RSS to newsdata.io API for focused US political news and events, implemented US-specific political keyword filtering (Congress, White House, Biden, Trump, etc.), added country filter for US news, updated sample data with American political stories, feed now focuses exclusively on US politics, government, and elections
 
 ## User Preferences
 
