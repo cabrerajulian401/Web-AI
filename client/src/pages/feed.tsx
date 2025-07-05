@@ -182,6 +182,7 @@ export default function FeedPage() {
 
                     {/* Article Content */}
                     <CardContent className="p-4 flex flex-col flex-grow">
+                      <p className="text-sm font-medium theme-muted-text mb-1">Research Report:</p>
                       <h3 className="text-xl font-semibold theme-headline-text mb-2 line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
                         {article.title}
                       </h3>

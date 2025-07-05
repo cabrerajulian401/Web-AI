@@ -192,7 +192,6 @@ export default function ArticlePage() {
               <CardContent className="p-8">
                 {/* Article Header */}
                 <div className="mb-6">
-                  <p className="text-lg font-medium theme-muted-text mb-2">Research Report:</p>
                   <h1 className="text-3xl md:text-4xl font-bold theme-headline-text mb-4 leading-tight">
                     {article.title}
                   </h1>
