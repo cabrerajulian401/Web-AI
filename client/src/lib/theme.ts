@@ -34,9 +34,7 @@ export interface ThemeConfig {
   researchCardHeaderTextColor: string;
   bodyTextColor: string;
   mutedTextColor: string;
-  
-  // Content settings
-  researchSectionText?: string;
+  researchPromptTextColor: string;
 }
 
 // Default theme (current colors)
@@ -76,6 +74,7 @@ export const defaultTheme: ThemeConfig = {
   researchCardHeaderTextColor: 'rgb(55, 65, 81)', // gray-700
   bodyTextColor: 'rgb(75, 85, 99)', // gray-600
   mutedTextColor: 'rgb(156, 163, 175)', // gray-400
+  researchPromptTextColor: 'rgb(17, 24, 39)', // gray-900
 };
 
 // Alternative theme examples
@@ -100,6 +99,7 @@ export const darkTheme: ThemeConfig = {
   researchCardHeaderTextColor: 'rgb(209, 213, 219)', // gray-300
   bodyTextColor: 'rgb(156, 163, 175)', // gray-400
   mutedTextColor: 'rgb(107, 114, 128)', // gray-500
+  researchPromptTextColor: 'rgb(255, 255, 255)', // white
 };
 
 export const blueTheme: ThemeConfig = {
@@ -123,6 +123,7 @@ export const blueTheme: ThemeConfig = {
   researchCardHeaderTextColor: 'rgb(37, 99, 235)', // blue-600
   bodyTextColor: 'rgb(30, 64, 175)', // blue-800
   mutedTextColor: 'rgb(96, 165, 250)', // blue-400
+  researchPromptTextColor: 'rgb(30, 58, 138)', // blue-900
 };
 
 // Theme management
@@ -162,6 +163,7 @@ export class ThemeManager {
     root.style.setProperty('--research-card-header-text-color', this.currentTheme.researchCardHeaderTextColor);
     root.style.setProperty('--body-text-color', this.currentTheme.bodyTextColor);
     root.style.setProperty('--muted-text-color', this.currentTheme.mutedTextColor);
+    root.style.setProperty('--research-prompt-text-color', this.currentTheme.researchPromptTextColor);
   }
   
   // Preset themes

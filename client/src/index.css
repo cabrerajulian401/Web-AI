@@ -83,6 +83,7 @@
 .theme-research-card-header-text { color: var(--research-card-header-text-color); }
 .theme-body-text { color: var(--body-text-color); }
 .theme-muted-text { color: var(--muted-text-color); }
+.theme-research-prompt-text { color: var(--research-prompt-text-color); }
 
 .dark {
   --background: hsl(240, 10%, 3.9%);

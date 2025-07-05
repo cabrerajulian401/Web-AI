@@ -138,8 +138,8 @@ export default function FeedPage() {
           <div className="flex-1 max-w-4xl">
             {/* Research Input */}
             <div className="flex flex-col items-center space-y-4 mb-12">
-              <h2 className="text-3xl font-bold theme-research-card-header-text text-center">
-                {currentTheme.researchSectionText || "Generate your own research report"}
+              <h2 className="text-3xl font-bold theme-research-prompt-text text-center">
+                Generate your own research report
               </h2>
               <div className="relative w-full max-w-2xl">
                 <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />

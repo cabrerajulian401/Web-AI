@@ -74,8 +74,8 @@ export default function ArticlePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white border-b-2 border-black shadow-sm">
+      <div className="min-h-screen theme-page-bg">
+        <header className="theme-article-card-bg theme-divider border-b shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-32">
               <div className="flex items-center space-x-6">
@@ -135,9 +135,9 @@ export default function ArticlePage() {
   const { article, executiveSummary, timelineItems, relatedArticles, rawFacts, perspectives } = articleData;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen theme-page-bg">
       {/* Header */}
-      <header className="bg-white border-b-2 border-black shadow-sm">
+      <header className="theme-article-card-bg theme-divider border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-8">
             <div className="flex items-center justify-between">
@@ -150,13 +150,13 @@ export default function ArticlePage() {
                     className="h-16 w-16 rounded-lg"
                   />
                   <div>
-                    <span className="text-5xl font-bold text-brand-dark">TIMIO News</span>
-                    <p className="text-xl text-gray-600 mt-2">Truth. Trust. Transparency.</p>
+                    <span className="text-5xl font-bold theme-header-text">TIMIO News</span>
+                    <p className="text-xl theme-muted-text mt-2">Truth. Trust. Transparency.</p>
                   </div>
                 </div>
                 <button 
                   onClick={handleBackToFeed}
-                  className="flex items-center text-gray-600 hover:text-brand-blue transition-colors duration-200 font-medium text-sm"
+                  className="flex items-center theme-muted-text hover:text-brand-blue transition-colors duration-200 font-medium text-sm"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back
@@ -188,16 +188,16 @@ export default function ArticlePage() {
           {/* Main Content */}
           <div className="lg:col-span-8">
             {/* Article Hero */}
-            <Card className="shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
+            <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
               <CardContent className="p-8">
                 {/* Article Header */}
                 <div className="mb-6">
-                  <h1 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4 leading-tight">
+                  <h1 className="text-3xl md:text-4xl font-bold theme-headline-text mb-4 leading-tight">
                     {article.title}
                   </h1>
                   
                   {/* Article Meta */}
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted mb-6">
+                  <div className="flex flex-wrap items-center gap-4 text-sm theme-muted-text mb-6">
                     <span className="flex items-center">
                       <Clock className="h-4 w-4 mr-1" />
                       Published {new Date(article.publishedAt).toLocaleDateString()}

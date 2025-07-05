@@ -135,20 +135,7 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
       <div className="max-h-[500px] overflow-y-auto">
         <CardContent className="space-y-4">
         
-        {/* Text Settings */}
-        <div className="space-y-3 pb-4 border-b border-gray-200">
-          <h3 className="font-medium text-sm text-gray-700">Content Settings</h3>
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Research Section Text</Label>
-            <Input
-              type="text"
-              value={workingTheme.researchSectionText || "Generate your own research report"}
-              onChange={(e) => handleColorChange('researchSectionText' as keyof ThemeConfig, e.target.value)}
-              className="text-sm"
-              placeholder="Enter research section text"
-            />
-          </div>
-        </div>
+
 
         {/* Color Settings in Grid Layout */}
         <div className="grid grid-cols-2 gap-6">
@@ -254,6 +241,11 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
                 label="Muted Text" 
                 property="mutedTextColor" 
                 value={workingTheme.mutedTextColor} 
+              />
+              <ColorInput 
+                label="Research Prompt Text" 
+                property="researchPromptTextColor" 
+                value={workingTheme.researchPromptTextColor} 
               />
             </div>
           </div>
