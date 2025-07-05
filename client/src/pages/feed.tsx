@@ -38,7 +38,7 @@ export default function FeedPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <header className="bg-white border-b-2 border-black shadow-sm">
+        <header className="theme-article-card-bg theme-divider border-b shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-32">
               <div className="flex items-center space-x-4">

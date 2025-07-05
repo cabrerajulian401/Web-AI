@@ -135,14 +135,14 @@ export const navyTheme: ThemeConfig = {
   dividerColor: 'rgb(255, 255, 255)', // white
   dividerWidth: '2px',
   iconBackground: 'rgb(255, 255, 255)', // white
-  borderColor: 'rgb(255, 255, 255)', // white
-  borderWidth: '2px',
+  borderColor: 'transparent', // no borders
+  borderWidth: '0px',
   borderFocusColor: 'rgb(255, 255, 255)', // white
-  reportCardBackground: 'rgb(30, 45, 90)', // darker navy
-  reportCardBorder: 'rgb(255, 255, 255)', // white
-  articleCardBackground: 'rgb(30, 45, 90)', // darker navy
-  articleCardBorder: 'rgb(255, 255, 255)', // white
-  articleCardHoverBackground: 'rgb(40, 55, 100)', // lighter navy
+  reportCardBackground: 'rgb(22, 32, 67)', // same as page background
+  reportCardBorder: 'transparent', // no borders
+  articleCardBackground: 'rgb(22, 32, 67)', // same as page background
+  articleCardBorder: 'transparent', // no borders
+  articleCardHoverBackground: 'rgb(30, 45, 90)', // slightly lighter navy on hover
   sidebarTextColor: 'rgb(255, 255, 255)', // white
   sidebarBackground: 'transparent',
   sidebarBorderColor: 'transparent',
