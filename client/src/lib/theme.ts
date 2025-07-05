@@ -138,21 +138,21 @@ export const navyTheme: ThemeConfig = {
   borderColor: 'transparent', // no borders
   borderWidth: '0px',
   borderFocusColor: 'rgb(255, 255, 255)', // white
-  reportCardBackground: 'rgb(22, 32, 67)', // same as page background
+  reportCardBackground: 'rgb(255, 255, 255)', // white cards
   reportCardBorder: 'transparent', // no borders
-  articleCardBackground: 'rgb(22, 32, 67)', // same as page background
+  articleCardBackground: 'rgb(255, 255, 255)', // white cards
   articleCardBorder: 'transparent', // no borders
-  articleCardHoverBackground: 'rgb(30, 45, 90)', // slightly lighter navy on hover
+  articleCardHoverBackground: 'rgb(249, 250, 251)', // light gray on hover
   sidebarTextColor: 'rgb(255, 255, 255)', // white
   sidebarBackground: 'transparent',
   sidebarBorderColor: 'transparent',
-  headerTextColor: 'rgb(255, 255, 255)', // white
-  headlineTextColor: 'rgb(255, 255, 255)', // white
-  researchCardHeaderTextColor: 'rgb(255, 255, 255)', // white
-  bodyTextColor: 'rgb(229, 231, 235)', // gray-200
-  mutedTextColor: 'rgb(156, 163, 175)', // gray-400
-  researchPromptTextColor: 'rgb(255, 255, 255)', // white
-  researchReportLabelColor: 'rgb(209, 213, 219)', // gray-300
+  headerTextColor: 'rgb(255, 255, 255)', // white for header text
+  headlineTextColor: 'rgb(17, 24, 39)', // black for card headlines
+  researchCardHeaderTextColor: 'rgb(17, 24, 39)', // black for card headers
+  bodyTextColor: 'rgb(55, 65, 81)', // dark gray for card body text
+  mutedTextColor: 'rgb(107, 114, 128)', // muted gray for card meta text
+  researchPromptTextColor: 'rgb(255, 255, 255)', // white for main research prompt
+  researchReportLabelColor: 'rgb(107, 114, 128)', // muted gray for card labels
 };
 
 // Theme management
