@@ -114,7 +114,6 @@ Changelog:
 - July 05, 2025. Enhanced search bar prominence with gradient background, enhanced shadows, blue color scheme, hover animations, and Research button. Combined header and first card in article view. Updated search bar text to "Generate a report on any event" and removed AI branding subtext for cleaner presentation
 - July 05, 2025. Completed dummy research report functionality with comprehensive "One Big Beautiful Bill" content including Executive Summary, Timeline, Raw Facts (organized by Legislative/Financial Impact/Voting Record categories), Different Perspectives (4 viewpoints with color-coded displays), and Conflicting Info sections. Implemented search functionality that navigates to dummy report regardless of search query, with Enter key support for enhanced user experience
 - July 05, 2025. Updated research report design by removing header section, placing "TIMIO News" logo above "RESEARCH REPORT" in hero overlay, removing all action buttons for clean minimal presentation, and replaced placeholder image with authentic Getty Images photo of the bill signing ceremony
-- July 05, 2025. Enhanced Raw Facts section with color-coded category cards (Legislative=blue, Financial Impact=green, Voting Record=purple), added emoji icons for each category, improved visual hierarchy with rounded borders and shadows, and replaced checkboxes with bullet points for cleaner presentation
 
 ## User Preferences
 
