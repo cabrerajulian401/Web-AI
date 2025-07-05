@@ -190,7 +190,7 @@ export default function ArticlePage() {
                   <img 
                     src={article.heroImageUrl}
                     alt={article.title}
-                    className="w-full h-64 object-cover"
+                    className="w-full h-48 object-cover"
                   />
                   {/* Semitransparent mask */}
                   <div className="absolute inset-0 bg-black bg-opacity-40"></div>
@@ -204,8 +204,8 @@ export default function ArticlePage() {
                   
                   {/* Headline overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="text-sm font-medium text-blue-300 mb-2">Research Report:</p>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+                    <p className="text-xl font-bold text-blue-300 mb-3 tracking-wide">RESEARCH REPORT</p>
+                    <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
                       {article.title}
                     </h1>
                   </div>
