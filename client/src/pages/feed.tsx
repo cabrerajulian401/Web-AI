@@ -139,18 +139,30 @@ export default function FeedPage() {
           {/* Left side - Articles */}
           <div className="flex-1 max-w-4xl">
             {/* Research Input */}
-            <div className="flex flex-col items-center space-y-4 mb-12">
+            <div className="flex flex-col items-center space-y-6 mb-12">
               <h2 className="text-3xl font-bold theme-research-prompt-text text-center">
                 Generate your own research report
               </h2>
               <div className="relative w-full max-w-2xl">
-                <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Enter a story to research"
-                  className="w-full pl-16 pr-6 py-4 text-xl bg-white border-2 border-gray-300 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 rounded-xl shadow-lg"
-                />
+                {/* Enhanced background with gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl blur-sm opacity-20"></div>
+                <div className="relative bg-white rounded-2xl shadow-2xl border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-3xl transform hover:-translate-y-1">
+                  <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 h-7 w-7 text-blue-500" />
+                  <Input
+                    type="text"
+                    placeholder="Enter a story to research..."
+                    className="w-full pl-16 pr-6 py-6 text-xl bg-transparent border-0 focus:ring-0 focus:outline-none placeholder:text-gray-400"
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <Button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 text-white font-semibold rounded-lg shadow-md">
+                      Research
+                    </Button>
+                  </div>
+                </div>
               </div>
+              <p className="text-sm text-gray-500 text-center max-w-xl">
+                Powered by AI • Get instant analysis and insights on any topic
+              </p>
             </div>
 
             {/* Page Header */}
