@@ -51,7 +51,7 @@ export class RSSService {
       // Simple political keyword for current events
       const politicalKeywords = 'politics';
       
-      // Add more specific parameters for better political news diversity
+      // Use latest endpoint with better diversity approach
       const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&country=us&category=politics&language=en`;
       console.log('API URL:', apiUrl);
       
@@ -72,21 +72,36 @@ export class RSSService {
         return this.getSampleEventData();
       }
       
+      // If we get very few unique articles from the API, combine with sample data
+      if (data.results.length < 5) {
+        console.log('Limited diversity from API, will combine with sample data...');
+      }
+      
       console.log(`Fetched ${data.results.length} events from newsdata.io`);
       
       // Log the first few article titles to see what we're getting
       console.log('First few articles from API:');
-      data.results.slice(0, 3).forEach((item, index) => {
-        console.log(`${index + 1}. ${item.title} - Category: ${item.category}`);
+      data.results.slice(0, 5).forEach((item, index) => {
+        console.log(`${index + 1}. ${item.title} - Category: ${item.category} - Country: ${item.country}`);
       });
       
-      // Filter for unique titles and complete articles
+      // Filter for US political events/articles with better criteria
       const seenTitles = new Set<string>();
+      const usKeywords = ['congress', 'senate', 'house', 'biden', 'trump', 'washington', 'white house', 'supreme court', 'election', 'campaign', 'governor', 'mayor', 'democrat', 'republican', 'gop', 'bill', 'legislation', 'federal', 'state', 'political', 'vote', 'voting'];
+      
       const filteredResults = data.results.filter(item => {
         const hasRequiredData = item.title && item.description;
         const isUnique = !seenTitles.has(item.title);
+        const isUSContent = item.country.includes('us') || item.country.includes('united states');
         
-        if (hasRequiredData && isUnique) {
+        // Check if content contains US political keywords
+        const titleLower = item.title.toLowerCase();
+        const descriptionLower = (item.description || '').toLowerCase();
+        const hasUSPoliticalKeywords = usKeywords.some(keyword => 
+          titleLower.includes(keyword) || descriptionLower.includes(keyword)
+        );
+        
+        if (hasRequiredData && isUnique && (isUSContent || hasUSPoliticalKeywords)) {
           seenTitles.add(item.title);
           return true;
         }
@@ -94,7 +109,8 @@ export class RSSService {
       });
       console.log(`After filtering: ${filteredResults.length} articles remaining`);
       
-      const articles: Article[] = filteredResults
+      // Create articles from API results
+      const apiArticles: Article[] = filteredResults
         .map((item, index) => {
           const slug = this.createSlug(item.title);
           const imageUrl = item.image_url || this.getDefaultImage();
@@ -113,15 +129,32 @@ export class RSSService {
             authorName: item.creator?.[0] || null,
             authorTitle: item.source_name || null,
           };
-        })
-        .slice(0, 20); // Limit to 20 articles
+        });
       
-      console.log(`Returning ${articles.length} articles to storage`);
-      if (articles.length > 0) {
-        console.log(`First article: ${articles[0].title}`);
+      // If we have less than 3 unique articles, supplement with sample data
+      if (apiArticles.length < 3) {
+        console.log(`Only ${apiArticles.length} unique articles from API, supplementing with sample US political events...`);
+        const sampleArticles = this.getSampleEventData();
+        
+        // Combine API articles with sample articles, ensuring no duplicates
+        const combinedArticles = [...apiArticles];
+        const apiTitles = new Set(apiArticles.map(a => a.title.toLowerCase()));
+        
+        sampleArticles.forEach(sampleArticle => {
+          if (!apiTitles.has(sampleArticle.title.toLowerCase()) && combinedArticles.length < 10) {
+            combinedArticles.push({
+              ...sampleArticle,
+              id: combinedArticles.length + 1
+            });
+          }
+        });
+        
+        console.log(`Returning ${combinedArticles.length} combined articles (${apiArticles.length} from API, ${combinedArticles.length - apiArticles.length} from samples)`);
+        return combinedArticles;
       }
       
-      return articles;
+      console.log(`Returning ${apiArticles.length} articles from API`);
+      return apiArticles.slice(0, 20);
     } catch (error) {
       console.error('Error fetching from newsdata.io:', error);
       console.log('Using sample political news data...');
