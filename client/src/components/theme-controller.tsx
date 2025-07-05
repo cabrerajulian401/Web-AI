@@ -247,6 +247,11 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
                 property="researchPromptTextColor" 
                 value={workingTheme.researchPromptTextColor} 
               />
+              <ColorInput 
+                label="Research Report Label" 
+                property="researchReportLabelColor" 
+                value={workingTheme.researchReportLabelColor} 
+              />
             </div>
           </div>
         </div>

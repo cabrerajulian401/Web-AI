@@ -35,6 +35,7 @@ export interface ThemeConfig {
   bodyTextColor: string;
   mutedTextColor: string;
   researchPromptTextColor: string;
+  researchReportLabelColor: string;
 }
 
 // Default theme (current colors)
@@ -65,8 +66,8 @@ export const defaultTheme: ThemeConfig = {
   
   // Sidebar
   sidebarTextColor: 'rgb(75, 85, 99)', // gray-600
-  sidebarBackground: 'rgb(255, 255, 255)', // white
-  sidebarBorderColor: 'rgb(209, 213, 219)', // gray-300
+  sidebarBackground: 'transparent',
+  sidebarBorderColor: 'transparent',
   
   // Text colors
   headerTextColor: 'rgb(17, 24, 39)', // gray-900
@@ -75,6 +76,7 @@ export const defaultTheme: ThemeConfig = {
   bodyTextColor: 'rgb(75, 85, 99)', // gray-600
   mutedTextColor: 'rgb(156, 163, 175)', // gray-400
   researchPromptTextColor: 'rgb(17, 24, 39)', // gray-900
+  researchReportLabelColor: 'rgb(107, 114, 128)', // gray-500
 };
 
 // Alternative theme examples
@@ -92,14 +94,15 @@ export const darkTheme: ThemeConfig = {
   articleCardBorder: 'rgb(75, 85, 99)', // gray-600
   articleCardHoverBackground: 'rgb(55, 65, 81)', // gray-700
   sidebarTextColor: 'rgb(209, 213, 219)', // gray-300
-  sidebarBackground: 'rgb(31, 41, 55)', // gray-800
-  sidebarBorderColor: 'rgb(75, 85, 99)', // gray-600
+  sidebarBackground: 'transparent',
+  sidebarBorderColor: 'transparent',
   headerTextColor: 'rgb(255, 255, 255)', // white
   headlineTextColor: 'rgb(255, 255, 255)', // white
   researchCardHeaderTextColor: 'rgb(209, 213, 219)', // gray-300
   bodyTextColor: 'rgb(156, 163, 175)', // gray-400
   mutedTextColor: 'rgb(107, 114, 128)', // gray-500
   researchPromptTextColor: 'rgb(255, 255, 255)', // white
+  researchReportLabelColor: 'rgb(209, 213, 219)', // gray-300
 };
 
 export const blueTheme: ThemeConfig = {
@@ -116,14 +119,15 @@ export const blueTheme: ThemeConfig = {
   articleCardBorder: 'rgb(147, 197, 253)', // blue-300
   articleCardHoverBackground: 'rgb(219, 234, 254)', // blue-100
   sidebarTextColor: 'rgb(30, 64, 175)', // blue-800
-  sidebarBackground: 'rgb(255, 255, 255)', // white
-  sidebarBorderColor: 'rgb(147, 197, 253)', // blue-300
+  sidebarBackground: 'transparent',
+  sidebarBorderColor: 'transparent',
   headerTextColor: 'rgb(30, 58, 138)', // blue-900
   headlineTextColor: 'rgb(30, 58, 138)', // blue-900
   researchCardHeaderTextColor: 'rgb(37, 99, 235)', // blue-600
   bodyTextColor: 'rgb(30, 64, 175)', // blue-800
   mutedTextColor: 'rgb(96, 165, 250)', // blue-400
   researchPromptTextColor: 'rgb(30, 58, 138)', // blue-900
+  researchReportLabelColor: 'rgb(37, 99, 235)', // blue-600
 };
 
 // Theme management
@@ -164,6 +168,7 @@ export class ThemeManager {
     root.style.setProperty('--body-text-color', this.currentTheme.bodyTextColor);
     root.style.setProperty('--muted-text-color', this.currentTheme.mutedTextColor);
     root.style.setProperty('--research-prompt-text-color', this.currentTheme.researchPromptTextColor);
+    root.style.setProperty('--research-report-label-color', this.currentTheme.researchReportLabelColor);
   }
   
   // Preset themes

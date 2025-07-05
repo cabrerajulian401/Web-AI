@@ -84,6 +84,7 @@
 .theme-body-text { color: var(--body-text-color); }
 .theme-muted-text { color: var(--muted-text-color); }
 .theme-research-prompt-text { color: var(--research-prompt-text-color); }
+.theme-research-report-label { color: var(--research-report-label-color); }
 
 .dark {
   --background: hsl(240, 10%, 3.9%);
