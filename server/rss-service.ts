@@ -157,55 +157,70 @@ export class RSSService {
       let articleId = 1;
       
       data.events.results.forEach(event => {
-        // Filter for US political content
+        // Strict filter for US political content only
         const title = event.title.eng.toLowerCase();
         const summary = (event.summary.eng || '').toLowerCase();
-        const usKeywords = ['united states', 'usa', 'america', 'congress', 'senate', 'biden', 'trump', 'washington', 'white house', 'supreme court', 'federal', 'republican', 'democrat', 'gop'];
+        const text = title + ' ' + summary;
         
-        const isUSRelated = usKeywords.some(keyword => 
-          title.includes(keyword) || summary.includes(keyword)
-        );
+        // Strong US indicators - require explicit US political terms
+        const strongUSKeywords = ['biden', 'trump', 'congress', 'senate', 'white house', 'washington dc', 'supreme court', 'house of representatives', 'federal government', 'us president', 'american politics', 'united states', 'usa', 'america'];
         
-        if (isUSRelated) {
+        // Exclude non-US countries, regions, and irrelevant content
+        const excludeKeywords = ['canada', 'canadian', 'alberta', 'ontario', 'australia', 'australian', 'india', 'indian', 'calcutta', 'west bengal', 'lagos', 'nigeria', 'mamata', 'trinamool', 'jaishankar', 'premier', 'byelection', 'toll pass', 'highway', 'qantas', 'apc', 'defections', 'dalori', 'khemka', 'bihar', 'bjp', 'hyderabad', 'kharge', 'gopal', 'natasha', 'spitting image', 'prince harry', 'harris', 'posters'];
+        
+        const hasStrongUSIndicator = strongUSKeywords.some(keyword => text.includes(keyword));
+        const hasExcludedContent = excludeKeywords.some(keyword => text.includes(keyword));
+        
+        if (hasStrongUSIndicator && !hasExcludedContent) {
           // Create an article from the event
           const eventArticle: Article = {
             id: articleId++,
             title: this.cleanTitle(event.title.eng),
             slug: this.createSlug(event.title.eng),
-            excerpt: event.summary.eng || 'Political event summary',
-            content: event.summary.eng || 'Political event content',
+            excerpt: event.summary.eng || 'US political event summary',
+            content: event.summary.eng || 'US political event content',
             category: 'Politics',
             publishedAt: new Date(event.eventDate),
             readTime: this.estimateReadTime(event.summary.eng || ''),
             sourceCount: event.articleCounts.total || 1,
             heroImageUrl: this.getDefaultImage(),
             authorName: 'News Desk',
-            authorTitle: 'Political Events',
+            authorTitle: 'US Political Events',
           };
           
           apiArticles.push(eventArticle);
         }
         
-        // Also add individual articles from the event if available
+        // Also add individual articles from the event if available and US-related
         if (event.articles && event.articles.results) {
           event.articles.results.forEach(article => {
             if (articleId <= 15) { // Limit total articles
-              const individualArticle: Article = {
-                id: articleId++,
-                title: this.cleanTitle(article.title),
-                slug: this.createSlug(article.title),
-                excerpt: article.summary || this.extractExcerpt(article.body || ''),
-                content: article.body || article.summary || '',
-                category: 'Politics',
-                publishedAt: new Date(article.dateTime),
-                readTime: this.estimateReadTime(article.body || article.summary || ''),
-                sourceCount: Math.floor(Math.random() * 15) + 5,
-                heroImageUrl: article.image || this.getDefaultImage(),
-                authorName: article.authors?.[0]?.name || article.source.title,
-                authorTitle: article.source.title,
-              };
+              const articleTitle = article.title.toLowerCase();
+              const articleSummary = (article.summary || '').toLowerCase();
+              const articleText = articleTitle + ' ' + articleSummary;
               
-              apiArticles.push(individualArticle);
+              // Apply same US filtering to individual articles
+              const hasStrongUSIndicator = strongUSKeywords.some(keyword => articleText.includes(keyword));
+              const hasExcludedContent = excludeKeywords.some(keyword => articleText.includes(keyword));
+              
+              if (hasStrongUSIndicator && !hasExcludedContent) {
+                const individualArticle: Article = {
+                  id: articleId++,
+                  title: this.cleanTitle(article.title),
+                  slug: this.createSlug(article.title),
+                  excerpt: article.summary || this.extractExcerpt(article.body || ''),
+                  content: article.body || article.summary || '',
+                  category: 'Politics',
+                  publishedAt: new Date(article.dateTime),
+                  readTime: this.estimateReadTime(article.body || article.summary || ''),
+                  sourceCount: Math.floor(Math.random() * 15) + 5,
+                  heroImageUrl: article.image || this.getDefaultImage(),
+                  authorName: article.authors?.[0]?.name || article.source.title,
+                  authorTitle: article.source.title,
+                };
+                
+                apiArticles.push(individualArticle);
+              }
             }
           });
         }
