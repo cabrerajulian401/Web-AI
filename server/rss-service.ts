@@ -51,13 +51,15 @@ export class RSSService {
       // Simple political keyword for current events
       const politicalKeywords = 'politics';
       
-      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&country=us&size=20&prioritydomain=top`;
+      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&country=us&size=20`;
       console.log('API URL:', apiUrl);
       
       const response = await fetch(apiUrl);
       
       if (!response.ok) {
+        const errorText = await response.text();
         console.log(`NewsData API error: ${response.status} ${response.statusText}`);
+        console.log('API Error Response:', errorText);
         console.log('Falling back to sample political news data...');
         return this.getSampleEventData();
       }
