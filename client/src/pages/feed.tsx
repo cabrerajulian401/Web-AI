@@ -138,18 +138,27 @@ export default function FeedPage() {
         <div className="flex gap-8">
           {/* Left side - Articles */}
           <div className="flex-1 max-w-4xl">
-            {/* Research Input */}
-            <div className="flex flex-col items-center space-y-4 mb-12">
-              <h2 className="text-3xl font-bold theme-research-prompt-text text-center">
+            {/* Research Input - Enhanced */}
+            <div className="flex flex-col items-center space-y-6 mb-16 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-xl border border-blue-100">
+              <h2 className="text-4xl font-bold theme-research-prompt-text text-center bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Generate your own research report
               </h2>
-              <div className="relative w-full max-w-2xl">
-                <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
+              <p className="text-lg text-gray-600 text-center max-w-xl">
+                Enter any topic or story you want to research and get AI-powered insights
+              </p>
+              <div className="relative w-full max-w-3xl">
+                <Search className="absolute left-8 top-1/2 transform -translate-y-1/2 h-8 w-8 text-blue-400" />
                 <Input
                   type="text"
-                  placeholder="Enter a story to research"
-                  className="w-full pl-16 pr-6 py-4 text-xl bg-white border-2 border-gray-300 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 rounded-xl shadow-lg"
+                  placeholder="Enter a story, topic, or question to research..."
+                  className="w-full pl-20 pr-8 py-6 text-2xl bg-white border-3 border-blue-200 focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/30 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 placeholder-gray-400"
                 />
+                <Button 
+                  size="lg"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Research
+                </Button>
               </div>
             </div>
 
