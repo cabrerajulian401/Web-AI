@@ -194,22 +194,94 @@ export default function ArticlePage() {
                 title="Raw Facts"
                 icon="database"
                 content={
-                  <div className="mt-6">
-                    {rawFacts.map((factGroup, groupIndex) => (
-                      <div key={groupIndex} className="mb-8">
-                        <h4 className="text-lg font-semibold text-gray-900 mb-4 border-b-2 border-gray-200 pb-2">
-                          {factGroup.category}
-                        </h4>
-                        <ul className="text-base text-gray-800 space-y-3">
-                          {factGroup.facts.map((fact, factIndex) => (
-                            <li key={factIndex} className="flex items-start">
-                              <input type="checkbox" checked readOnly className="mt-1.5 mr-4 flex-shrink-0 w-4 h-4 accent-blue-600" />
-                              <span className="leading-relaxed">{fact}</span>
-                            </li>
-                          ))}
-                        </ul>
+                  <div className="space-y-6">
+                    {/* Bill Information Header */}
+                    <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-blue-500">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                        Directly from the bill (H.R.1, 119th Congress)
+                      </h4>
+                    </div>
+
+                    {/* Tax Provisions */}
+                    <div className="space-y-3">
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">Makes Trump tax cuts permanent</span>
                       </div>
-                    ))}
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">Tax reductions for incomes &lt;$500k (5-year limit)</span>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">New deductions: tips, overtime, auto loans (expire 2028)</span>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">Adds $200 to child tax credit</span>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">1% remittance tax; increases endowment investment taxes</span>
+                      </div>
+                    </div>
+
+                    {/* Environmental & Energy */}
+                    <div className="space-y-3">
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">Ends clean energy credits; opens federal land to oil & gas</span>
+                      </div>
+                    </div>
+
+                    {/* Social Programs */}
+                    <div className="space-y-3">
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">Cuts to Medicaid, Medicare, SNAP; shifts SNAP costs to states</span>
+                      </div>
+                    </div>
+
+                    {/* Security & Defense */}
+                    <div className="space-y-3">
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-purple-600 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">ICE funding increases tenfold to $100B by 2029</span>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-purple-600 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">Adds $150B to defense, $150B to border enforcement</span>
+                      </div>
+                    </div>
+
+                    {/* Fiscal Impact */}
+                    <div className="space-y-3">
+                      <div className="flex items-start">
+                        <div className="h-2 w-2 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0" />
+                        <span className="text-gray-800">Raises debt ceiling by $5T</span>
+                      </div>
+                    </div>
+
+                    {/* CBO Analysis Section */}
+                    <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-3">
+                        CBO Analysis:
+                      </h4>
+                      <div className="space-y-2">
+                        <div className="flex items-start">
+                          <div className="h-2 w-2 bg-yellow-600 rounded-full mt-2 mr-3 flex-shrink-0" />
+                          <span className="text-gray-800">Adds $2.8T to deficit by 2034</span>
+                        </div>
+                        <div className="flex items-start">
+                          <div className="h-2 w-2 bg-yellow-600 rounded-full mt-2 mr-3 flex-shrink-0" />
+                          <span className="text-gray-800">10.9M lose insurance, mainly from Medicaid</span>
+                        </div>
+                        <div className="flex items-start">
+                          <div className="h-2 w-2 bg-yellow-600 rounded-full mt-2 mr-3 flex-shrink-0" />
+                          <span className="text-gray-800">Medicaid & CHIP enrollment drops by 10.5M</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 }
               />
