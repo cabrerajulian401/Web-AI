@@ -191,36 +191,46 @@ export default function ArticlePage() {
             {/* Article Hero */}
             <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
               <CardContent className="p-8">
-                {/* Article Header */}
-                <div className="mb-6">
-                  <h1 className="text-3xl md:text-4xl font-bold theme-headline-text mb-4 leading-tight">
-                    {article.title}
-                  </h1>
-                  
-                  {/* Article Meta */}
-                  <div className="flex flex-wrap items-center gap-4 text-sm theme-muted-text mb-6">
-                    <span className="flex items-center">
-                      <Clock className="h-4 w-4 mr-1" />
-                      Published {new Date(article.publishedAt).toLocaleDateString()}
-                    </span>
-                    <span className="flex items-center">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      {article.sourceCount} sources analyzed
-                    </span>
-                    <span className="flex items-center">
-                      <Eye className="h-4 w-4 mr-1" />
-                      {article.readTime} min read
-                    </span>
-                  </div>
+                {/* Article Meta */}
+                <div className="flex flex-wrap items-center gap-4 text-sm theme-muted-text mb-6">
+                  <span className="flex items-center">
+                    <Clock className="h-4 w-4 mr-1" />
+                    Published {new Date(article.publishedAt).toLocaleDateString()}
+                  </span>
+                  <span className="flex items-center">
+                    <TrendingUp className="h-4 w-4 mr-1" />
+                    {article.sourceCount} sources analyzed
+                  </span>
+                  <span className="flex items-center">
+                    <Eye className="h-4 w-4 mr-1" />
+                    {article.readTime} min read
+                  </span>
                 </div>
 
-                {/* Hero Image */}
-                <div className="mb-4">
+                {/* Hero Image with Overlay */}
+                <div className="relative overflow-hidden rounded-lg shadow-lg mb-4">
                   <img 
                     src={article.heroImageUrl}
                     alt={article.title}
-                    className="w-full h-80 object-cover rounded-lg shadow-lg"
+                    className="w-full h-80 object-cover"
                   />
+                  {/* Semitransparent mask */}
+                  <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+                  
+                  {/* Category badge */}
+                  <div className="absolute top-6 left-6">
+                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                      {article.category}
+                    </span>
+                  </div>
+                  
+                  {/* Headline overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <p className="text-sm font-medium text-blue-300 mb-2">Research Report:</p>
+                    <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+                      {article.title}
+                    </h1>
+                  </div>
                 </div>
 
 

@@ -204,13 +204,6 @@ export class RSSService {
               const hasExcludedContent = excludeKeywords.some(keyword => articleText.includes(keyword));
               
               if (hasStrongUSIndicator && !hasExcludedContent) {
-                // Log image availability for debugging
-                if (article.image) {
-                  console.log(`Article "${article.title}" has image: ${article.image}`);
-                } else {
-                  console.log(`Article "${article.title}" has no image, using placeholder`);
-                }
-                
                 const individualArticle: Article = {
                   id: articleId++,
                   title: this.cleanTitle(article.title),
