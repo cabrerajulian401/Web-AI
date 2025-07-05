@@ -48,10 +48,7 @@ export class RSSService {
     try {
       console.log('Fetching recent trending US political news from newsdata.io...');
       
-      // Simple political keyword for current events
-      const politicalKeywords = 'politics';
-      
-      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&country=us&category=politics`;
+      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&country=us`;
       console.log('API URL:', apiUrl);
       
       const response = await fetch(apiUrl);
@@ -73,8 +70,19 @@ export class RSSService {
       
       console.log(`Fetched ${data.results.length} events from newsdata.io`);
       
+      // Filter for political content keywords
+      const politicalKeywords = ['trump', 'biden', 'congress', 'senate', 'house', 'republican', 'democrat', 'political', 'politics', 'election', 'campaign', 'white house', 'supreme court', 'federal', 'government', 'governor', 'mayor', 'vote', 'legislation', 'bill', 'law'];
+      
       const articles: Article[] = data.results
         .filter(item => !item.duplicate && item.title && item.description) // Filter out duplicates and incomplete articles
+        .filter(item => {
+          // Check if title or description contains political keywords
+          const titleLower = item.title.toLowerCase();
+          const descriptionLower = (item.description || '').toLowerCase();
+          return politicalKeywords.some(keyword => 
+            titleLower.includes(keyword) || descriptionLower.includes(keyword)
+          );
+        })
         .map((item, index) => {
           const slug = this.createSlug(item.title);
           const imageUrl = item.image_url || this.getDefaultImage();
@@ -95,6 +103,42 @@ export class RSSService {
           };
         })
         .slice(0, 20); // Limit to 20 articles
+      
+      console.log(`Filtered to ${articles.length} political articles from ${data.results.length} total articles`);
+      
+      // If we don't have enough political articles, supplement with general news
+      if (articles.length < 6) {
+        const additionalArticles = data.results
+          .filter(item => !item.duplicate && item.title && item.description)
+          .filter(item => {
+            // Exclude articles we already have
+            const titleLower = item.title.toLowerCase();
+            return !articles.some(existing => existing.title.toLowerCase() === titleLower);
+          })
+          .slice(0, 10 - articles.length) // Take enough to get to 10 total
+          .map((item, index) => {
+            const slug = this.createSlug(item.title);
+            const imageUrl = item.image_url || this.getDefaultImage();
+            
+            return {
+              id: articles.length + index + 1,
+              title: this.cleanTitle(item.title),
+              slug,
+              excerpt: this.extractExcerpt(item.description || ''),
+              content: item.content || item.description || '',
+              category: this.mapCategory(item.category || []),
+              publishedAt: new Date(item.pubDate),
+              readTime: this.estimateReadTime(item.content || item.description || ''),
+              sourceCount: Math.floor(Math.random() * 15) + 5,
+              heroImageUrl: imageUrl,
+              authorName: item.creator?.[0] || null,
+              authorTitle: item.source_name || null,
+            };
+          });
+          
+        articles.push(...additionalArticles);
+        console.log(`Added ${additionalArticles.length} additional current articles for total of ${articles.length}`);
+      }
       
       return articles;
     } catch (error) {
