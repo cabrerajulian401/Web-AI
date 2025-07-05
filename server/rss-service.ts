@@ -48,12 +48,13 @@ export class RSSService {
     try {
       console.log('Fetching recent trending US political news from newsdata.io...');
       
-      // Simplified US Political keywords for current events
-      const politicalKeywords = 'Trump OR Biden OR Congress OR Senate OR House OR politics OR election OR campaign OR White House';
+      // Simple political keyword for current events
+      const politicalKeywords = 'politics';
       
-      const response = await fetch(
-        `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&country=us&size=20&prioritydomain=top`
-      );
+      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&country=us&size=20&prioritydomain=top`;
+      console.log('API URL:', apiUrl);
+      
+      const response = await fetch(apiUrl);
       
       if (!response.ok) {
         console.log(`NewsData API error: ${response.status} ${response.statusText}`);
