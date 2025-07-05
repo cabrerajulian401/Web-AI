@@ -51,7 +51,8 @@ export class RSSService {
       // Simple political keyword for current events
       const politicalKeywords = 'politics';
       
-      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&country=us&category=politics`;
+      // Add more specific parameters for better political news diversity
+      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&country=us&category=politics&language=en`;
       console.log('API URL:', apiUrl);
       
       const response = await fetch(apiUrl);
@@ -73,8 +74,27 @@ export class RSSService {
       
       console.log(`Fetched ${data.results.length} events from newsdata.io`);
       
-      const articles: Article[] = data.results
-        .filter(item => !item.duplicate && item.title && item.description) // Filter out duplicates and incomplete articles
+      // Log the first few article titles to see what we're getting
+      console.log('First few articles from API:');
+      data.results.slice(0, 3).forEach((item, index) => {
+        console.log(`${index + 1}. ${item.title} - Category: ${item.category}`);
+      });
+      
+      // Filter for unique titles and complete articles
+      const seenTitles = new Set<string>();
+      const filteredResults = data.results.filter(item => {
+        const hasRequiredData = item.title && item.description;
+        const isUnique = !seenTitles.has(item.title);
+        
+        if (hasRequiredData && isUnique) {
+          seenTitles.add(item.title);
+          return true;
+        }
+        return false;
+      });
+      console.log(`After filtering: ${filteredResults.length} articles remaining`);
+      
+      const articles: Article[] = filteredResults
         .map((item, index) => {
           const slug = this.createSlug(item.title);
           const imageUrl = item.image_url || this.getDefaultImage();
@@ -95,6 +115,11 @@ export class RSSService {
           };
         })
         .slice(0, 20); // Limit to 20 articles
+      
+      console.log(`Returning ${articles.length} articles to storage`);
+      if (articles.length > 0) {
+        console.log(`First article: ${articles[0].title}`);
+      }
       
       return articles;
     } catch (error) {
