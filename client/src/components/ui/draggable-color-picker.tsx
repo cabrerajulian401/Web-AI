@@ -135,19 +135,8 @@ export function DraggableColorPicker({ value, onChange, label }: DraggableColorP
           ref={pickerRef}
           className="relative bg-white border border-gray-300 rounded-lg p-4 shadow-lg"
         >
-          <canvas
-            ref={canvasRef}
-            width={200}
-            height={150}
-            className="border border-gray-200 cursor-crosshair"
-            onMouseDown={handleCanvasMouseDown}
-            onMouseMove={handleCanvasMouseMove}
-            onMouseUp={handleCanvasMouseUp}
-            onMouseLeave={handleCanvasMouseUp}
-          />
-          
           {/* Preset Colors */}
-          <div className="mt-3">
+          <div className="mb-3">
             <div className="text-xs font-medium text-gray-600 mb-2">Quick Colors:</div>
             <div className="flex gap-2">
               {presetColors.map((preset) => (
@@ -170,6 +159,17 @@ export function DraggableColorPicker({ value, onChange, label }: DraggableColorP
               ))}
             </div>
           </div>
+
+          <canvas
+            ref={canvasRef}
+            width={200}
+            height={150}
+            className="border border-gray-200 cursor-crosshair"
+            onMouseDown={handleCanvasMouseDown}
+            onMouseMove={handleCanvasMouseMove}
+            onMouseUp={handleCanvasMouseUp}
+            onMouseLeave={handleCanvasMouseUp}
+          />
 
           {/* Current Color Display */}
           <div className="mt-3 text-xs font-mono text-gray-600">
