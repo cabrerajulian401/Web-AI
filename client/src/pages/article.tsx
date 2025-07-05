@@ -169,7 +169,7 @@ export default function ArticlePage() {
                 </div>
 
                 {/* Executive Summary */}
-                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg">
+                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg max-w-2xl">
                   <h2 className="text-xl font-semibold text-brand-dark mb-4 flex items-center">
                     <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center mr-3">
                       <img 
