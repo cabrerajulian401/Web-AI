@@ -46,21 +46,21 @@ export class RSSService {
 
   async fetchArticles(): Promise<Article[]> {
     try {
-      console.log('Fetching US political news from newsdata.io...');
+      console.log('Fetching recent trending US political news from newsdata.io...');
       
-      // US Political keywords to focus on American political events and news
+      // Recent trending US Political keywords for current events
       const politicalKeywords = [
-        'US politics', 'American politics', 'Congress', 'Senate', 'House Representatives',
-        'President Biden', 'White House', 'Capitol Hill', 'Washington DC',
-        'Democrat', 'Republican', 'GOP', 'Democratic Party', 'Republican Party',
-        'Supreme Court', 'federal court', 'US election', 'midterm', 'presidential election',
-        'Governor', 'Mayor', 'state legislature', 'federal government',
-        'Trump', 'Biden', 'Harris', 'Speaker House', 'Senate Majority Leader',
-        'filibuster', 'committee hearing', 'confirmation', 'impeachment'
+        'breaking political news', 'trending politics', 'latest Congress', 'recent Senate vote',
+        'Biden news today', 'Trump latest', 'White House breaking', 'Capitol Hill today',
+        'political breaking news', 'election news', 'campaign update', 'primary results',
+        'House vote today', 'Senate hearing', 'Supreme Court decision', 'federal court ruling',
+        'political scandal', 'controversy', 'investigation', 'committee vote',
+        'gubernatorial race', 'mayoral election', 'political rally', 'campaign trail',
+        'policy announcement', 'executive order', 'political statement', 'press conference'
       ].join(' OR ');
       
       const response = await fetch(
-        `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&country=us&size=20&prioritydomain=top`
+        `${this.baseUrl}/latest?apikey=${this.apiKey}&q=${encodeURIComponent(politicalKeywords)}&language=en&country=us&size=20&timeframe=24&prioritydomain=top`
       );
       
       if (!response.ok) {
@@ -179,42 +179,42 @@ export class RSSService {
   }
 
   private getSampleEventData(): Article[] {
-    // Sample US political events and news data
+    // Sample recent trending US political events and news data
     const sampleEvents = [
       {
-        title: "House Republicans Push Forward with Border Security Bill",
-        description: "House GOP leaders advance comprehensive border security legislation despite Democratic opposition, setting up potential Senate showdown.",
-        category: "US Politics",
+        title: "Breaking: House Speaker Johnson Faces Challenge from GOP Hardliners",
+        description: "Republican conservatives threaten Speaker Johnson's leadership over spending bill negotiations, creating uncertainty in House proceedings.",
+        category: "Breaking Politics",
         image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&h=400&fit=crop"
       },
       {
-        title: "Biden Administration Announces New Climate Executive Order",
-        description: "President Biden signs executive order targeting federal emissions reduction and clean energy procurement across government agencies.",
-        category: "US Politics",
+        title: "Trump Legal Team Files Emergency Supreme Court Appeal",
+        description: "Former President's lawyers petition Supreme Court for emergency stay of lower court ruling in federal election interference case.",
+        category: "Legal/Political",
         image: "https://images.unsplash.com/photo-1589578527966-fdac0f44566c?w=800&h=400&fit=crop"
       },
       {
-        title: "Senate Judiciary Committee Confirms Federal Judge Nomination",
-        description: "Committee approves Biden's nominee for federal appeals court in party-line vote, moving confirmation to full Senate floor.",
-        category: "US Politics",
+        title: "Biden Poll Numbers Drop Amid Economic Concerns",
+        description: "New polling shows President Biden's approval rating declining as voters express concern over inflation and economic uncertainty.",
+        category: "Campaign 2024",
         image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=400&fit=crop"
       },
       {
-        title: "Trump Holds Rally in Key Swing State Ahead of Primary",
-        description: "Former President Trump campaigns in Iowa, criticizing current administration policies and previewing 2024 election strategy.",
-        category: "US Politics",
+        title: "DeSantis Campaign Shakeup: Key Staff Departures Announced",
+        description: "Florida Governor's presidential campaign announces major staff changes amid fundraising challenges and polling struggles.",
+        category: "Campaign 2024",
         image: "https://images.unsplash.com/photo-1596368743298-413cca6f4d61?w=800&h=400&fit=crop"
       },
       {
-        title: "California Governor Vetoes Controversial Tech Regulation Bill",
-        description: "Governor Newsom vetoes Silicon Valley regulation measure, citing concerns about innovation and economic competitiveness.",
-        category: "US Politics",
+        title: "Senate Confirms Controversial FTC Nominee in Party-Line Vote",
+        description: "Democrats push through Biden's nominee for Federal Trade Commission despite Republican objections over antitrust positions.",
+        category: "Senate Confirmations",
         image: "https://images.unsplash.com/photo-1569163139394-de4e4f43e4e0?w=800&h=400&fit=crop"
       },
       {
-        title: "Congressional Hearing on Social Media Draws Bipartisan Criticism",
-        description: "House committee grills tech executives on content moderation practices, with lawmakers from both parties expressing concerns.",
-        category: "US Politics",
+        title: "Hunter Biden Investigation: New Subpoenas Issued by House Committee",
+        description: "House Oversight Committee escalates probe with fresh subpoenas targeting business associates and financial records.",
+        category: "Congressional Investigation",
         image: "https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?w=800&h=400&fit=crop"
       }
     ];
