@@ -231,7 +231,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       publishedAt: new Date("2025-07-05T00:00:00Z"),
       readTime: 8,
       sourceCount: 24,
-      heroImageUrl: "/assets/placeholder_1751663094502.jpg",
+      heroImageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg",
       authorName: "Political Research Team",
       authorTitle: "TIMIO News Analysis"
     };
@@ -313,25 +313,28 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         id: 999,
         articleId: 999,
         title: "CBO Analysis: 12 Million Could Lose Insurance Under New Law",
+        excerpt: "Congressional Budget Office projects significant coverage losses due to work requirements and funding cuts.",
         url: "#",
         source: "Congressional Budget Office",
-        publishedAt: new Date("2025-07-04T00:00:00Z")
+        imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
       },
       {
         id: 1000,
         articleId: 999,
         title: "State Governors Prepare Legal Challenges to Federal Cuts",
+        excerpt: "Multiple state attorneys general announce coordinated legal strategy to challenge federal healthcare cuts.",
         url: "#",
         source: "Associated Press",
-        publishedAt: new Date("2025-07-05T00:00:00Z")
+        imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
       },
       {
         id: 1001,
         articleId: 999,
         title: "Business Groups Praise Permanent Tax Relief",
+        excerpt: "Industry organizations applaud permanent tax cuts and business deduction expansions in new legislation.",
         url: "#",
         source: "Wall Street Journal",
-        publishedAt: new Date("2025-07-04T00:00:00Z")
+        imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
       }
     ];
 

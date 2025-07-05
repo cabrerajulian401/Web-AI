@@ -149,29 +149,7 @@ export default function ArticlePage() {
                   {/* Semitransparent mask */}
                   <div className="absolute inset-0 bg-black bg-opacity-40"></div>
                   
-                  {/* Action buttons positioned in top-right corner */}
-                  <div className="absolute top-4 right-4 flex items-center space-x-3">
-                    <button 
-                      onClick={handleBackToFeed}
-                      className="flex items-center bg-black bg-opacity-50 hover:bg-opacity-70 text-white px-3 py-2 rounded-lg transition-colors duration-200 font-medium text-sm"
-                    >
-                      <ArrowLeft className="h-4 w-4 mr-2" />
-                      Back
-                    </button>
-                    <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowThemeController(!showThemeController)}
-                      className="flex items-center gap-2 bg-white bg-opacity-90 hover:bg-opacity-100"
-                    >
-                      <Settings className="h-4 w-4" />
-                      Theme
-                    </Button>
-                  </div>
+
                   
                   {/* Headline overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6">
