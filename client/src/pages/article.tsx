@@ -153,7 +153,6 @@ export default function ArticlePage() {
                   />
                   <div>
                     <span className="text-xl font-bold theme-header-text">TIMIO News</span>
-                    <p className="text-sm theme-muted-text">Truth. Trust. Transparency.</p>
                   </div>
                 </div>
                 <button 
