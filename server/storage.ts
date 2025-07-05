@@ -214,6 +214,203 @@ export class MemStorage implements IStorage {
       perspectives: samplePerspectives
     });
 
+    // Add dummy "One Big Beautiful Bill" report
+    const dummyArticle: Article = {
+      id: 999,
+      title: "Trump Signs 'One Big Beautiful Bill' Into Law on July 4, 2025",
+      slug: "one-big-beautiful-bill-trump-2025",
+      excerpt: "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2025, featuring permanent tax cuts, massive cuts to Medicaid and SNAP, and work requirements that could leave 12 million without health insurance by 2034.",
+      content: `President Trump signed the "One Big Beautiful Bill" into law on July 4, 2025, marking what supporters call "the start of a new golden age for America" and critics denounce as "a direct and heartless assault on the American people."
+
+The comprehensive legislation makes permanent the largest tax cuts in U.S. history while implementing the most significant reductions to Medicaid, SNAP, and the Affordable Care Act since their creation. The Congressional Budget Office estimates that 12 million Americans could lose health insurance by 2034 due to the changes.
+
+The bill passed on strict party lines, with the Senate approving it 51-50 (with Vice President JD Vance casting the tie-breaking vote) and the House passing it 218-214, with only two House Republicans voting against it.
+
+Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, elimination of taxes on tips and overtime, expanded work requirements for Medicaid and SNAP, and approximately $930 billion in cuts to healthcare programs over ten years.`,
+      category: "Politics",
+      publishedAt: new Date("2025-07-05T00:00:00Z"),
+      readTime: 8,
+      sourceCount: 24,
+      heroImageUrl: "/assets/placeholder_1751663094502.jpg",
+      authorName: "Political Research Team",
+      authorTitle: "TIMIO News Analysis"
+    };
+
+    const dummyExecutiveSummary: ExecutiveSummary = {
+      id: 999,
+      articleId: 999,
+      points: [
+        "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2025",
+        "Bill includes permanent tax cuts, especially benefiting businesses and high earners",
+        "Largest reductions to Medicaid, SNAP, and ACA since their creation",
+        "Estimated 12 million could lose health insurance by 2034 (CBO)",
+        "Work requirements for Medicaid and SNAP expanded",
+        "Bill passed on strict party lines, with only two House Republicans voting no",
+        "Massive lobbying and advertising campaigns preceded the vote",
+        "Protests and political backlash began immediately after passage"
+      ]
+    };
+
+    const dummyTimelineItems: TimelineItem[] = [
+      {
+        id: 999,
+        articleId: 999,
+        date: new Date("2025-05-22T00:00:00Z"),
+        title: "House Initial Passage",
+        description: "House passes initial version 215-214",
+        type: "legislative",
+        sourceLabel: "Congressional Record"
+      },
+      {
+        id: 1000,
+        articleId: 999,
+        date: new Date("2025-06-16T00:00:00Z"),
+        title: "Senate Committee Action",
+        description: "Senate Finance Committee releases final text and summary",
+        type: "legislative",
+        sourceLabel: "Senate Finance Committee"
+      },
+      {
+        id: 1001,
+        articleId: 999,
+        date: new Date("2025-07-01T00:00:00Z"),
+        title: "Senate Passage",
+        description: "Senate passes revised bill 51-50, VP breaks tie",
+        type: "legislative",
+        sourceLabel: "Senate Clerk"
+      },
+      {
+        id: 1002,
+        articleId: 999,
+        date: new Date("2025-07-02T00:00:00Z"),
+        title: "House Final Passage",
+        description: "House passes final bill 218-214",
+        type: "legislative",
+        sourceLabel: "House Clerk"
+      },
+      {
+        id: 1003,
+        articleId: 999,
+        date: new Date("2025-07-04T00:00:00Z"),
+        title: "Presidential Signature",
+        description: "Trump signs the bill into law on Independence Day",
+        type: "signing",
+        sourceLabel: "White House"
+      },
+      {
+        id: 1004,
+        articleId: 999,
+        date: new Date("2025-07-05T00:00:00Z"),
+        title: "Protests Begin",
+        description: "Protests and rallies against the law begin in major cities",
+        type: "protest",
+        sourceLabel: "News Reports"
+      }
+    ];
+
+    const dummyRelatedArticles: RelatedArticle[] = [
+      {
+        id: 999,
+        articleId: 999,
+        title: "CBO Analysis: 12 Million Could Lose Insurance Under New Law",
+        url: "#",
+        source: "Congressional Budget Office",
+        publishedAt: new Date("2025-07-04T00:00:00Z")
+      },
+      {
+        id: 1000,
+        articleId: 999,
+        title: "State Governors Prepare Legal Challenges to Federal Cuts",
+        url: "#",
+        source: "Associated Press",
+        publishedAt: new Date("2025-07-05T00:00:00Z")
+      },
+      {
+        id: 1001,
+        articleId: 999,
+        title: "Business Groups Praise Permanent Tax Relief",
+        url: "#",
+        source: "Wall Street Journal",
+        publishedAt: new Date("2025-07-04T00:00:00Z")
+      }
+    ];
+
+    const dummyRawFacts: RawFacts[] = [
+      {
+        id: 999,
+        articleId: 999,
+        category: "Legislative",
+        facts: [
+          "Permanent extension of 2017 Tax Cuts and Jobs Act (TCJA) tax brackets and doubled standard deduction",
+          "No tax on tips or overtime; increased senior deduction; enhanced child tax credit", 
+          "Increased small business expensing threshold and permanent Small Business Deduction",
+          "Raised death tax exemption, expanded 199A deduction to 23% for pass-through business income",
+          "Imposes work requirements of at least 80 hours/month for Medicaid eligibility"
+        ]
+      },
+      {
+        id: 1000,
+        articleId: 999,
+        category: "Financial Impact",
+        facts: [
+          "Cuts SNAP funding by nearly $300 billion; Medicaid, ACA, CHIP by about $930 billion",
+          "Raises national debt limit by $5 trillion", 
+          "Adds $3.3 trillion to the deficit over 10 years (CBO)",
+          "Nearly $1.7 trillion in mandatory savings claimed by White House"
+        ]
+      },
+      {
+        id: 1001,
+        articleId: 999,
+        category: "Voting Record",
+        facts: [
+          "Passed Senate 51-50 (VP JD Vance tie-breaker), House 218-214",
+          "Only two House Republicans voted against the bill",
+          "Bill passed on strict party lines with massive lobbying campaigns"
+        ]
+      }
+    ];
+
+    const dummyPerspectives: Perspective[] = [
+      {
+        id: 999,
+        articleId: 999,
+        viewpoint: "Administration Supporters",
+        description: "Praise the legislation as 'historic tax relief' and 'unleashing economic growth while restoring fiscal sanity.' Business groups applaud permanent tax cuts for small businesses and wholesaler-distributors.",
+        color: "green"
+      },
+      {
+        id: 1000,
+        articleId: 999,
+        viewpoint: "State Officials & Critics", 
+        description: "Call it a 'heartless assault on the American people' that strips healthcare and food assistance. State governors say they lack resources to fill the massive federal funding hole.",
+        color: "red"
+      },
+      {
+        id: 1001,
+        articleId: 999,
+        viewpoint: "Health Organizations",
+        description: "Describe it as 'among the darkest days in U.S. health care history,' warning that people will suffer and die due to cuts funding tax cuts for billionaires.",
+        color: "orange"
+      },
+      {
+        id: 1002,
+        articleId: 999,
+        viewpoint: "Nonpartisan Analysis",
+        description: "Penn Wharton Budget Model projects lifetime losses for all future generations, ranging from $5,700 for high-income to $22,000 for low-income households. Public support drops to 21% after hearing about hospital funding cuts.",
+        color: "blue"
+      }
+    ];
+
+    this.articles.set("one-big-beautiful-bill-trump-2025", {
+      article: dummyArticle,
+      executiveSummary: dummyExecutiveSummary,
+      timelineItems: dummyTimelineItems,
+      relatedArticles: dummyRelatedArticles,
+      rawFacts: dummyRawFacts,
+      perspectives: dummyPerspectives
+    });
+
     // Add more sample articles for the feed
     const article2: Article = {
       id: 2,

@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Clock, TrendingUp, Eye, ArrowRight, Search, Settings } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { ThemeController } from "@/components/theme-controller";
 import { useTheme } from "@/hooks/use-theme";
 import { useState } from "react";
@@ -32,7 +32,22 @@ export default function FeedPage() {
     queryKey: ['/api/feed'],
   });
   const [showThemeController, setShowThemeController] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [, setLocation] = useLocation();
   const { currentTheme } = useTheme();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      // Navigate to dummy report regardless of search query
+      setLocation("/article/one-big-beautiful-bill-trump-2025");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   if (isLoading) {
     return (
@@ -151,10 +166,16 @@ export default function FeedPage() {
                   <Input
                     type="text"
                     placeholder="Enter a story to research..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     className="w-full pl-16 pr-6 py-6 text-xl bg-transparent border-0 focus:ring-0 focus:outline-none placeholder:text-gray-400"
                   />
                   <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                    <Button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 text-white font-semibold rounded-lg shadow-md">
+                    <Button 
+                      onClick={handleSearch}
+                      className="bg-blue-600 hover:bg-blue-700 px-6 py-2 text-white font-semibold rounded-lg shadow-md"
+                    >
                       Research
                     </Button>
                   </div>
