@@ -168,26 +168,34 @@ export default function FeedPage() {
               {articles?.map((article) => (
                 <Link key={article.id} href={`/article/${article.slug}`}>
                   <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover border-2 shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer group overflow-hidden h-full">
-                    {/* Article Image */}
+                    {/* Article Image with Overlay */}
                     <div className="relative overflow-hidden">
                       <img 
                         src={article.heroImageUrl}
                         alt={article.title}
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
                       />
+                      {/* Semitransparent mask */}
+                      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+                      
+                      {/* Category badge */}
                       <div className="absolute top-4 left-4">
                         <Badge variant="secondary" className="bg-blue-100 text-blue-800">
                           {article.category}
                         </Badge>
                       </div>
+                      
+                      {/* Headline overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <p className="text-sm font-medium text-blue-300 mb-1">Research Report:</p>
+                        <h3 className="text-xl font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-200 transition-colors duration-200">
+                          {article.title}
+                        </h3>
+                      </div>
                     </div>
 
                     {/* Article Content */}
                     <CardContent className="p-4 flex flex-col flex-grow">
-                      <p className="text-sm font-medium theme-research-report-label mb-1">Research Report:</p>
-                      <h3 className="text-xl font-semibold theme-headline-text mb-2 line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
-                        {article.title}
-                      </h3>
                       <p className="theme-body-text mb-4 line-clamp-3 flex-grow">
                         {article.excerpt}
                       </p>
