@@ -137,60 +137,54 @@ export default function ArticlePage() {
 
   return (
     <div className="min-h-screen theme-page-bg">
-      {/* Header */}
-      <header className="theme-header-bg shadow-sm relative">
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 theme-divider"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-2">
-            <div className="flex items-center justify-between">
-              {/* Logo, Brand and Back Button */}
-              <div className="flex flex-col space-y-1">
-                <div className="flex items-center space-x-3">
-                  <img 
-                    src={timioLogo} 
-                    alt="TIMIO News" 
-                    className="h-8 w-8 rounded-lg"
-                  />
-                  <div>
-                    <span className="text-xl font-bold theme-header-text">TIMIO News</span>
-                  </div>
-                </div>
-                <button 
-                  onClick={handleBackToFeed}
-                  className="flex items-center theme-muted-text hover:text-brand-blue transition-colors duration-200 font-medium text-sm"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </button>
-              </div>
-              
-              <div className="flex items-center space-x-4">
-                <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowThemeController(!showThemeController)}
-                  className="flex items-center gap-2"
-                >
-                  <Settings className="h-4 w-4" />
-                  Theme
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-8">
-            {/* Article Hero */}
+            {/* Combined Header and Article Hero */}
             <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
               <CardContent className="p-0">
+                {/* Header Section */}
+                <div className="theme-header-bg p-6 border-b theme-divider">
+                  <div className="flex items-center justify-between">
+                    {/* Logo, Brand and Back Button */}
+                    <div className="flex flex-col space-y-1">
+                      <div className="flex items-center space-x-3">
+                        <img 
+                          src={timioLogo} 
+                          alt="TIMIO News" 
+                          className="h-8 w-8 rounded-lg"
+                        />
+                        <div>
+                          <span className="text-xl font-bold theme-header-text">TIMIO News</span>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={handleBackToFeed}
+                        className="flex items-center theme-muted-text hover:text-brand-blue transition-colors duration-200 font-medium text-sm"
+                      >
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Back
+                      </button>
+                    </div>
+                    
+                    <div className="flex items-center space-x-4">
+                      <Button onClick={handleShare} className="bg-brand-blue hover:bg-blue-600">
+                        <Share2 className="h-4 w-4 mr-2" />
+                        Share
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowThemeController(!showThemeController)}
+                        className="flex items-center gap-2"
+                      >
+                        <Settings className="h-4 w-4" />
+                        Theme
+                      </Button>
+                    </div>
+                  </div>
+                </div>
                 {/* Hero Image with Overlay */}
                 <div className="relative overflow-hidden">
                   <img 
