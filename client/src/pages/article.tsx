@@ -137,7 +137,7 @@ export default function ArticlePage() {
           {/* Main Content */}
           <div className="lg:col-span-8">
             {/* Combined Header and Article Hero */}
-            <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in max-w-2xl">
+            <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
               <CardContent className="p-0">
                 {/* Hero Image with Overlay */}
                 <div className="relative overflow-hidden">
