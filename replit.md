@@ -113,6 +113,7 @@ Changelog:
 - July 05, 2025. Updated research report view to match feed page design with consistent headline overlays on images. Removed header metadata, Executive Summary section, and whitespace from article view for cleaner, more focused visual presentation. Article page now shows edge-to-edge hero image with overlay containing category badge, "Research Report:" label, and headline only
 - July 05, 2025. Enhanced search bar prominence with gradient background, enhanced shadows, blue color scheme, hover animations, and Research button. Combined header and first card in article view. Updated search bar text to "Generate a report on any event" and removed AI branding subtext for cleaner presentation
 - July 05, 2025. Completed dummy research report functionality with comprehensive "One Big Beautiful Bill" content including Executive Summary, Timeline, Raw Facts (organized by Legislative/Financial Impact/Voting Record categories), Different Perspectives (4 viewpoints with color-coded displays), and Conflicting Info sections. Implemented search functionality that navigates to dummy report regardless of search query, with Enter key support for enhanced user experience
+- July 05, 2025. Updated research report design by removing header section, placing "TIMIO News" logo above "RESEARCH REPORT" in hero overlay, removing all action buttons for clean minimal presentation, and replaced placeholder image with authentic Getty Images photo of the bill signing ceremony
 
 ## User Preferences
 
