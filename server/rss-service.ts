@@ -1,34 +1,90 @@
 import type { Article } from '@shared/schema';
 import fetch from 'node-fetch';
 
-interface NewsDataArticle {
-  article_id: string;
+interface NewsAPIArticle {
+  uri: string;
   title: string;
-  link: string;
-  keywords?: string[];
-  creator?: string[];
-  description?: string;
-  content?: string;
-  pubDate: string;
-  image_url?: string;
-  video_url?: string;
-  source_id: string;
-  source_name?: string;
-  source_url?: string;
-  source_icon?: string;
-  language: string;
-  country: string[];
-  category: string[];
-  ai_tag?: string[];
-  sentiment?: string;
-  duplicate: boolean;
+  body: string;
+  summary: string;
+  url: string;
+  image?: string;
+  eventUri?: string;
+  sentiment?: number;
+  wgt?: number;
+  relevance?: number;
+  dateTime: string;
+  dateTimePub?: string;
+  source: {
+    uri: string;
+    dataType: string;
+    title: string;
+  };
+  authors?: Array<{
+    uri: string;
+    name: string;
+    type: string;
+  }>;
+  location?: {
+    country: {
+      label: {
+        eng: string;
+      };
+    };
+  };
+  categories?: Array<{
+    uri: string;
+    label: {
+      eng: string;
+    };
+  }>;
+  concepts?: Array<{
+    uri: string;
+    label: {
+      eng: string;
+    };
+    score: number;
+  }>;
 }
 
-interface NewsDataResponse {
-  status: string;
-  totalResults: number;
-  results: NewsDataArticle[];
-  nextPage?: string;
+interface NewsAPIResponse {
+  events: {
+    results: Array<{
+      uri: string;
+      title: {
+        eng: string;
+      };
+      summary: {
+        eng: string;
+      };
+      eventDate: string;
+      articleCounts: {
+        total: number;
+      };
+      concepts: Array<{
+        uri: string;
+        label: {
+          eng: string;
+        };
+        score: number;
+      }>;
+      categories: Array<{
+        uri: string;
+        label: {
+          eng: string;
+        };
+      }>;
+      location?: {
+        country: {
+          label: {
+            eng: string;
+          };
+        };
+      };
+      articles: {
+        results: NewsAPIArticle[];
+      };
+    }>;
+  };
 }
 
 export class RSSService {
@@ -36,100 +92,126 @@ export class RSSService {
   private baseUrl: string;
 
   constructor(feedUrl?: string) {
-    this.apiKey = process.env.NEWSDATA_API_KEY || '';
-    this.baseUrl = 'https://newsdata.io/api/1';
+    this.apiKey = process.env.NEWSAPI_AI_KEY || '';
+    this.baseUrl = 'https://eventregistry.org/api/v1';
     
     if (!this.apiKey) {
-      throw new Error('NEWSDATA_API_KEY environment variable is required');
+      throw new Error('NEWSAPI_AI_KEY environment variable is required');
     }
   }
 
   async fetchArticles(): Promise<Article[]> {
     try {
-      console.log('Fetching recent trending US political news from newsdata.io...');
+      console.log('Fetching recent trending US political events from NewsAPI.ai Event Registry...');
       
-      // Simple political keyword for current events
-      const politicalKeywords = 'politics';
+      // NewsAPI.ai Event Registry parameters for US political events
+      const requestBody = {
+        action: 'getEvents',
+        keyword: 'biden OR trump OR congress OR senate OR "white house"',
+        lang: 'eng',
+        eventsSortBy: 'date',
+        eventsCount: 15,
+        includeEventTitle: true,
+        includeEventSummary: true,
+        includeEventArticleCounts: true,
+        includeEventArticles: true,
+        eventArticlesCount: 2,
+        apiKey: this.apiKey
+      };
       
-      // Use latest endpoint with better diversity approach
-      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&country=us&category=politics&language=en`;
-      console.log('API URL:', apiUrl);
+      console.log('API Request Body:', JSON.stringify(requestBody, null, 2));
       
-      const response = await fetch(apiUrl);
+      const response = await fetch(`${this.baseUrl}/event`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.log(`NewsData API error: ${response.status} ${response.statusText}`);
+        console.log(`NewsAPI.ai error: ${response.status} ${response.statusText}`);
         console.log('API Error Response:', errorText);
         console.log('Falling back to sample political news data...');
         return this.getSampleEventData();
       }
       
-      const data = await response.json() as NewsDataResponse;
+      const data = await response.json() as NewsAPIResponse;
       
-      if (data.status !== 'success') {
-        console.log('NewsData API returned error status, falling back to sample political news data...');
+      if (!data.events || !data.events.results) {
+        console.log('NewsAPI.ai returned no events, falling back to sample political news data...');
         return this.getSampleEventData();
       }
       
-      // If we get very few unique articles from the API, combine with sample data
-      if (data.results.length < 5) {
-        console.log('Limited diversity from API, will combine with sample data...');
-      }
+      console.log(`Fetched ${data.events.results.length} political events from NewsAPI.ai`);
       
-      console.log(`Fetched ${data.results.length} events from newsdata.io`);
-      
-      // Log the first few article titles to see what we're getting
-      console.log('First few articles from API:');
-      data.results.slice(0, 5).forEach((item, index) => {
-        console.log(`${index + 1}. ${item.title} - Category: ${item.category} - Country: ${item.country}`);
+      // Log the first few events to see what we're getting
+      console.log('First few events from API:');
+      data.events.results.slice(0, 5).forEach((event, index) => {
+        console.log(`${index + 1}. ${event.title.eng} - Articles: ${event.articleCounts.total}`);
       });
       
-      // Filter for US political events/articles with better criteria
-      const seenTitles = new Set<string>();
-      const usKeywords = ['congress', 'senate', 'house', 'biden', 'trump', 'washington', 'white house', 'supreme court', 'election', 'campaign', 'governor', 'mayor', 'democrat', 'republican', 'gop', 'bill', 'legislation', 'federal', 'state', 'political', 'vote', 'voting'];
+      // Convert events to articles
+      const apiArticles: Article[] = [];
+      let articleId = 1;
       
-      const filteredResults = data.results.filter(item => {
-        const hasRequiredData = item.title && item.description;
-        const isUnique = !seenTitles.has(item.title);
-        const isUSContent = item.country.includes('us') || item.country.includes('united states');
+      data.events.results.forEach(event => {
+        // Filter for US political content
+        const title = event.title.eng.toLowerCase();
+        const summary = (event.summary.eng || '').toLowerCase();
+        const usKeywords = ['united states', 'usa', 'america', 'congress', 'senate', 'biden', 'trump', 'washington', 'white house', 'supreme court', 'federal', 'republican', 'democrat', 'gop'];
         
-        // Check if content contains US political keywords
-        const titleLower = item.title.toLowerCase();
-        const descriptionLower = (item.description || '').toLowerCase();
-        const hasUSPoliticalKeywords = usKeywords.some(keyword => 
-          titleLower.includes(keyword) || descriptionLower.includes(keyword)
+        const isUSRelated = usKeywords.some(keyword => 
+          title.includes(keyword) || summary.includes(keyword)
         );
         
-        if (hasRequiredData && isUnique && (isUSContent || hasUSPoliticalKeywords)) {
-          seenTitles.add(item.title);
-          return true;
-        }
-        return false;
-      });
-      console.log(`After filtering: ${filteredResults.length} articles remaining`);
-      
-      // Create articles from API results
-      const apiArticles: Article[] = filteredResults
-        .map((item, index) => {
-          const slug = this.createSlug(item.title);
-          const imageUrl = item.image_url || this.getDefaultImage();
-          
-          return {
-            id: index + 1,
-            title: this.cleanTitle(item.title),
-            slug,
-            excerpt: item.description || this.extractExcerpt(item.content || ''),
-            content: item.content || item.description || '',
-            category: this.mapCategory(item.category),
-            publishedAt: new Date(item.pubDate),
-            readTime: this.estimateReadTime(item.content || item.description || ''),
-            sourceCount: Math.floor(Math.random() * 15) + 5, // Random number between 5-20
-            heroImageUrl: imageUrl,
-            authorName: item.creator?.[0] || null,
-            authorTitle: item.source_name || null,
+        if (isUSRelated) {
+          // Create an article from the event
+          const eventArticle: Article = {
+            id: articleId++,
+            title: this.cleanTitle(event.title.eng),
+            slug: this.createSlug(event.title.eng),
+            excerpt: event.summary.eng || 'Political event summary',
+            content: event.summary.eng || 'Political event content',
+            category: 'Politics',
+            publishedAt: new Date(event.eventDate),
+            readTime: this.estimateReadTime(event.summary.eng || ''),
+            sourceCount: event.articleCounts.total || 1,
+            heroImageUrl: this.getDefaultImage(),
+            authorName: 'News Desk',
+            authorTitle: 'Political Events',
           };
-        });
+          
+          apiArticles.push(eventArticle);
+        }
+        
+        // Also add individual articles from the event if available
+        if (event.articles && event.articles.results) {
+          event.articles.results.forEach(article => {
+            if (articleId <= 15) { // Limit total articles
+              const individualArticle: Article = {
+                id: articleId++,
+                title: this.cleanTitle(article.title),
+                slug: this.createSlug(article.title),
+                excerpt: article.summary || this.extractExcerpt(article.body || ''),
+                content: article.body || article.summary || '',
+                category: 'Politics',
+                publishedAt: new Date(article.dateTime),
+                readTime: this.estimateReadTime(article.body || article.summary || ''),
+                sourceCount: Math.floor(Math.random() * 15) + 5,
+                heroImageUrl: article.image || this.getDefaultImage(),
+                authorName: article.authors?.[0]?.name || article.source.title,
+                authorTitle: article.source.title,
+              };
+              
+              apiArticles.push(individualArticle);
+            }
+          });
+        }
+      });
+      
+      console.log(`Created ${apiArticles.length} articles from events`);
       
       // If we have less than 3 unique articles, supplement with sample data
       if (apiArticles.length < 3) {
@@ -141,7 +223,7 @@ export class RSSService {
         const apiTitles = new Set(apiArticles.map(a => a.title.toLowerCase()));
         
         sampleArticles.forEach(sampleArticle => {
-          if (!apiTitles.has(sampleArticle.title.toLowerCase()) && combinedArticles.length < 10) {
+          if (!apiTitles.has(sampleArticle.title.toLowerCase()) && combinedArticles.length < 15) {
             combinedArticles.push({
               ...sampleArticle,
               id: combinedArticles.length + 1
@@ -153,10 +235,10 @@ export class RSSService {
         return combinedArticles;
       }
       
-      console.log(`Returning ${apiArticles.length} articles from API`);
+      console.log(`Returning ${apiArticles.length} articles from NewsAPI.ai`);
       return apiArticles.slice(0, 20);
     } catch (error) {
-      console.error('Error fetching from newsdata.io:', error);
+      console.error('Error fetching from NewsAPI.ai:', error);
       console.log('Using sample political news data...');
       return this.getSampleEventData();
     }
