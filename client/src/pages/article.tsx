@@ -190,17 +190,10 @@ export default function ArticlePage() {
                   <img 
                     src={article.heroImageUrl}
                     alt={article.title}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-56 object-cover"
                   />
                   {/* Semitransparent mask */}
                   <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-                  
-                  {/* Category badge */}
-                  <div className="absolute top-6 left-6">
-                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
-                      {article.category}
-                    </span>
-                  </div>
                   
                   {/* Headline overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6">
