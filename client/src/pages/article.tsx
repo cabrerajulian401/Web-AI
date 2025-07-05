@@ -137,7 +137,7 @@ export default function ArticlePage() {
           {/* Main Content */}
           <div className="lg:col-span-8">
             {/* Combined Header and Article Hero */}
-            <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
+            <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in max-w-2xl">
               <CardContent className="p-0">
                 {/* Hero Image with Overlay */}
                 <div className="relative overflow-hidden">
@@ -169,7 +169,7 @@ export default function ArticlePage() {
                 </div>
 
                 {/* Executive Summary */}
-                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg max-w-2xl">
+                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg">
                   <h2 className="text-xl font-semibold text-brand-dark mb-4 flex items-center">
                     <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center mr-3">
                       <img 
