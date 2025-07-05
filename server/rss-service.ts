@@ -51,7 +51,7 @@ export class RSSService {
       // Simple political keyword for current events
       const politicalKeywords = 'politics';
       
-      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&country=us&size=20`;
+      const apiUrl = `${this.baseUrl}/latest?apikey=${this.apiKey}&country=us`;
       console.log('API URL:', apiUrl);
       
       const response = await fetch(apiUrl);
