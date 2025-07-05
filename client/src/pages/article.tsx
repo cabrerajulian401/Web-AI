@@ -196,7 +196,7 @@ export default function ArticlePage() {
                   <img 
                     src={article.heroImageUrl}
                     alt={article.title}
-                    className="w-full h-80 object-cover"
+                    className="w-full h-64 object-cover"
                   />
                   {/* Semitransparent mask */}
                   <div className="absolute inset-0 bg-black bg-opacity-40"></div>
@@ -218,7 +218,7 @@ export default function ArticlePage() {
                 </div>
 
                 {/* Executive Summary */}
-                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg m-6 mb-4">
+                <div className="bg-blue-50 border-l-4 border-brand-blue p-6 rounded-r-lg">
                   <h2 className="text-xl font-semibold text-brand-dark mb-4 flex items-center">
                     <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center mr-3">
                       <img 
