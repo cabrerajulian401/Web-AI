@@ -39,6 +39,7 @@ export interface ThemeConfig {
   mutedTextColor: string;
   researchPromptTextColor: string;
   researchReportLabelColor: string;
+  taglineTextColor: string;
 }
 
 // Default theme (current colors)
@@ -83,6 +84,7 @@ export const defaultTheme: ThemeConfig = {
   mutedTextColor: 'rgb(156, 163, 175)', // gray-400
   researchPromptTextColor: 'rgb(17, 24, 39)', // gray-900
   researchReportLabelColor: 'rgb(107, 114, 128)', // gray-500
+  taglineTextColor: 'rgb(31, 41, 55)', // gray-800 - darker on default
 };
 
 // Alternative theme examples
@@ -110,6 +112,7 @@ export const darkTheme: ThemeConfig = {
   mutedTextColor: 'rgb(107, 114, 128)', // gray-500
   researchPromptTextColor: 'rgb(255, 255, 255)', // white
   researchReportLabelColor: 'rgb(209, 213, 219)', // gray-300
+  taglineTextColor: 'rgb(209, 213, 219)', // gray-300
 };
 
 export const blueTheme: ThemeConfig = {
@@ -136,6 +139,7 @@ export const blueTheme: ThemeConfig = {
   mutedTextColor: 'rgb(96, 165, 250)', // blue-400
   researchPromptTextColor: 'rgb(30, 58, 138)', // blue-900
   researchReportLabelColor: 'rgb(37, 99, 235)', // blue-600
+  taglineTextColor: 'rgb(30, 58, 138)', // blue-900
 };
 
 export const navyTheme: ThemeConfig = {
@@ -162,6 +166,7 @@ export const navyTheme: ThemeConfig = {
   mutedTextColor: 'rgb(107, 114, 128)', // muted gray for card meta text
   researchPromptTextColor: 'rgb(255, 255, 255)', // white for main research prompt
   researchReportLabelColor: 'rgb(107, 114, 128)', // muted gray for card labels
+  taglineTextColor: 'rgb(255, 255, 255)', // white on navy theme
 };
 
 // Theme management
@@ -204,6 +209,7 @@ export class ThemeManager {
     root.style.setProperty('--muted-text-color', this.currentTheme.mutedTextColor);
     root.style.setProperty('--research-prompt-text-color', this.currentTheme.researchPromptTextColor);
     root.style.setProperty('--research-report-label-color', this.currentTheme.researchReportLabelColor);
+    root.style.setProperty('--tagline-text-color', this.currentTheme.taglineTextColor);
   }
   
   // Preset themes

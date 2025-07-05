@@ -111,7 +111,7 @@ export default function FeedPage() {
               />
               <div>
                 <h1 className="text-4xl font-bold theme-header-text">TIMIO News</h1>
-                <p className="text-lg theme-body-text">Truth. Trust. Transparency.</p>
+                <p className="text-lg theme-tagline-text">Truth. Trust. Transparency.</p>
               </div>
             </div>
             
@@ -158,7 +158,7 @@ export default function FeedPage() {
               <h1 className="text-3xl md:text-4xl font-bold theme-header-text mb-2">
                 Today's Stories
               </h1>
-              <p className="text-lg theme-body-text">
+              <p className="text-lg theme-tagline-text">
                 AI Driven Research on popular stories
               </p>
             </div>

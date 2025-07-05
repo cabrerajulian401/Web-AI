@@ -306,6 +306,11 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
                 property="researchReportLabelColor" 
                 value={workingTheme.researchReportLabelColor} 
               />
+              <ColorInput 
+                label="Tagline Text" 
+                property="taglineTextColor" 
+                value={workingTheme.taglineTextColor} 
+              />
             </div>
           </div>
         </div>
