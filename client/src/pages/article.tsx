@@ -326,35 +326,52 @@ export default function ArticlePage() {
                 icon="pivot"
                 customIcon={pivotIcon}
                 content={
-                  <div className="space-y-4 mt-6">
-                    {perspectives.map((perspective, index) => {
-                      const colorClasses = {
-                        green: "bg-green-600 bg-opacity-75 hover:bg-opacity-85 text-green-200 border-green-500",
-                        red: "bg-red-600 bg-opacity-75 hover:bg-opacity-85 text-red-200 border-red-500",
-                        blue: "bg-blue-600 bg-opacity-75 hover:bg-opacity-85 text-blue-200 border-blue-500",
-                        orange: "bg-orange-600 bg-opacity-75 hover:bg-opacity-85 text-orange-200 border-orange-500",
-                        yellow: "bg-yellow-600 bg-opacity-75 hover:bg-opacity-85 text-yellow-200 border-yellow-500",
-                        purple: "bg-purple-600 bg-opacity-75 hover:bg-opacity-85 text-purple-200 border-purple-500"
-                      };
-                      
-                      const colors = colorClasses[perspective.color as keyof typeof colorClasses] || colorClasses.blue;
-                      const [bgColor, textColor, borderColor] = colors.split(' ');
-                      
-                      return (
-                        <div key={index} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                          <div className={`p-4 ${bgColor} transition-colors duration-200`}>
-                            <div className="flex items-center justify-between">
-                              <h4 className="font-semibold text-lg text-white">{perspective.viewpoint}</h4>
+                  <div className="mt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {perspectives.map((perspective, index) => {
+                        const colorClasses = {
+                          green: "border-green-500 bg-green-50 text-green-800",
+                          red: "border-red-500 bg-red-50 text-red-800",
+                          blue: "border-blue-500 bg-blue-50 text-blue-800",
+                          orange: "border-orange-500 bg-orange-50 text-orange-800",
+                          yellow: "border-yellow-500 bg-yellow-50 text-yellow-800",
+                          purple: "border-purple-500 bg-purple-50 text-purple-800"
+                        };
+                        
+                        const badgeClasses = {
+                          green: "bg-green-500 text-white",
+                          red: "bg-red-500 text-white",
+                          blue: "bg-blue-500 text-white",
+                          orange: "bg-orange-500 text-white",
+                          yellow: "bg-yellow-500 text-white",
+                          purple: "bg-purple-500 text-white"
+                        };
+                        
+                        const cardColors = colorClasses[perspective.color as keyof typeof colorClasses] || colorClasses.blue;
+                        const badgeColor = badgeClasses[perspective.color as keyof typeof badgeClasses] || badgeClasses.blue;
+                        
+                        return (
+                          <div key={index} className={`relative bg-white border-2 ${cardColors} rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200`}>
+                            {/* Perspective Badge */}
+                            <div className="flex items-center justify-between mb-4">
+                              <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${badgeColor}`}>
+                                {perspective.viewpoint}
+                              </div>
                             </div>
+                            
+                            {/* Content */}
+                            <div className="space-y-3">
+                              <p className="text-gray-700 leading-relaxed">
+                                {perspective.description}
+                              </p>
+                            </div>
+                            
+                            {/* Bottom accent line */}
+                            <div className={`absolute bottom-0 left-0 right-0 h-1 ${badgeColor.replace('text-white', '').replace('bg-', 'bg-')} rounded-b-xl`}></div>
                           </div>
-                          <div className="p-4 bg-gray-50">
-                            <p className={`border-l-4 ${borderColor} pl-4 text-brand-dark`}>
-                              {perspective.description}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 }
               />
