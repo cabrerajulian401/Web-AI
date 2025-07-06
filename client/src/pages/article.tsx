@@ -326,51 +326,85 @@ export default function ArticlePage() {
                 icon="pivot"
                 customIcon={pivotIcon}
                 content={
-                  <div className="mt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {perspectives.map((perspective, index) => {
-                        const colorClasses = {
-                          green: "border-green-500 bg-green-50 text-green-800",
-                          red: "border-red-500 bg-red-50 text-red-800",
-                          blue: "border-blue-500 bg-blue-50 text-blue-800",
-                          orange: "border-orange-500 bg-orange-50 text-orange-800",
-                          yellow: "border-yellow-500 bg-yellow-50 text-yellow-800",
-                          purple: "border-purple-500 bg-purple-50 text-purple-800"
-                        };
-                        
-                        const badgeClasses = {
-                          green: "bg-green-500 text-white",
-                          red: "bg-red-500 text-white",
-                          blue: "bg-blue-500 text-white",
-                          orange: "bg-orange-500 text-white",
-                          yellow: "bg-yellow-500 text-white",
-                          purple: "bg-purple-500 text-white"
-                        };
-                        
-                        const cardColors = colorClasses[perspective.color as keyof typeof colorClasses] || colorClasses.blue;
-                        const badgeColor = badgeClasses[perspective.color as keyof typeof badgeClasses] || badgeClasses.blue;
-                        
-                        return (
-                          <div key={index} className={`relative bg-white border-2 ${cardColors} rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200`}>
-                            {/* Perspective Badge */}
-                            <div className="flex items-center justify-between mb-4">
-                              <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${badgeColor}`}>
-                                {perspective.viewpoint}
-                              </div>
-                            </div>
-                            
-                            {/* Content */}
-                            <div className="space-y-3">
-                              <p className="text-gray-700 leading-relaxed">
-                                {perspective.description}
-                              </p>
-                            </div>
-                            
-                            {/* Bottom accent line */}
-                            <div className={`absolute bottom-0 left-0 right-0 h-1 ${badgeColor.replace('text-white', '').replace('bg-', 'bg-')} rounded-b-xl`}></div>
+                  <div className="mt-6 space-y-6">
+                    {/* Republican Support */}
+                    <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-lg">R</span>
                           </div>
-                        );
-                      })}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-lg font-semibold text-blue-900 mb-2">Republican Leadership</h4>
+                          <p className="text-blue-800 mb-3 leading-relaxed">
+                            "The One Big Beautiful Bill delivers on every promise we made to the American people. This comprehensive legislation cuts taxes for working families, secures our border, and puts America first in trade. It's the largest tax cut in American history while reducing the deficit through smart spending reforms."
+                          </p>
+                          <div className="text-sm text-blue-700">
+                            <strong>Source:</strong> <a href="https://www.speaker.gov/newsroom" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">House Speaker's Office Press Release</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Democratic Opposition */}
+                    <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-lg">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-lg">D</span>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-lg font-semibold text-red-900 mb-2">Democratic Minority</h4>
+                          <p className="text-red-800 mb-3 leading-relaxed">
+                            "This bill is a disaster for working families and a gift to billionaires. While promising tax relief, it cuts Medicare and Medicaid, threatens healthcare for millions, and adds trillions to the deficit. The CBO analysis shows this will hurt the very people Republicans claim to help."
+                          </p>
+                          <div className="text-sm text-red-700">
+                            <strong>Source:</strong> <a href="https://www.democraticleader.house.gov/" target="_blank" rel="noopener noreferrer" className="underline hover:text-red-900">House Democratic Leadership Statement</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Business Community */}
+                    <div className="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-lg">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-lg">B</span>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-lg font-semibold text-green-900 mb-2">Business Groups</h4>
+                          <p className="text-green-800 mb-3 leading-relaxed">
+                            "The business community strongly supports this legislation. The permanent tax cuts and deregulation measures will unleash economic growth, create jobs, and restore American competitiveness. The manufacturing incentives alone will bring production back to the United States."
+                          </p>
+                          <div className="text-sm text-green-700">
+                            <strong>Source:</strong> <a href="https://www.uschamber.com/policy/taxes" target="_blank" rel="noopener noreferrer" className="underline hover:text-green-900">U.S. Chamber of Commerce Policy Statement</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Policy Experts */}
+                    <div className="bg-purple-50 border-l-4 border-purple-600 p-6 rounded-r-lg">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-lg">E</span>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-lg font-semibold text-purple-900 mb-2">Independent Analysts</h4>
+                          <p className="text-purple-800 mb-3 leading-relaxed">
+                            "This bill presents significant trade-offs. While tax cuts may stimulate short-term growth, the long-term fiscal impact is concerning. The healthcare provisions could reduce coverage, but the infrastructure investments show promise. The net effect depends heavily on implementation and economic conditions."
+                          </p>
+                          <div className="text-sm text-purple-700">
+                            <strong>Source:</strong> <a href="https://www.brookings.edu/research/" target="_blank" rel="noopener noreferrer" className="underline hover:text-purple-900">Brookings Institution Analysis</a>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 }
