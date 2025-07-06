@@ -31,6 +31,7 @@ export const timelineItems = pgTable("timeline_items", {
   description: text("description").notNull(),
   type: text("type").notNull(), // 'announcement', 'release', etc.
   sourceLabel: text("source_label").notNull(),
+  sourceUrl: text("source_url"),
 });
 
 export const relatedArticles = pgTable("related_articles", {

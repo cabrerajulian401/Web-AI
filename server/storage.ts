@@ -97,7 +97,8 @@ export class MemStorage implements IStorage {
         title: "GPT-5 Announcement",
         description: "OpenAI announces o3 model with advanced reasoning capabilities",
         type: "announcement",
-        sourceLabel: "Source 9"
+        sourceLabel: "Source 9",
+        sourceUrl: null
       },
       {
         id: 2,
@@ -106,7 +107,8 @@ export class MemStorage implements IStorage {
         title: "GPT-4.5 Announcement",
         description: "OpenAI CEO Sam Altman announces GPT-4.5 (\"Orion\") as the last model without full chain-of-thought reasoning",
         type: "announcement",
-        sourceLabel: "Source 9"
+        sourceLabel: "Source 9",
+        sourceUrl: null
       },
       {
         id: 3,
@@ -115,7 +117,8 @@ export class MemStorage implements IStorage {
         title: "Release Delay",
         description: "OpenAI delays GPT-5 release due to technical issues and high demand. Confirms work on new models o3 and o4-mini",
         type: "announcement",
-        sourceLabel: "Source 9"
+        sourceLabel: "Source 9",
+        sourceUrl: null
       },
       {
         id: 4,
@@ -124,7 +127,8 @@ export class MemStorage implements IStorage {
         title: "O3-Pro Release",
         description: "OpenAI releases o3-pro API, its most expensive AI model to date",
         type: "release",
-        sourceLabel: "Source 9"
+        sourceLabel: "Source 9",
+        sourceUrl: null
       }
     ];
 
@@ -256,7 +260,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         title: "House Initial Passage",
         description: "House passes initial version 215-214",
         type: "legislative",
-        sourceLabel: "Congressional Record"
+        sourceLabel: "Congressional Record",
+        sourceUrl: "https://www.congress.gov/congressional-record"
       },
       {
         id: 1000,
@@ -265,7 +270,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         title: "Senate Committee Action",
         description: "Senate Finance Committee releases final text and summary",
         type: "legislative",
-        sourceLabel: "Senate Finance Committee"
+        sourceLabel: "Senate Finance Committee",
+        sourceUrl: "https://www.finance.senate.gov/"
       },
       {
         id: 1001,
@@ -274,7 +280,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         title: "Senate Passage",
         description: "Senate passes revised bill 51-50, VP breaks tie",
         type: "legislative",
-        sourceLabel: "Senate Clerk"
+        sourceLabel: "Senate Clerk",
+        sourceUrl: "https://www.senate.gov/legislative/LIS/roll_call_lists/vote_menu_117_1.htm"
       },
       {
         id: 1002,
@@ -283,7 +290,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         title: "House Final Passage",
         description: "House passes final bill 218-214",
         type: "legislative",
-        sourceLabel: "House Clerk"
+        sourceLabel: "House Clerk",
+        sourceUrl: "https://clerk.house.gov/Votes"
       },
       {
         id: 1003,
@@ -292,7 +300,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         title: "Presidential Signature",
         description: "Trump signs the bill into law on Independence Day",
         type: "signing",
-        sourceLabel: "White House"
+        sourceLabel: "White House",
+        sourceUrl: "https://www.whitehouse.gov/briefing-room/presidential-actions/"
       },
       {
         id: 1004,
@@ -301,7 +310,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         title: "Protests Begin",
         description: "Protests and rallies against the law begin in major cities",
         type: "protest",
-        sourceLabel: "News Reports"
+        sourceLabel: "Associated Press",
+        sourceUrl: "https://apnews.com/"
       }
     ];
 
@@ -311,7 +321,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         articleId: 999,
         title: "CBO Analysis: 12 Million Could Lose Insurance Under New Law",
         excerpt: "Congressional Budget Office projects significant coverage losses due to work requirements and funding cuts.",
-        url: "#",
+        url: "https://www.cbo.gov/cost-estimates",
         source: "Congressional Budget Office",
         imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
       },
@@ -320,7 +330,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         articleId: 999,
         title: "State Governors Prepare Legal Challenges to Federal Cuts",
         excerpt: "Multiple state attorneys general announce coordinated legal strategy to challenge federal healthcare cuts.",
-        url: "#",
+        url: "https://apnews.com/politics",
         source: "Associated Press",
         imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
       },
@@ -329,7 +339,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         articleId: 999,
         title: "Business Groups Praise Permanent Tax Relief",
         excerpt: "Industry organizations applaud permanent tax cuts and business deduction expansions in new legislation.",
-        url: "#",
+        url: "https://www.wsj.com/politics",
         source: "Wall Street Journal",
         imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
       }
@@ -500,7 +510,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
             title: "Development Announced",
             description: "Initial announcement and industry reactions",
             type: "",
-            sourceLabel: "TechCrunch"
+            sourceLabel: "TechCrunch",
+            sourceUrl: null
           },
           {
             id: index * 10 + 2,
@@ -509,7 +520,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
             title: "Technical Details Released",
             description: "More information becomes available",
             type: "",
-            sourceLabel: "The Verge"
+            sourceLabel: "The Verge",
+            sourceUrl: null
           },
           {
             id: index * 10 + 3,
@@ -518,7 +530,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
             title: "Market Impact",
             description: "Industry analysts weigh in on implications",
             type: "",
-            sourceLabel: "Wall Street Journal"
+            sourceLabel: "Wall Street Journal",
+            sourceUrl: null
           }
         ],
         relatedArticles: [
@@ -605,7 +618,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
             title: "Initial Report",
             description: "Story first reported by major news outlets",
             type: "",
-            sourceLabel: "Reuters"
+            sourceLabel: "Reuters",
+            sourceUrl: null
           },
           {
             id: 2,
@@ -614,7 +628,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
             title: "Expert Analysis",
             description: "Industry experts provide initial commentary",
             type: "",
-            sourceLabel: "Bloomberg"
+            sourceLabel: "Bloomberg",
+            sourceUrl: null
           },
           {
             id: 3,
@@ -623,7 +638,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
             title: "Market Response",
             description: "Financial markets react to the development",
             type: "",
-            sourceLabel: "CNN"
+            sourceLabel: "CNN",
+            sourceUrl: null
           },
           {
             id: 4,
@@ -632,7 +648,8 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
             title: "Current Status",
             description: "Latest updates and ongoing developments",
             type: "",
-            sourceLabel: "Associated Press"
+            sourceLabel: "Associated Press",
+            sourceUrl: null
           }
         ],
         relatedArticles: [

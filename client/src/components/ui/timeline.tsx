@@ -28,13 +28,20 @@ export function Timeline({ items }: TimelineProps) {
                 </span>
                 <span className="text-muted">•</span>
                 <span className="text-muted">Source:</span>
-                <a 
-                  href="#" 
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-medium transition-colors"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  {item.sourceLabel}
-                </a>
+                {item.sourceUrl ? (
+                  <a 
+                    href={item.sourceUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-medium transition-colors hover:text-blue-600"
+                  >
+                    {item.sourceLabel}
+                  </a>
+                ) : (
+                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs font-medium">
+                    {item.sourceLabel}
+                  </span>
+                )}
               </div>
               <h4 className="font-medium text-brand-dark">{item.title}</h4>
               <p className="text-sm text-gray-600">{item.description}</p>

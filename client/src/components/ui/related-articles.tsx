@@ -15,7 +15,13 @@ export function RelatedArticles({ articles }: RelatedArticlesProps) {
       </h3>
       <div className="space-y-4">
         {articles.map((article) => (
-          <div key={article.id} className="group cursor-pointer">
+          <a 
+            key={article.id} 
+            href={article.url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="group cursor-pointer block hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200"
+          >
             <div className="flex space-x-4">
               <img 
                 src={article.imageUrl}
@@ -30,7 +36,7 @@ export function RelatedArticles({ articles }: RelatedArticlesProps) {
                 <p className="text-xs text-gray-500 mt-1 line-clamp-2">{article.excerpt}</p>
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </Card>
