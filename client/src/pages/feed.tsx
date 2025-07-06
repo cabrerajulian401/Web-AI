@@ -56,17 +56,18 @@ export default function FeedPage() {
         <header className="theme-header-bg shadow-sm relative">
           <div className="absolute bottom-0 left-0 right-0 h-0.5 theme-divider"></div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-32">
-              <div className="flex items-center space-x-4">
-                <Skeleton className="h-12 w-12" />
+            <div className="flex items-center justify-between py-4 min-h-[80px] sm:min-h-[120px] lg:h-32">
+              <div className="flex items-center space-x-2 sm:space-x-4">
+                <Skeleton className="h-12 w-12 sm:h-16 sm:w-16 lg:h-24 lg:w-24" />
                 <div>
-                  <Skeleton className="h-8 w-40" />
+                  <Skeleton className="h-6 w-32 sm:h-8 sm:w-40 lg:h-10 lg:w-48" />
+                  <Skeleton className="h-4 w-24 sm:h-5 sm:w-32 mt-1" />
                 </div>
               </div>
               
-              <div className="flex items-center space-x-4">
-                <Skeleton className="h-10 w-20" />
-                <Skeleton className="h-10 w-20" />
+              <div className="flex items-center space-x-2 sm:space-x-4">
+                <Skeleton className="h-6 w-12 sm:h-8 sm:w-16" />
+                <Skeleton className="h-8 w-12 sm:h-10 sm:w-20" />
               </div>
             </div>
           </div>
@@ -117,31 +118,31 @@ export default function FeedPage() {
       <header className="theme-header-bg shadow-sm relative">
         <div className="absolute bottom-0 left-0 right-0 h-0.5 theme-divider"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-32">
-            <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between py-4 min-h-[80px] sm:min-h-[120px] lg:h-32">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <img 
                 src={timioLogo} 
                 alt="TIMIO Logo" 
-                className="w-24 h-24"
+                className="w-12 h-12 sm:w-16 sm:h-16 lg:w-24 lg:h-24"
               />
               <div>
-                <h1 className="text-4xl font-bold theme-header-text">TIMIO News</h1>
-                <p className="text-lg theme-tagline-text">Truth. Trust. Transparency.</p>
+                <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold theme-header-text">TIMIO News</h1>
+                <p className="text-sm sm:text-base lg:text-lg theme-tagline-text">Truth. Trust. Transparency.</p>
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="bg-brand-blue text-white px-3 py-1">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <Badge variant="secondary" className="bg-brand-blue text-white px-2 py-1 sm:px-3 text-xs sm:text-sm">
                 Live
               </Badge>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowThemeController(!showThemeController)}
-                className="flex items-center gap-2"
+                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4"
               >
-                <Settings className="h-4 w-4" />
-                Theme
+                <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Theme</span>
               </Button>
             </div>
           </div>
@@ -149,32 +150,32 @@ export default function FeedPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Left side - Articles */}
           <div className="flex-1 max-w-4xl">
             {/* Research Input */}
-            <div className="flex flex-col items-center space-y-6 mb-12">
-              <h2 className="text-3xl font-bold theme-research-prompt-text text-center">
+            <div className="flex flex-col items-center space-y-4 sm:space-y-6 mb-8 sm:mb-12">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold theme-research-prompt-text text-center px-4">
                 Generate a report on any event
               </h2>
-              <div className="relative w-full max-w-2xl">
+              <div className="relative w-full max-w-2xl px-4 sm:px-0">
                 {/* Enhanced background with gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl blur-sm opacity-20"></div>
-                <div className="relative bg-white rounded-2xl shadow-2xl border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-3xl transform hover:-translate-y-1">
-                  <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 h-7 w-7 text-blue-500" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl sm:rounded-2xl blur-sm opacity-20"></div>
+                <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-3xl transform hover:-translate-y-1">
+                  <Search className="absolute left-4 sm:left-6 top-1/2 transform -translate-y-1/2 h-5 w-5 sm:h-7 sm:w-7 text-blue-500" />
                   <Input
                     type="text"
                     placeholder="Enter a story to research..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    className="w-full pl-16 pr-6 py-6 text-xl bg-transparent border-0 focus:ring-0 focus:outline-none placeholder:text-gray-400"
+                    className="w-full pl-12 sm:pl-16 pr-4 sm:pr-6 py-4 sm:py-6 text-lg sm:text-xl bg-transparent border-0 focus:ring-0 focus:outline-none placeholder:text-gray-400"
                   />
-                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                  <div className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2">
                     <Button 
                       onClick={handleSearch}
-                      className="bg-blue-600 hover:bg-blue-700 px-6 py-2 text-white font-semibold rounded-lg shadow-md"
+                      className="bg-blue-600 hover:bg-blue-700 px-3 sm:px-6 py-1.5 sm:py-2 text-white font-semibold rounded-lg shadow-md text-sm sm:text-base"
                     >
                       Research
                     </Button>
@@ -184,17 +185,17 @@ export default function FeedPage() {
             </div>
 
             {/* Page Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold theme-header-text mb-2">
+            <div className="mb-6 sm:mb-8 px-4 sm:px-0">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold theme-header-text mb-2">
                 Today's Stories
               </h1>
-              <p className="text-lg theme-tagline-text">
+              <p className="text-base sm:text-lg theme-tagline-text">
                 AI Driven Research on popular stories
               </p>
             </div>
 
             {/* Articles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 px-4 sm:px-0">
               {articles?.map((article) => (
                 <Link key={article.id} href={`/article/${article.slug}`}>
                   <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover border-2 shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer group overflow-hidden h-full">
