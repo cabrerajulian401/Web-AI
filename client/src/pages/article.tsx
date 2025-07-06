@@ -3,6 +3,7 @@ import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ExpandableSection } from "@/components/ui/expandable-section";
 import { Timeline } from "@/components/ui/timeline";
 import { RelatedArticles } from "@/components/ui/related-articles";
@@ -326,86 +327,84 @@ export default function ArticlePage() {
                 icon="pivot"
                 customIcon={pivotIcon}
                 content={
-                  <div className="mt-6 space-y-6">
-                    {/* Republican Support */}
-                    <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-shrink-0">
-                          <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-lg">R</span>
+                  <div className="mt-6">
+                    <Accordion type="multiple" className="w-full space-y-4">
+                      <AccordionItem value="republican" className="border border-blue-200 rounded-lg">
+                        <AccordionTrigger className="hover:no-underline px-6 py-4 bg-blue-50 hover:bg-blue-100 rounded-t-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                              <span className="text-white font-bold text-sm">R</span>
+                            </div>
+                            <span className="font-semibold text-blue-900">Republican Leadership</span>
                           </div>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-lg font-semibold text-blue-900 mb-2">Republican Leadership</h4>
-                          <p className="text-blue-800 mb-3 leading-relaxed">
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 py-4 bg-white">
+                          <blockquote className="border-l-4 border-blue-600 pl-4 italic text-gray-700 mb-4">
                             "The One Big Beautiful Bill delivers on every promise we made to the American people. This comprehensive legislation cuts taxes for working families, secures our border, and puts America first in trade. It's the largest tax cut in American history while reducing the deficit through smart spending reforms."
-                          </p>
+                          </blockquote>
                           <div className="text-sm text-blue-700">
                             <strong>Source:</strong> <a href="https://www.speaker.gov/newsroom" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">House Speaker's Office Press Release</a>
                           </div>
-                        </div>
-                      </div>
-                    </div>
+                        </AccordionContent>
+                      </AccordionItem>
 
-                    {/* Democratic Opposition */}
-                    <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-lg">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-shrink-0">
-                          <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-lg">D</span>
+                      <AccordionItem value="democratic" className="border border-red-200 rounded-lg">
+                        <AccordionTrigger className="hover:no-underline px-6 py-4 bg-red-50 hover:bg-red-100 rounded-t-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+                              <span className="text-white font-bold text-sm">D</span>
+                            </div>
+                            <span className="font-semibold text-red-900">Democratic Minority</span>
                           </div>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-lg font-semibold text-red-900 mb-2">Democratic Minority</h4>
-                          <p className="text-red-800 mb-3 leading-relaxed">
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 py-4 bg-white">
+                          <blockquote className="border-l-4 border-red-600 pl-4 italic text-gray-700 mb-4">
                             "This bill is a disaster for working families and a gift to billionaires. While promising tax relief, it cuts Medicare and Medicaid, threatens healthcare for millions, and adds trillions to the deficit. The CBO analysis shows this will hurt the very people Republicans claim to help."
-                          </p>
+                          </blockquote>
                           <div className="text-sm text-red-700">
                             <strong>Source:</strong> <a href="https://www.democraticleader.house.gov/" target="_blank" rel="noopener noreferrer" className="underline hover:text-red-900">House Democratic Leadership Statement</a>
                           </div>
-                        </div>
-                      </div>
-                    </div>
+                        </AccordionContent>
+                      </AccordionItem>
 
-                    {/* Business Community */}
-                    <div className="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-lg">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-shrink-0">
-                          <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-lg">B</span>
+                      <AccordionItem value="business" className="border border-green-200 rounded-lg">
+                        <AccordionTrigger className="hover:no-underline px-6 py-4 bg-green-50 hover:bg-green-100 rounded-t-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                              <span className="text-white font-bold text-sm">B</span>
+                            </div>
+                            <span className="font-semibold text-green-900">Business Groups</span>
                           </div>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-lg font-semibold text-green-900 mb-2">Business Groups</h4>
-                          <p className="text-green-800 mb-3 leading-relaxed">
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 py-4 bg-white">
+                          <blockquote className="border-l-4 border-green-600 pl-4 italic text-gray-700 mb-4">
                             "The business community strongly supports this legislation. The permanent tax cuts and deregulation measures will unleash economic growth, create jobs, and restore American competitiveness. The manufacturing incentives alone will bring production back to the United States."
-                          </p>
+                          </blockquote>
                           <div className="text-sm text-green-700">
                             <strong>Source:</strong> <a href="https://www.uschamber.com/policy/taxes" target="_blank" rel="noopener noreferrer" className="underline hover:text-green-900">U.S. Chamber of Commerce Policy Statement</a>
                           </div>
-                        </div>
-                      </div>
-                    </div>
+                        </AccordionContent>
+                      </AccordionItem>
 
-                    {/* Policy Experts */}
-                    <div className="bg-purple-50 border-l-4 border-purple-600 p-6 rounded-r-lg">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-shrink-0">
-                          <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-lg">E</span>
+                      <AccordionItem value="analysts" className="border border-purple-200 rounded-lg">
+                        <AccordionTrigger className="hover:no-underline px-6 py-4 bg-purple-50 hover:bg-purple-100 rounded-t-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                              <span className="text-white font-bold text-sm">A</span>
+                            </div>
+                            <span className="font-semibold text-purple-900">Independent Analysts</span>
                           </div>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-lg font-semibold text-purple-900 mb-2">Independent Analysts</h4>
-                          <p className="text-purple-800 mb-3 leading-relaxed">
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 py-4 bg-white">
+                          <blockquote className="border-l-4 border-purple-600 pl-4 italic text-gray-700 mb-4">
                             "This bill presents significant trade-offs. While tax cuts may stimulate short-term growth, the long-term fiscal impact is concerning. The healthcare provisions could reduce coverage, but the infrastructure investments show promise. The net effect depends heavily on implementation and economic conditions."
-                          </p>
+                          </blockquote>
                           <div className="text-sm text-purple-700">
                             <strong>Source:</strong> <a href="https://www.brookings.edu/research/" target="_blank" rel="noopener noreferrer" className="underline hover:text-purple-900">Brookings Institution Analysis</a>
                           </div>
-                        </div>
-                      </div>
-                    </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </div>
                 }
               />
