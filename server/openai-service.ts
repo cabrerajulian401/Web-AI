@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import { pexelsService } from "./pexels-service";
+import fetch from 'node-fetch';
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -15,50 +16,82 @@ export interface ResearchReport {
 }
 
 export class OpenAIResearchService {
-  async generateResearchReport(query: string, heroImageUrl?: string): Promise<ResearchReport> {
+  
+  // Real news search using EventRegistry API (same as RSS service)
+  async searchRealNews(query: string, limit: number = 6): Promise<any[]> {
+    const apiKey = '337d177a-8018-4937-8ebf-53c96cef4906'; // Using same key as RSS service
+    
     try {
-      // First, search for related news articles using GPT-4o-mini with web search
-      const relatedArticlesResponse = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `You are a web search assistant with access to real-time web search. Your task is to find actual, recent news articles related to the given topic.
+      const url = `https://eventregistry.org/api/v1/article/getArticles`;
+      const body = {
+        action: 'getArticles',
+        keyword: query,
+        articlesPage: 1,
+        articlesCount: limit,
+        articlesSortBy: 'date',
+        sourceLocationUri: 'http://en.wikipedia.org/wiki/United_States',
+        lang: 'eng',
+        apiKey: apiKey
+      };
 
-IMPORTANT: You must use your web search capabilities to find real articles with actual URLs from legitimate news sources. Do not generate fake or placeholder articles.
-
-Return JSON in this exact format:
-{
-  "articles": [
-    {
-      "title": "string (exact article title as it appears on the actual website)",
-      "excerpt": "string (brief 1-2 sentence description/summary of what the article covers)",
-      "url": "string (actual, working URL to the real article)",
-      "source": "string (actual publication name)",
-      "publishedAt": "string (ISO date when available from the article)"
-    }
-  ]
-}
-
-Search Guidelines:
-- MUST use web search to find 6-8 real, recent news articles from legitimate sources
-- Include diverse perspectives from different reputable news outlets
-- Focus on articles published within the last 30 days when possible
-- Verify all URLs are actual working links to real articles
-- Sources should include major news outlets like Reuters, AP, BBC, CNN, NPR, etc.
-- Do not generate fictional articles or placeholder content`
-          },
-          {
-            role: "user",
-            content: `Use web search to find recent real news articles related to: ${query}`
-          }
-        ],
-        response_format: { type: "json_object" },
-        temperature: 0.1,
-        max_tokens: 2000
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
       });
 
-      const relatedArticlesData = JSON.parse(relatedArticlesResponse.choices[0].message.content || '{"articles": []}');
+      if (!response.ok) {
+        console.error('EventRegistry API error:', response.status);
+        return [];
+      }
+
+      const data = await response.json() as any;
+      
+      if (!data.articles?.results) {
+        console.log('No articles found in EventRegistry response');
+        return [];
+      }
+
+      return data.articles.results.map((article: any) => ({
+        title: article.title || 'Untitled Article',
+        excerpt: article.body?.substring(0, 150) + '...' || 'No description available',
+        url: article.url || '',
+        source: article.source?.title || 'Unknown Source',
+        publishedAt: article.dateTime || new Date().toISOString()
+      })).filter((article: any) => 
+        article.url && 
+        article.url.startsWith('http') && 
+        !article.title.includes('[Removed]')
+      );
+    } catch (error) {
+      console.error('Error searching real news:', error);
+      return [];
+    }
+  }
+
+  async generateResearchReport(query: string, heroImageUrl?: string): Promise<ResearchReport> {
+    try {
+      // First, search for related news articles using real news APIs
+      console.log('\n=== REAL NEWS SEARCH ===');
+      console.log('Query:', query);
+      console.log('Using EventRegistry API for authentic news...');
+      
+      const searchResults = await this.searchRealNews(query, 6);
+      console.log('Articles found:', searchResults.length);
+      
+      if (searchResults.length > 0) {
+        searchResults.forEach((article, index) => {
+          console.log(`\nArticle ${index + 1}:`);
+          console.log('  Title:', article.title);
+          console.log('  Source:', article.source);
+          console.log('  URL:', article.url);
+          console.log('  Published:', article.publishedAt);
+          console.log('  URL valid format:', article.url?.startsWith('http') ? 'YES' : 'NO');
+        });
+      } else {
+        console.log('No articles returned from real news search');
+      }
+      console.log('=== END REAL NEWS SEARCH ===\n');
       
       // Then generate comprehensive research report
       const response = await openai.chat.completions.create({
@@ -166,7 +199,7 @@ Use real, current information from authentic sources. Make reports comprehensive
           title: item.title,
           description: item.description
         })),
-        relatedArticles: await Promise.all(relatedArticlesData.articles.map(async (article: any, index: number) => {
+        relatedArticles: await Promise.all(searchResults.map(async (article: any, index: number) => {
           // Fetch image from Pexels based on article title with unique index
           // Use index + 1 to ensure different images from the main hero image (index 0)
           const imageUrl = await pexelsService.searchImageByTopic(article.title, index + 1);
