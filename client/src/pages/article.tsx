@@ -76,8 +76,19 @@ export default function ArticlePage() {
   }, []);
 
   const { data: articleData, isLoading } = useQuery<ArticleData>({
-    queryKey: ["/api/article", slug],
-    queryFn: () => fetch(`/api/article/${slug}`).then(res => res.json()),
+    queryKey: ["/api/article", slug, localStorage.getItem('useDummyArticle')],
+    queryFn: async () => {
+      // Check if dummy article mode is enabled
+      const useDummyArticle = localStorage.getItem('useDummyArticle') === 'true';
+      
+      // If dummy mode is enabled, always return the original dummy article
+      if (useDummyArticle) {
+        return fetch('/api/article/one-big-beautiful-bill-trump-2025').then(res => res.json());
+      }
+      
+      // Otherwise use the actual slug
+      return fetch(`/api/article/${slug}`).then(res => res.json());
+    },
   });
 
   const handleShare = async () => {

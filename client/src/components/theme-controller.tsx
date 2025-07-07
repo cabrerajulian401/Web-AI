@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
 import { DraggableColorPicker } from '@/components/ui/draggable-color-picker';
 import { Palette, RotateCcw, Move, X } from 'lucide-react';
 import { ThemeConfig, defaultTheme, darkTheme, blueTheme, navyTheme, ThemeManager } from '@/lib/theme';
@@ -18,6 +19,9 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [useDummyArticle, setUseDummyArticle] = useState(() => {
+    return localStorage.getItem('useDummyArticle') === 'true';
+  });
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleColorChange = (property: keyof ThemeConfig, value: string) => {
@@ -29,6 +33,11 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
   const resetToDefault = () => {
     setWorkingTheme(defaultTheme);
     setTheme(defaultTheme);
+  };
+
+  const handleDummyArticleToggle = (checked: boolean) => {
+    setUseDummyArticle(checked);
+    localStorage.setItem('useDummyArticle', checked.toString());
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -183,6 +192,26 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
             >
               Navy
             </Button>
+          </div>
+        </div>
+
+        {/* Dummy Article Toggle */}
+        <div className="space-y-3 pb-4 border-b border-gray-200">
+          <h3 className="font-medium text-sm text-gray-700">Article Settings</h3>
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="dummy-article-toggle" className="text-sm font-medium">
+                Use Dummy Article
+              </Label>
+              <p className="text-xs text-gray-500">
+                Show original "Big Beautiful Bill" content instead of AI-generated research
+              </p>
+            </div>
+            <Switch
+              id="dummy-article-toggle"
+              checked={useDummyArticle}
+              onCheckedChange={handleDummyArticleToggle}
+            />
           </div>
         </div>
 
