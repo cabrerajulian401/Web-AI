@@ -185,7 +185,7 @@ export default function ArticlePage() {
                   
                   {/* TIMIO Logo and Search Bar - Over Image */}
                   <div className="absolute top-4 left-4 right-4">
-                    <div className="flex items-center space-x-2 mb-4">
+                    <div className="flex items-center space-x-2 mb-3">
                       <img 
                         src={timioLogo} 
                         alt="TIMIO News" 
@@ -195,9 +195,9 @@ export default function ArticlePage() {
                     </div>
                     
                     {/* Search Bar - Smaller and Transparent */}
-                    <div className="relative max-w-2xl mb-16">
+                    <div className="relative max-w-2xl">
                       <form onSubmit={handleSearch} className="relative">
-                        <div className="relative flex items-center bg-white/20 backdrop-blur-sm rounded-lg border border-white/30 shadow-lg hover:bg-white/30 transition-all duration-300 focus-within:bg-white/30 focus-within:border-white/50 mb-4">
+                        <div className="relative flex items-center bg-white/20 backdrop-blur-sm rounded-lg border border-white/30 shadow-lg hover:bg-white/30 transition-all duration-300 focus-within:bg-white/30 focus-within:border-white/50">
                           <Search className="h-4 w-4 text-white ml-3" />
                           <input
                             type="text"
