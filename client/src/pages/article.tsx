@@ -145,8 +145,9 @@ export default function ArticlePage() {
       
       // Save search query to localStorage
       localStorage.setItem('searchQuery', searchQuery);
-      // Generate research report using OpenAI
-      researchMutation.mutate(searchQuery);
+      
+      // Navigate to loading page which will handle the research
+      setLocation('/research-loading');
     }
   };
 
