@@ -332,127 +332,76 @@ export default function ArticlePage() {
                 icon="database"
                 content={
                   <div className="mt-4 space-y-8">
-                    {/* Bill Source */}
-                    <div>
-                      <h3 className="text-lg font-bold text-black mb-3">
-                        <a 
-                          href="https://www.congress.gov/search?q=%7B%22source%22:%22legislation%22%7D" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="hover:text-gray-600 transition-colors"
-                        >
-                          Directly from the Bill: H.R.1 - "One Big Beautiful Bill Act"<br />
-                          (Congress.gov)
-                        </a>
-                      </h3>
-                      <div className="w-full h-0.5 bg-black mb-6"></div>
-                    </div>
-
-                    {/* Key Provisions */}
-                    <div className="space-y-3">
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          Makes Trump tax cuts permanent
-                        </span>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          Tax reductions for incomes &lt;$500k (5-year limit)
-                        </span>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          New deductions: tips, overtime, auto loans (expire 2028)
-                        </span>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          Adds $200 to child tax credit
-                        </span>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          1% remittance tax; increases endowment investment taxes
-                        </span>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          Ends clean energy credits; opens federal land to oil & gas
-                        </span>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          Cuts to Medicaid, Medicare, SNAP; shifts SNAP costs to states
-                        </span>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          ICE funding increases tenfold to $100B by 2029
-                        </span>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          Adds $150B to defense, $150B to border enforcement
-                        </span>
-                      </div>
-
-                      <div className="flex items-start">
-                        <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                        <span className="text-gray-900 leading-relaxed">
-                          Raises debt ceiling by $5T
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* CBO Analysis Section */}
-                    <div>
-                      <h3 className="text-lg font-bold text-black mb-3">
-                        <a href="https://www.cbo.gov/system/files/2025-01/59927-Reconciliation.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 transition-colors">
-                          Congressional Budget Office Analysis<br />
-                          (CBO.gov)
-                        </a>
-                      </h3>
-                      <div className="w-full h-0.5 bg-black mb-6"></div>
-                      <div className="space-y-3">
-                        <div className="flex items-start">
-                          <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                          <span className="text-gray-900 leading-relaxed">
-                            Adds $2.8T to deficit by 2034
-                          </span>
+                    {/* Check if dummy mode is enabled */}
+                    {useDummyMode ? (
+                      // Show dummy data for the "Big Beautiful Bill"
+                      <>
+                        <div>
+                          <h3 className="text-lg font-bold text-black mb-3">
+                            <a 
+                              href="https://www.congress.gov/search?q=%7B%22source%22:%22legislation%22%7D" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="hover:text-gray-600 transition-colors"
+                            >
+                              Directly from the Bill: H.R.1 - "One Big Beautiful Bill Act"<br />
+                              (Congress.gov)
+                            </a>
+                          </h3>
+                          <div className="w-full h-0.5 bg-black mb-6"></div>
                         </div>
 
-                        <div className="flex items-start">
-                          <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                          <span className="text-gray-900 leading-relaxed">
-                            10.9M lose insurance, mainly from Medicaid
-                          </span>
+                        <div className="space-y-3">
+                          <div className="flex items-start">
+                            <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
+                            <span className="text-gray-900 leading-relaxed">
+                              Makes Trump tax cuts permanent
+                            </span>
+                          </div>
+                          {/* Additional dummy facts... */}
                         </div>
-
-                        <div className="flex items-start">
-                          <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                          <span className="text-gray-900 leading-relaxed">
-                            Medicaid & CHIP enrollment drops by 10.5M
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                      </>
+                    ) : (
+                      // Show OpenAI-generated raw facts
+                      <>
+                        {rawFacts && rawFacts.length > 0 ? (
+                          // Group facts by category
+                          Object.entries(rawFacts.reduce((acc, fact) => {
+                            if (!acc[fact.category]) {
+                              acc[fact.category] = [];
+                            }
+                            acc[fact.category].push(fact);
+                            return acc;
+                          }, {} as Record<string, RawFacts[]>)).map(([category, facts]) => (
+                            <div key={category}>
+                              <h3 className="text-lg font-bold text-black mb-3">
+                                {category}
+                              </h3>
+                              <div className="w-full h-0.5 bg-black mb-6"></div>
+                              <div className="space-y-3">
+                                {facts.map((fact, index) => (
+                                  <div key={index} className="flex items-start">
+                                    <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
+                                    <div className="text-gray-900 leading-relaxed">
+                                      <span>{fact.fact}</span>
+                                      {fact.source && (
+                                        <span className="text-gray-600 text-sm ml-2">
+                                          ({fact.source})
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-gray-600 italic">
+                            No raw facts available for this report.
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 }
               />
@@ -463,7 +412,54 @@ export default function ArticlePage() {
                 customIcon={pivotIcon}
                 content={
                   <div className="mt-4 space-y-4">
-                    {/* Pro-Trump Perspective */}
+                    {perspectives && perspectives.length > 0 ? (
+                      // Show OpenAI-generated perspectives
+                      perspectives.map((perspective, index) => {
+                        // Use different colors for different viewpoints
+                        const colors = [
+                          'bg-red-600 hover:bg-red-700',
+                          'bg-blue-600 hover:bg-blue-700', 
+                          'bg-gray-600 hover:bg-gray-700',
+                          'bg-green-600 hover:bg-green-700',
+                          'bg-purple-600 hover:bg-purple-700'
+                        ];
+                        const colorClass = colors[index % colors.length];
+                        
+                        return (
+                          <Collapsible key={index} defaultOpen={false}>
+                            <CollapsibleTrigger className="w-full">
+                              <div className={`${colorClass} text-white p-6 rounded-lg transition-colors`}>
+                                <div className="flex items-center justify-between">
+                                  <div className="text-left">
+                                    <h3 className="font-bold text-xl mb-2">{perspective.viewpoint}</h3>
+                                    <p className="text-sm opacity-80">Source: {perspective.source}</p>
+                                  </div>
+                                  <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
+                                </div>
+                              </div>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent>
+                              <div className="p-6 space-y-6 bg-gray-100">
+                                <p className="text-gray-800 text-lg font-semibold">{perspective.description}</p>
+                                <div className="w-full h-0.5 bg-black my-2"></div>
+                                
+                                {perspective.quote && (
+                                  <div>
+                                    <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">{perspective.source}</div>
+                                    <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                      "{perspective.quote}"
+                                    </blockquote>
+                                  </div>
+                                )}
+                              </div>
+                            </CollapsibleContent>
+                          </Collapsible>
+                        );
+                      })
+                    ) : (
+                      // Show dummy data for the "Big Beautiful Bill"
+                      <>
+                        {/* Pro-Trump Perspective */}
                     <Collapsible defaultOpen={false}>
                       <CollapsibleTrigger className="w-full">
                         <div className="bg-red-600 text-white p-6 rounded-lg hover:bg-red-700 transition-colors">
@@ -639,6 +635,8 @@ export default function ArticlePage() {
                         </div>
                       </CollapsibleContent>
                     </Collapsible>
+                      </>
+                    )}
                   </div>
                 }
               />
