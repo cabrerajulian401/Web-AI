@@ -54,6 +54,7 @@ Return JSON in this exact format:
   "relatedArticles": [
     {
       "title": "string",
+      "excerpt": "string (brief description of the article, 1-2 sentences)",
       "url": "string (real URL)",
       "source": "string",
       "publishedAt": "string (ISO date)"
@@ -128,13 +129,19 @@ Use real, current information from authentic sources. Make reports comprehensive
           title: item.title,
           description: item.description
         })),
-        relatedArticles: reportData.relatedArticles.map((article: any, index: number) => ({
-          id: Date.now() + index,
-          articleId: Date.now(),
-          title: article.title,
-          url: article.url,
-          source: article.source,
-          publishedAt: article.publishedAt
+        relatedArticles: await Promise.all(reportData.relatedArticles.map(async (article: any, index: number) => {
+          // Fetch image from Pexels based on article title
+          const imageUrl = await pexelsService.searchImageByTopic(article.title);
+          
+          return {
+            id: Date.now() + index,
+            articleId: Date.now(),
+            title: article.title,
+            excerpt: article.excerpt || "Related article covering this topic.", // Use OpenAI-generated excerpt
+            url: article.url,
+            source: article.source,
+            imageUrl: imageUrl
+          };
         })),
         rawFacts: reportData.rawFacts.map((fact: any, index: number) => ({
           id: Date.now() + index,
