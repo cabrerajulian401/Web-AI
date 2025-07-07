@@ -26,27 +26,48 @@ export function CitedSources({ sources }: CitedSourcesProps) {
         Cited Sources
       </h3>
       <div className="space-y-4">
-        {sources.map((source) => (
-          <div 
-            key={source.id} 
-            className="group cursor-pointer block hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200"
-          >
-            <div className="flex space-x-4">
-              <img 
-                src={source.imageUrl}
-                alt={source.name}
-                className="w-28 h-20 object-cover rounded-lg flex-shrink-0"
-              />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-gray-500 mb-1">{source.type}</p>
-                <h4 className="font-semibold text-black text-sm line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
-                  {source.name}
-                </h4>
-                <p className="text-xs text-gray-500 mt-1 line-clamp-2">{source.description}</p>
+        {sources.map((source) => {
+          const SourceWrapper = source.url ? 'a' : 'div';
+          const wrapperProps = source.url ? {
+            href: source.url,
+            target: '_blank',
+            rel: 'noopener noreferrer'
+          } : {};
+          
+          return (
+            <SourceWrapper
+              key={source.id}
+              {...wrapperProps}
+              className={`group block hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200 ${
+                source.url ? 'cursor-pointer' : 'cursor-default'
+              }`}
+            >
+              <div className="flex space-x-4">
+                <img 
+                  src={source.imageUrl}
+                  alt={source.name}
+                  className="w-28 h-20 object-cover rounded-lg flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-gray-500 mb-1">{source.type}</p>
+                  <h4 className={`font-semibold text-sm line-clamp-2 transition-colors duration-200 ${
+                    source.url 
+                      ? 'text-black group-hover:text-brand-blue group-hover:underline' 
+                      : 'text-black'
+                  }`}>
+                    {source.name}
+                  </h4>
+                  <p className="text-xs text-gray-500 mt-1 line-clamp-2">{source.description}</p>
+                  {source.url && (
+                    <p className="text-xs text-brand-blue mt-1 group-hover:underline">
+                      Click to visit source →
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
+            </SourceWrapper>
+          );
+        })}
       </div>
     </Card>
   );
