@@ -32,11 +32,11 @@ export default function ArticlePage() {
   const [, setLocation] = useLocation();
   const [showThemeController, setShowThemeController] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Extract slug from URL path
   const currentPath = window.location.pathname;
   const slug = currentPath.split('/article/')[1] || 'gpt-5-announcement';
-  
+
   // Get search query from URL params or localStorage
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -50,7 +50,7 @@ export default function ArticlePage() {
       }
     }
   }, []);
-  
+
   const { data: articleData, isLoading } = useQuery<ArticleData>({
     queryKey: ["/api/article", slug],
     queryFn: () => fetch(`/api/article/${slug}`).then(res => res.json()),
@@ -83,7 +83,7 @@ export default function ArticlePage() {
   const handleBackToFeed = () => {
     setLocation("/");
   };
-  
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -94,7 +94,7 @@ export default function ArticlePage() {
       window.history.pushState({}, '', url);
     }
   };
-  
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearch(e);
@@ -121,7 +121,7 @@ export default function ArticlePage() {
                     <p className="text-xl text-gray-600 mt-2">Truth. Trust. Transparency.</p>
                   </div>
                 </div>
-                
+
                 <Skeleton className="h-6 w-32" />
                 <Skeleton className="h-8 w-24" />
               </div>
@@ -173,28 +173,39 @@ export default function ArticlePage() {
             {/* Combined Header and Article Hero */}
             <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
               <CardContent className="p-0">
-                {/* Hero Image with Overlay */}
+                {/* Hero Image with Overlay - Increased height to prevent overlap */}
                 <div className="relative overflow-hidden">
                   <img 
                     src={article.heroImageUrl}
                     alt={article.title}
-                    className="w-full h-56 object-cover"
+                    className="w-full h-64 object-cover"
                   />
                   {/* Semitransparent mask */}
                   <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-                  
-                  {/* TIMIO Logo and Search Bar - Over Image */}
-                  <div className="absolute top-4 left-4 right-4">
-                    <div className="flex items-center space-x-2 mb-3">
-                      <img 
-                        src={timioLogo} 
-                        alt="TIMIO News" 
-                        className="h-6 w-6 rounded-lg"
-                      />
-                      <span className="text-lg font-bold text-white">TIMIO News</span>
+
+                  {/* TIMIO Logo and Search Bar - Over Image with better spacing */}
+                  <div className="absolute top-4 left-4 right-4 pb-2">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-2">
+                        <img 
+                          src={timioLogo} 
+                          alt="TIMIO News" 
+                          className="h-6 w-6 rounded-lg"
+                        />
+                        <span className="text-lg font-bold text-white">TIMIO News</span>
+                      </div>
+                      <Button
+                        onClick={handleBackToFeed}
+                        variant="ghost"
+                        size="sm"
+                        className="text-white hover:bg-white/20 px-3 py-1"
+                      >
+                        <ArrowLeft className="h-4 w-4 mr-1" />
+                        Back
+                      </Button>
                     </div>
-                    
-                    {/* Search Bar - Smaller and Transparent */}
+
+                    {/* Search Bar - Smaller and Transparent with constrained width */}
                     <div className="relative max-w-2xl">
                       <form onSubmit={handleSearch} className="relative">
                         <div className="relative flex items-center bg-white/20 backdrop-blur-sm rounded-lg border border-white/30 shadow-lg hover:bg-white/30 transition-all duration-300 focus-within:bg-white/30 focus-within:border-white/50">
@@ -217,8 +228,8 @@ export default function ArticlePage() {
                       </form>
                     </div>
                   </div>
-                  
-                  {/* Headline overlay */}
+
+                  {/* Headline overlay - Increased top padding to prevent overlap */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 pt-20">
                     <p className="text-xl font-bold text-blue-300 mb-3 tracking-wide">RESEARCH REPORT</p>
                     <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
@@ -278,63 +289,63 @@ export default function ArticlePage() {
                           Makes Trump tax cuts permanent
                         </span>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
                           Tax reductions for incomes &lt;$500k (5-year limit)
                         </span>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
                           New deductions: tips, overtime, auto loans (expire 2028)
                         </span>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
                           Adds $200 to child tax credit
                         </span>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
                           1% remittance tax; increases endowment investment taxes
                         </span>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
                           Ends clean energy credits; opens federal land to oil & gas
                         </span>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
                           Cuts to Medicaid, Medicare, SNAP; shifts SNAP costs to states
                         </span>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
                           ICE funding increases tenfold to $100B by 2029
                         </span>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
                           Adds $150B to defense, $150B to border enforcement
                         </span>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
@@ -359,14 +370,14 @@ export default function ArticlePage() {
                             Adds $2.8T to deficit by 2034
                           </span>
                         </div>
-                        
+
                         <div className="flex items-start">
                           <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                           <span className="text-gray-900 leading-relaxed">
                             10.9M lose insurance, mainly from Medicaid
                           </span>
                         </div>
-                        
+
                         <div className="flex items-start">
                           <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                           <span className="text-gray-900 leading-relaxed">
@@ -642,7 +653,7 @@ export default function ArticlePage() {
           </div>
         </div>
       </main>
-      
+
       {/* Theme Controller */}
       {showThemeController && <ThemeController onClose={() => setShowThemeController(false)} />}
     </div>
