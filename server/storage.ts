@@ -6,6 +6,9 @@ import {
   relatedArticles, 
   rawFacts, 
   perspectives,
+  badges,
+  userBadges,
+  userStats,
   type User, 
   type InsertUser,
   type Article,
@@ -19,9 +22,16 @@ import {
   type RawFacts,
   type InsertRawFacts,
   type Perspective,
-  type InsertPerspective
+  type InsertPerspective,
+  type Badge,
+  type InsertBadge,
+  type UserBadge,
+  type InsertUserBadge,
+  type UserStats,
+  type InsertUserStats
 } from "@shared/schema";
 import { RSSService } from "./rss-service";
+import { BadgeService, type UserBadgeData } from "./badge-service";
 
 interface ArticleData {
   article: Article;
