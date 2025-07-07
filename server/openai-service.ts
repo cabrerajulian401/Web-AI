@@ -17,7 +17,47 @@ export interface ResearchReport {
 export class OpenAIResearchService {
   async generateResearchReport(query: string, heroImageUrl?: string): Promise<ResearchReport> {
     try {
-      // Generate comprehensive research report
+      // First, search for related news articles
+      const relatedArticlesResponse = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `You are a web search assistant. Search for recent news articles related to the given topic.
+            
+Return JSON in this exact format:
+{
+  "articles": [
+    {
+      "title": "string (exact article title as it appears in search results)",
+      "excerpt": "string (brief 1-2 sentence description/summary of what the article covers)",
+      "url": "string (real URL to the article)",
+      "source": "string (publication name)",
+      "publishedAt": "string (ISO date when available)"
+    }
+  ]
+}
+
+Search Guidelines:
+- Find 6-8 recent, relevant news articles from reputable sources
+- Use current web search to find real articles, not cached information
+- Include diverse perspectives and sources
+- Focus on recent developments and breaking news
+- Ensure all URLs are real and accessible`
+          },
+          {
+            role: "user",
+            content: `Search for recent news articles related to: ${query}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.3,
+        max_tokens: 2000
+      });
+
+      const relatedArticlesData = JSON.parse(relatedArticlesResponse.choices[0].message.content || '{"articles": []}');
+      
+      // Then generate comprehensive research report
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
@@ -25,7 +65,7 @@ export class OpenAIResearchService {
             role: "system",
             content: `Take on the role of an advanced non-partisan research AI.
 Create a research report on the broader news story behind the user's search term.
-Do not create dummy data, use your web search ability to get real info from the internet.
+Use your web search ability to get real info from the internet.
 
 Return JSON in this exact format:
 {
@@ -49,15 +89,6 @@ Return JSON in this exact format:
       "date": "string (YYYY-MM-DD)",
       "title": "string", 
       "description": "string"
-    }
-  ],
-  "relatedArticles": [
-    {
-      "title": "string",
-      "excerpt": "string (brief description of the article, 1-2 sentences)",
-      "url": "string (real URL)",
-      "source": "string",
-      "publishedAt": "string (ISO date)"
     }
   ],
   "rawFacts": [
@@ -101,6 +132,9 @@ Use real, current information from authentic sources. Make reports comprehensive
       // Create slug from title
       const slug = this.createSlug(reportData.article.title);
       
+      // Get hero image from Pexels based on the main article title
+      const heroImageFromPexels = heroImageUrl || await pexelsService.searchImageByTopic(reportData.article.title, 0);
+      
       // Format the response to match our schema
       const report: ResearchReport = {
         article: {
@@ -110,7 +144,7 @@ Use real, current information from authentic sources. Make reports comprehensive
           content: reportData.article.content,
           category: reportData.article.category || "Research",
           excerpt: reportData.article.excerpt,
-          heroImageUrl: heroImageUrl || reportData.article.heroImageUrl || "https://via.placeholder.com/800x400/1e40af/white?text=Research+Report",
+          heroImageUrl: heroImageFromPexels,
           publishedAt: reportData.article.publishedAt || new Date().toISOString(),
           readTime: reportData.article.readTime || 8,
           sourceCount: reportData.article.sourceCount || 12,
@@ -129,27 +163,22 @@ Use real, current information from authentic sources. Make reports comprehensive
           title: item.title,
           description: item.description
         })),
-        relatedArticles: await Promise.all(reportData.relatedArticles.map(async (article: any, index: number) => {
+        relatedArticles: await Promise.all(relatedArticlesData.articles.map(async (article: any, index: number) => {
           // Fetch image from Pexels based on article title with unique index
+          // Use index + 1 to ensure different images from the main hero image (index 0)
           const imageUrl = await pexelsService.searchImageByTopic(article.title, index + 1);
           
           return {
             id: Date.now() + index,
             articleId: Date.now(),
-            title: article.title,
-            excerpt: article.excerpt || "Related article covering this topic.", // Use OpenAI-generated excerpt
+            title: article.title, // Use the exact title from web search results (black text)
+            excerpt: article.excerpt, // Use the description from web search results (gray text)
             url: article.url,
             source: article.source,
             imageUrl: imageUrl
           };
         })),
-        rawFacts: reportData.rawFacts.map((fact: any, index: number) => ({
-          id: Date.now() + index,
-          articleId: Date.now(),
-          category: fact.category,
-          fact: fact.fact,
-          source: fact.source
-        })),
+        rawFacts: this.groupRawFactsByCategory(reportData.rawFacts),
         perspectives: reportData.perspectives.map((perspective: any, index: number) => ({
           id: Date.now() + index,
           articleId: Date.now(),
@@ -165,6 +194,28 @@ Use real, current information from authentic sources. Make reports comprehensive
       console.error('OpenAI Research Service Error:', error);
       throw new Error('Failed to generate research report');
     }
+  }
+
+  private groupRawFactsByCategory(rawFactsArray: any[]): any[] {
+    // Group raw facts by category
+    const groupedFacts = rawFactsArray.reduce((acc: any, item: any) => {
+      const category = item.category || 'General';
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      // Add the fact with source annotation
+      const factWithSource = item.source ? `${item.fact} (${item.source})` : item.fact;
+      acc[category].push(factWithSource);
+      return acc;
+    }, {});
+
+    // Convert to array format expected by schema
+    return Object.entries(groupedFacts).map(([category, facts], index) => ({
+      id: Date.now() + index,
+      articleId: Date.now(),
+      category,
+      facts: facts as string[]
+    }));
   }
 
   private createSlug(title: string): string {

@@ -199,7 +199,7 @@ export default function ArticlePage() {
     );
   }
 
-  if (!articleData) {
+  if (!articleData || !articleData.article) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="w-full max-w-md mx-4">
@@ -366,30 +366,19 @@ export default function ArticlePage() {
                       // Show OpenAI-generated raw facts
                       <>
                         {rawFacts && rawFacts.length > 0 ? (
-                          // Group facts by category
-                          Object.entries(rawFacts.reduce((acc, fact) => {
-                            if (!acc[fact.category]) {
-                              acc[fact.category] = [];
-                            }
-                            acc[fact.category].push(fact);
-                            return acc;
-                          }, {} as Record<string, RawFacts[]>)).map(([category, facts]) => (
-                            <div key={category}>
+                          // Display facts by category
+                          rawFacts.map((factGroup, groupIndex) => (
+                            <div key={groupIndex}>
                               <h3 className="text-lg font-bold text-black mb-3">
-                                {category}
+                                {factGroup.category}
                               </h3>
                               <div className="w-full h-0.5 bg-black mb-6"></div>
                               <div className="space-y-3">
-                                {facts.map((fact, index) => (
+                                {factGroup.facts.map((fact, index) => (
                                   <div key={index} className="flex items-start">
                                     <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                                     <div className="text-gray-900 leading-relaxed">
-                                      <span>{fact.fact}</span>
-                                      {fact.source && (
-                                        <span className="text-gray-600 text-sm ml-2">
-                                          ({fact.source})
-                                        </span>
-                                      )}
+                                      <span>{fact}</span>
                                     </div>
                                   </div>
                                 ))}

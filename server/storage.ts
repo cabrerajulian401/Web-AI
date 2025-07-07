@@ -588,9 +588,13 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
   }
 
   async getArticleBySlug(slug: string): Promise<ArticleData | undefined> {
+    console.log(`Looking for article with slug: ${slug}`);
+    console.log(`Available articles in storage:`, Array.from(this.articles.keys()));
+    
     // First check if it's one of our detailed static articles
     const staticArticle = this.articles.get(slug);
     if (staticArticle) {
+      console.log(`Found static article: ${slug}`);
       return staticArticle;
     }
 
@@ -710,8 +714,18 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
   }
 
   async storeResearchReport(slug: string, report: ArticleData): Promise<void> {
+    console.log(`Storing research report with slug: ${slug}`);
+    console.log(`Report data:`, JSON.stringify({
+      title: report.article?.title,
+      hasExecutiveSummary: !!report.executiveSummary,
+      timelineItemsCount: report.timelineItems?.length || 0,
+      relatedArticlesCount: report.relatedArticles?.length || 0
+    }));
+    
     this.articles.set(slug, report);
     console.log(`Stored research report: ${slug}`);
+    console.log(`Total articles in storage:`, this.articles.size);
+    console.log(`All stored slugs:`, Array.from(this.articles.keys()));
   }
 }
 
