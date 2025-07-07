@@ -19,7 +19,7 @@ export class OpenAIResearchService {
   
   // Search for real news articles from specific sources
   private async searchRealNewsArticles(query: string, sources: string[]): Promise<{ [sourceName: string]: string }> {
-    const newsSearchService = require('./news-search-service').newsSearchService;
+    const { newsSearchService } = await import('./news-search-service.js');
     const urlMap: { [sourceName: string]: string } = {};
     
     try {
@@ -185,7 +185,7 @@ export class OpenAIResearchService {
 
       ---
 
-      Please return **ONLY** valid JSON in this exact schema (no extra text, no markdown formatting):
+      CRITICAL: Return ONLY valid JSON. No extra text before or after. Keep response concise - maximum 5 items per array to prevent truncation.
       {
         "article": {
           "id": number,
@@ -264,7 +264,7 @@ export class OpenAIResearchService {
           }
         ],
 
-        max_tokens: 4000
+        max_tokens: 2800
       });
 
       // Extract response
@@ -307,25 +307,50 @@ export class OpenAIResearchService {
         // Try to fix common JSON issues
         let fixedContent = cleanContent;
         
-        // Remove incomplete last element if the error is at the end
+        // Handle truncated JSON responses
         if (parseError.message.includes('Expected') && parseError.message.includes('after array element')) {
-          // Find the last complete array or object
-          const lastCommaIndex = fixedContent.lastIndexOf(',');
-          const lastBraceIndex = fixedContent.lastIndexOf('}');
-          const lastBracketIndex = fixedContent.lastIndexOf(']');
+          console.log('Attempting to fix truncated JSON...');
           
-          if (lastCommaIndex > Math.max(lastBraceIndex, lastBracketIndex)) {
-            // Remove content after the last comma
-            fixedContent = fixedContent.substring(0, lastCommaIndex) + '\n' + 
-              fixedContent.substring(lastCommaIndex + 1).replace(/[^}\]]/g, '').trim();
+          // Find the position of the error
+          const errorPos = parseError.message.match(/position (\d+)/);
+          let truncatePos = fixedContent.length;
+          
+          if (errorPos) {
+            truncatePos = Math.min(parseInt(errorPos[1]), fixedContent.length);
           }
           
-          // Try parsing the fixed content
+          // Find the last complete structure before the error
+          let workingContent = fixedContent.substring(0, truncatePos);
+          
+          // Remove any incomplete trailing elements
+          const lastCompleteComma = workingContent.lastIndexOf(',');
+          const lastCompleteObject = workingContent.lastIndexOf('}');
+          const lastCompleteArray = workingContent.lastIndexOf(']');
+          
+          // If we have a trailing comma after the last complete structure, remove everything after it
+          if (lastCompleteComma > Math.max(lastCompleteObject, lastCompleteArray)) {
+            workingContent = workingContent.substring(0, lastCompleteComma);
+          }
+          
+          // Ensure proper JSON closure
+          let openBraces = (workingContent.match(/\{/g) || []).length - (workingContent.match(/\}/g) || []).length;
+          let openBrackets = (workingContent.match(/\[/g) || []).length - (workingContent.match(/\]/g) || []).length;
+          
+          // Close any unclosed structures
+          while (openBrackets > 0) {
+            workingContent += ']';
+            openBrackets--;
+          }
+          while (openBraces > 0) {
+            workingContent += '}';
+            openBraces--;
+          }
+          
           try {
-            reportData = JSON.parse(fixedContent);
-            console.log('Successfully parsed fixed JSON');
+            reportData = JSON.parse(workingContent);
+            console.log('Successfully parsed truncated JSON');
           } catch (secondError) {
-            console.error('Failed to parse fixed content as well:', secondError);
+            console.error('Failed to parse fixed content:', secondError);
             throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
           }
         } else {
