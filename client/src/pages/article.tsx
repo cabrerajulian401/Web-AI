@@ -34,6 +34,15 @@ export default function ArticlePage() {
   const [showThemeController, setShowThemeController] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Helper function to find URL for a source name
+  const findSourceUrl = (sourceName: string, citedSources: CitedSource[]): string | null => {
+    const source = citedSources.find(s => 
+      s.name.toLowerCase().includes(sourceName.toLowerCase()) ||
+      sourceName.toLowerCase().includes(s.name.toLowerCase())
+    );
+    return source?.url || null;
+  };
+
   const researchMutation = useMutation({
     mutationFn: async (query: string) => {
       const response = await apiRequest("POST", "/api/research", { query });
@@ -439,6 +448,18 @@ export default function ArticlePage() {
                                     <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                       "{perspective.quote}"
                                     </blockquote>
+                                    {findSourceUrl(perspective.source, citedSources) && (
+                                      <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                        <a 
+                                          href={findSourceUrl(perspective.source, citedSources)!} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                        >
+                                          Read the article →
+                                        </a>
+                                      </div>
+                                    )}
                                   </div>
                                 )}
                               </div>
@@ -473,11 +494,18 @@ export default function ArticlePage() {
                               <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                 "President Trump's One Big, Beautiful Bill delivers on the commonsense agenda that nearly 80 million Americans voted for – the largest middle-class tax cut in history, permanent border security, massive military funding, and restoring fiscal sanity."
                               </blockquote>
-                              <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                  Read the article →
-                                </a>
-                              </div>
+                              {findSourceUrl("White House", citedSources) && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                  <a 
+                                    href={findSourceUrl("White House", citedSources)!} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
+                              )}
                             </div>
 
                             <div>
@@ -485,11 +513,18 @@ export default function ArticlePage() {
                               <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                 "The One, Big, Beautiful Bill cuts taxes for ALL Americans, secures the border, stands up to the woke mob by empowering parents and protecting women and children, and much more!"
                               </blockquote>
-                              <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                  Read the article →
-                                </a>
-                              </div>
+                              {findSourceUrl("America First Policy Institute", citedSources) && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                  <a 
+                                    href={findSourceUrl("America First Policy Institute", citedSources)!} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
+                              )}
                             </div>
 
                             <div>
@@ -497,11 +532,18 @@ export default function ArticlePage() {
                               <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                 "...a bold and necessary step toward securing the financial future of both our nation and its seniors...a win for seniors, for taxpayers, and for the future of our country."
                               </blockquote>
-                              <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                  Read the article →
-                                </a>
-                              </div>
+                              {findSourceUrl("AMAC Action", citedSources) && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                  <a 
+                                    href={findSourceUrl("AMAC Action", citedSources)!} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -532,11 +574,18 @@ export default function ArticlePage() {
                               <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                 "This so-called 'Big Beautiful Bill' marks a direct and heartless assault on the American people...taking health care away from nearly 200,000 Marylanders, and hurting 684,000 Marylanders that rely on food assistance..."
                               </blockquote>
-                              <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                  Read the article →
-                                </a>
-                              </div>
+                              {findSourceUrl("Governor", citedSources) && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                  <a 
+                                    href={findSourceUrl("Governor", citedSources)!} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
+                              )}
                             </div>
 
                             <div>
@@ -544,11 +593,18 @@ export default function ArticlePage() {
                               <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                 "...harms everyday Americans while granting billionaires substantial tax benefits."
                               </blockquote>
-                              <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                  Read the article →
-                                </a>
-                              </div>
+                              {findSourceUrl("Al Jazeera", citedSources) && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                  <a 
+                                    href={findSourceUrl("Al Jazeera", citedSources)!} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
+                              )}
                             </div>
 
                             <div>
@@ -556,11 +612,18 @@ export default function ArticlePage() {
                               <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                 "...would inflate spending and exacerbate the nation's already unparalleled debt."
                               </blockquote>
-                              <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                  Read the article →
-                                </a>
-                              </div>
+                              {findSourceUrl("Al Jazeera", citedSources) && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                  <a 
+                                    href={findSourceUrl("Al Jazeera", citedSources)!} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -591,11 +654,18 @@ export default function ArticlePage() {
                               <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                 "Far more Americans oppose the legislation than favor it. Nearly half (49%) oppose it, while 29% favor it. Another 21% are not sure."
                               </blockquote>
-                              <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                  Read the article →
-                                </a>
-                              </div>
+                              {findSourceUrl("Pew Research", citedSources) && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                  <a 
+                                    href={findSourceUrl("Pew Research", citedSources)!} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
+                              )}
                             </div>
 
                             <div>
@@ -603,11 +673,18 @@ export default function ArticlePage() {
                               <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                 "Fifty-five percent of voters said that they oppose the bill, while 29% said they support it and 16% were unsure."
                               </blockquote>
-                              <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                  Read the article →
-                                </a>
-                              </div>
+                              {findSourceUrl("ABC News", citedSources) && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                  <a 
+                                    href={findSourceUrl("ABC News", citedSources)!} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
+                              )}
                             </div>
 
                             <div>
@@ -615,11 +692,18 @@ export default function ArticlePage() {
                               <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                 "Americans largely disapprove of the megabill but are more split on some of the specific provisions."
                               </blockquote>
-                              <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                  Read the article →
-                                </a>
-                              </div>
+                              {findSourceUrl("Axios", citedSources) && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                  <a 
+                                    href={findSourceUrl("Axios", citedSources)!} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
