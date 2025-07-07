@@ -319,7 +319,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 999,
         articleId: 999,
-        title: "CBO Analysis: 12 Million Could Lose Insurance Under New Law",
+        title: "Congressional Budget Office Official Analysis: 12 Million Could Lose Insurance Under New Law",
         excerpt: "Congressional Budget Office projects significant coverage losses due to work requirements and funding cuts.",
         url: "https://www.cbo.gov/cost-estimates",
         source: "Congressional Budget Office",
