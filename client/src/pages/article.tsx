@@ -176,8 +176,8 @@ export default function ArticlePage() {
 
                   
                   {/* Headline overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
-                    <div className="flex items-center space-x-3 mb-3">
+                  <div className="absolute bottom-0 left-0 right-0 p-6 z-20 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+                    <div className="flex items-center space-x-3 mb-3 bg-black/30 rounded-lg px-3 py-2">
                       <img 
                         src={timioLogo} 
                         alt="TIMIO News" 
