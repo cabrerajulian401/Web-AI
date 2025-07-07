@@ -177,7 +177,7 @@ export default function ArticlePage() {
                   
                   {/* Headline overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <div className="flex items-center space-x-3 mb-2">
+                    <div className="flex items-center space-x-3 mb-3">
                       <img 
                         src={timioLogo} 
                         alt="TIMIO News" 
@@ -185,6 +185,31 @@ export default function ArticlePage() {
                       />
                       <span className="text-lg font-bold text-white">TIMIO News</span>
                     </div>
+                    
+                    {/* Search Bar */}
+                    <div className="mb-4">
+                      <form onSubmit={handleSearch} className="relative">
+                        <div className="relative bg-white/20 backdrop-blur-sm rounded-md p-2 border border-white/30">
+                          <div className="flex items-center space-x-2">
+                            <Search className="h-4 w-4 text-white" />
+                            <input
+                              type="text"
+                              value={searchQuery}
+                              onChange={handleSearchInputChange}
+                              placeholder="Generate a report on any event"
+                              className="flex-1 bg-transparent text-white placeholder-white/80 focus:outline-none text-sm"
+                            />
+                            <Button 
+                              type="submit" 
+                              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm"
+                            >
+                              Research
+                            </Button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    
                     <p className="text-xl font-bold text-blue-300 mb-3 tracking-wide">RESEARCH REPORT</p>
                     <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
                       {article.title}
@@ -192,29 +217,7 @@ export default function ArticlePage() {
                   </div>
                 </div>
 
-                {/* Search Bar */}
-                <div className="p-6 border-b border-gray-200">
-                  <form onSubmit={handleSearch} className="relative">
-                    <div className="relative bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-200">
-                      <div className="flex items-center space-x-3">
-                        <Search className="h-5 w-5 text-blue-600" />
-                        <input
-                          type="text"
-                          value={searchQuery}
-                          onChange={handleSearchInputChange}
-                          placeholder="Generate a report on any event"
-                          className="flex-1 bg-transparent text-gray-900 placeholder-gray-600 focus:outline-none text-lg"
-                        />
-                        <Button 
-                          type="submit" 
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-200"
-                        >
-                          Research
-                        </Button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
+
 
                 {/* Executive Summary - Collapsible */}
                 <ExpandableSection
