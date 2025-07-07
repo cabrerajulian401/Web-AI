@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings, ChevronDown, Search } from "lucide-react";
+import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,7 +11,7 @@ import { RelatedArticles } from "@/components/ui/related-articles";
 import { ThemeController } from "@/components/theme-controller";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import execSummaryIcon from "@assets/hour clear_1751669332914.png";
@@ -31,20 +31,10 @@ export default function ArticlePage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [showThemeController, setShowThemeController] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   
   // Extract slug from URL path
   const currentPath = window.location.pathname;
   const slug = currentPath.split('/article/')[1] || 'gpt-5-announcement';
-  
-  // Extract search query from URL parameters
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const query = urlParams.get('q');
-    if (query) {
-      setSearchQuery(query);
-    }
-  }, [window.location.search]);
   
   const { data: articleData, isLoading } = useQuery<ArticleData>({
     queryKey: ["/api/article", slug],
@@ -77,18 +67,6 @@ export default function ArticlePage() {
 
   const handleBackToFeed = () => {
     setLocation("/");
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      // Navigate to the same research report with updated search query
-      setLocation(`/article/one-big-beautiful-bill-trump-2025?q=${encodeURIComponent(searchQuery)}`);
-    }
-  };
-
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
   };
 
   if (isLoading) {
@@ -133,7 +111,7 @@ export default function ArticlePage() {
     );
   }
 
-  if (!articleData || !articleData.article) {
+  if (!articleData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="w-full max-w-md mx-4">
@@ -176,51 +154,21 @@ export default function ArticlePage() {
 
                   
                   {/* Headline overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 z-20 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
-                    <div className="flex items-center space-x-3 mb-3 bg-black/30 rounded-lg px-3 py-2">
-                      <div className="h-6 w-6 rounded-lg bg-white flex items-center justify-center">
-                        <img 
-                          src={timioLogo} 
-                          alt="TIMIO News" 
-                          className="h-4 w-4 rounded object-cover"
-                          style={{display: 'block', visibility: 'visible'}}
-                        />
-                      </div>
-                      <span className="text-lg font-bold text-white" style={{display: 'block', visibility: 'visible'}}>TIMIO News</span>
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <img 
+                        src={timioLogo} 
+                        alt="TIMIO News" 
+                        className="h-6 w-6 rounded-lg"
+                      />
+                      <span className="text-lg font-bold text-white">TIMIO News</span>
                     </div>
-                    
-                    {/* Search Bar */}
-                    <div className="mb-4">
-                      <form onSubmit={handleSearch} className="relative">
-                        <div className="relative bg-white/20 backdrop-blur-sm rounded-md p-2 border border-white/30">
-                          <div className="flex items-center space-x-2">
-                            <Search className="h-4 w-4 text-white" />
-                            <input
-                              type="text"
-                              value={searchQuery}
-                              onChange={handleSearchInputChange}
-                              placeholder="Generate a report on any event"
-                              className="flex-1 bg-transparent text-white placeholder-white/80 focus:outline-none text-sm"
-                            />
-                            <Button 
-                              type="submit" 
-                              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm"
-                            >
-                              Research
-                            </Button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                    
                     <p className="text-xl font-bold text-blue-300 mb-3 tracking-wide">RESEARCH REPORT</p>
                     <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
                       {article.title}
                     </h1>
                   </div>
                 </div>
-
-
 
                 {/* Executive Summary - Collapsible */}
                 <ExpandableSection
