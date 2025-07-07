@@ -329,11 +329,11 @@ export default function ArticlePage() {
                     {/* Pro-Trump Perspective */}
                     <Collapsible defaultOpen={false}>
                       <CollapsibleTrigger className="w-full">
-                        <div className="bg-red-600 text-white p-6 rounded-lg hover:bg-red-700 transition-colors">
+                        <div className="bg-red-400 text-white p-6 rounded-lg hover:bg-red-500 transition-colors">
                           <div className="flex items-center justify-between">
                             <div className="text-left">
-                              <h3 className="font-bold text-xl mb-2">"A Golden Age for America: Trump Delivers on Promises"</h3>
-
+                              <h3 className="font-bold text-xl mb-2">A Golden Age for America: Trump Delivers on Promises</h3>
+                              <p className="text-base font-medium opacity-90">Sources: 3</p>
                             </div>
                             <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
                           </div>
@@ -341,36 +341,44 @@ export default function ArticlePage() {
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <div className="p-6 space-y-6 bg-red-50">
-                          <p className="text-gray-800 text-base font-medium">Bill is historic, pro-growth, fulfills campaign promises, benefits families and businesses.</p>
-                          
-                          <div className="border-l-4 border-blue-400 pl-4">
-                            <div className="text-blue-600 text-sm font-medium mb-2">White House</div>
-                            <blockquote className="text-black italic mb-3">
-                              "President Trump's One Big, Beautiful Bill delivers on the commonsense agenda that nearly 80 million Americans voted for – the largest middle-class tax cut in history, permanent border security, massive military funding, and restoring fiscal sanity."
-                            </blockquote>
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white">
-                              Read the article →
-                            </Button>
-                          </div>
-                          
-                          <div className="border-l-4 border-blue-400 pl-4">
-                            <div className="text-blue-600 text-sm font-medium mb-2">America First Policy Institute</div>
-                            <blockquote className="text-black italic mb-3">
-                              "The One, Big, Beautiful Bill cuts taxes for ALL Americans, secures the border, stands up to the woke mob by empowering parents and protecting women and children, and much more!"
-                            </blockquote>
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white">
-                              Read the article →
-                            </Button>
-                          </div>
-                          
-                          <div className="border-l-4 border-blue-400 pl-4">
-                            <div className="text-blue-600 text-sm font-medium mb-2">AMAC Action</div>
-                            <blockquote className="text-black italic mb-3">
-                              "...a bold and necessary step toward securing the financial future of both our nation and its seniors...a win for seniors, for taxpayers, and for the future of our country."
-                            </blockquote>
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white">
-                              Read the article →
-                            </Button>
+                          <p className="text-gray-800 text-lg font-semibold">Bill is historic, pro-growth, fulfills campaign promises, benefits families and businesses.</p>
+
+                          <div className="space-y-6">
+                            <div>
+                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">WHITE HOUSE</div>
+                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                "President Trump's One Big, Beautiful Bill delivers on the commonsense agenda that nearly 80 million Americans voted for – the largest middle-class tax cut in history, permanent border security, massive military funding, and restoring fiscal sanity."
+                              </blockquote>
+                              <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  Read the article →
+                                </a>
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">AMERICA FIRST POLICY INSTITUTE</div>
+                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                "The One, Big, Beautiful Bill cuts taxes for ALL Americans, secures the border, stands up to the woke mob by empowering parents and protecting women and children, and much more!"
+                              </blockquote>
+                              <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  Read the article →
+                                </a>
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">AMAC ACTION</div>
+                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                "...a bold and necessary step toward securing the financial future of both our nation and its seniors...a win for seniors, for taxpayers, and for the future of our country."
+                              </blockquote>
+                              <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  Read the article →
+                                </a>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </CollapsibleContent>
@@ -379,11 +387,11 @@ export default function ArticlePage() {
                     {/* Democratic Opposition */}
                     <Collapsible defaultOpen={false}>
                       <CollapsibleTrigger className="w-full">
-                        <div className="bg-blue-600 text-white p-6 rounded-lg hover:bg-blue-700 transition-colors">
+                        <div className="bg-blue-400 text-white p-6 rounded-lg hover:bg-blue-500 transition-colors">
                           <div className="flex items-center justify-between">
                             <div className="text-left">
-                              <h3 className="font-bold text-xl mb-2">"A Gift to the Wealthy, a Blow to the Vulnerable"</h3>
-
+                              <h3 className="font-bold text-xl mb-2">A Gift to the Wealthy, a Blow to the Vulnerable</h3>
+                              <p className="text-base font-medium opacity-90">Sources: 3</p>
                             </div>
                             <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
                           </div>
@@ -391,36 +399,44 @@ export default function ArticlePage() {
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <div className="p-6 space-y-6 bg-blue-50">
-                          <p className="text-gray-800 text-base font-medium">Bill slashes social safety net, benefits rich, harms poor/elderly, increases deficit.</p>
-                          
-                          <div className="border-l-4 border-blue-400 pl-4">
-                            <div className="text-blue-600 text-sm font-medium mb-2">Governor Wes Moore (Maryland)</div>
-                            <blockquote className="text-black italic mb-3">
-                              "This so-called 'Big Beautiful Bill' marks a direct and heartless assault on the American people...taking health care away from nearly 200,000 Marylanders, and hurting 684,000 Marylanders that rely on food assistance..."
-                            </blockquote>
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white">
-                              Read the article →
-                            </Button>
-                          </div>
-                          
-                          <div className="border-l-4 border-blue-400 pl-4">
-                            <div className="text-blue-600 text-sm font-medium mb-2">Democratic Minority Leader Hakeem Jeffries (via Al Jazeera)</div>
-                            <blockquote className="text-black italic mb-3">
-                              "...harms everyday Americans while granting billionaires substantial tax benefits."
-                            </blockquote>
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white">
-                              Read the article →
-                            </Button>
-                          </div>
-                          
-                          <div className="border-l-4 border-blue-400 pl-4">
-                            <div className="text-blue-600 text-sm font-medium mb-2">Elon Musk (via Al Jazeera)</div>
-                            <blockquote className="text-black italic mb-3">
-                              "...would inflate spending and exacerbate the nation's already unparalleled debt."
-                            </blockquote>
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white">
-                              Read the article →
-                            </Button>
+                          <p className="text-gray-800 text-lg font-semibold">Bill slashes social safety net, benefits rich, harms poor/elderly, increases deficit.</p>
+
+                          <div className="space-y-6">
+                            <div>
+                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">GOVERNOR WES MOORE (MARYLAND)</div>
+                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                "This so-called 'Big Beautiful Bill' marks a direct and heartless assault on the American people...taking health care away from nearly 200,000 Marylanders, and hurting 684,000 Marylanders that rely on food assistance..."
+                              </blockquote>
+                              <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  Read the article →
+                                </a>
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">DEMOCRATIC MINORITY LEADER HAKEEM JEFFRIES (VIA AL JAZEERA)</div>
+                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                "...harms everyday Americans while granting billionaires substantial tax benefits."
+                              </blockquote>
+                              <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  Read the article →
+                                </a>
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">ELON MUSK (VIA AL JAZEERA)</div>
+                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                "...would inflate spending and exacerbate the nation's already unparalleled debt."
+                              </blockquote>
+                              <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  Read the article →
+                                </a>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </CollapsibleContent>
@@ -429,11 +445,11 @@ export default function ArticlePage() {
                     {/* Public Opinion */}
                     <Collapsible defaultOpen={false}>
                       <CollapsibleTrigger className="w-full">
-                        <div className="bg-gray-600 text-white p-6 rounded-lg hover:bg-gray-700 transition-colors">
+                        <div className="bg-gray-400 text-white p-6 rounded-lg hover:bg-gray-500 transition-colors">
                           <div className="flex items-center justify-between">
                             <div className="text-left">
-                              <h3 className="font-bold text-xl mb-2">"Skeptical Public: Most Oppose, But Some Provisions Popular"</h3>
-
+                              <h3 className="font-bold text-xl mb-2">Skeptical Public: Most Oppose, But Some Provisions Popular</h3>
+                              <p className="text-base font-medium opacity-90">Sources: 3</p>
                             </div>
                             <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
                           </div>
@@ -441,36 +457,44 @@ export default function ArticlePage() {
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <div className="p-6 space-y-6 bg-gray-50">
-                          <p className="text-gray-800 text-base font-medium">Majority of Americans oppose bill overall; support for some tax cuts and Medicaid work requirements.</p>
-                          
-                          <div className="border-l-4 border-blue-400 pl-4">
-                            <div className="text-blue-600 text-sm font-medium mb-2">Pew Research Center</div>
-                            <blockquote className="text-black italic mb-3">
-                              "Far more Americans oppose the legislation than favor it. Nearly half (49%) oppose it, while 29% favor it. Another 21% are not sure."
-                            </blockquote>
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white">
-                              Read the article →
-                            </Button>
-                          </div>
-                          
-                          <div className="border-l-4 border-blue-400 pl-4">
-                            <div className="text-blue-600 text-sm font-medium mb-2">Quinnipiac University Poll (via ABC News)</div>
-                            <blockquote className="text-black italic mb-3">
-                              "Fifty-five percent of voters said that they oppose the bill, while 29% said they support it and 16% were unsure."
-                            </blockquote>
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white">
-                              Read the article →
-                            </Button>
-                          </div>
-                          
-                          <div className="border-l-4 border-blue-400 pl-4">
-                            <div className="text-blue-600 text-sm font-medium mb-2">Axios</div>
-                            <blockquote className="text-black italic mb-3">
-                              "Americans largely disapprove of the megabill but are more split on some of the specific provisions."
-                            </blockquote>
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white">
-                              Read the article →
-                            </Button>
+                          <p className="text-gray-800 text-lg font-semibold">Majority of Americans oppose bill overall; support for some tax cuts and Medicaid work requirements.</p>
+
+                          <div className="space-y-6">
+                            <div>
+                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">PEW RESEARCH CENTER</div>
+                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                "Far more Americans oppose the legislation than favor it. Nearly half (49%) oppose it, while 29% favor it. Another 21% are not sure."
+                              </blockquote>
+                              <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  Read the article →
+                                </a>
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">QUINNIPIAC UNIVERSITY POLL (VIA ABC NEWS)</div>
+                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                "Fifty-five percent of voters said that they oppose the bill, while 29% said they support it and 16% were unsure."
+                              </blockquote>
+                              <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  Read the article →
+                                </a>
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">AXIOS</div>
+                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                "Americans largely disapprove of the megabill but are more split on some of the specific provisions."
+                              </blockquote>
+                              <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  Read the article →
+                                </a>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </CollapsibleContent>
