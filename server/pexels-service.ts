@@ -34,6 +34,7 @@ interface PexelsResponse {
 export class PexelsService {
   private apiKey: string;
   private baseUrl: string = 'https://api.pexels.com/v1';
+  private imageCache: Map<string, string> = new Map();
 
   constructor() {
     this.apiKey = process.env.PEXELS_API_KEY || '';
@@ -42,19 +43,30 @@ export class PexelsService {
     }
   }
 
-  async searchImageByTopic(query: string): Promise<string> {
+  async searchImageByTopic(query: string, imageIndex: number = 0): Promise<string> {
     try {
+      // Create cache key with query and index for unique image assignment
+      const cacheKey = `${query}_${imageIndex}`;
+      
+      // Check cache first
+      if (this.imageCache.has(cacheKey)) {
+        console.log(`Using cached image for: ${cacheKey}`);
+        return this.imageCache.get(cacheKey)!;
+      }
+
       if (!this.apiKey) {
         console.warn('Pexels API key not available, using placeholder image');
-        return this.generatePlaceholderImage(query);
+        const placeholderUrl = this.generatePlaceholderImage(query);
+        this.imageCache.set(cacheKey, placeholderUrl);
+        return placeholderUrl;
       }
 
       // Clean and enhance the search query for better results
       const searchQuery = this.enhanceSearchQuery(query);
       
-      console.log(`Searching Pexels for: ${searchQuery}`);
+      console.log(`Searching Pexels for: ${searchQuery} (index: ${imageIndex})`);
 
-      const response = await fetch(`${this.baseUrl}/search?query=${encodeURIComponent(searchQuery)}&per_page=10&orientation=landscape`, {
+      const response = await fetch(`${this.baseUrl}/search?query=${encodeURIComponent(searchQuery)}&per_page=20&orientation=landscape`, {
         headers: {
           'Authorization': this.apiKey,
           'User-Agent': 'TIMIO News Research App'
@@ -63,26 +75,35 @@ export class PexelsService {
 
       if (!response.ok) {
         console.error(`Pexels API error: ${response.status} ${response.statusText}`);
-        return this.generatePlaceholderImage(query);
+        const placeholderUrl = this.generatePlaceholderImage(query);
+        this.imageCache.set(cacheKey, placeholderUrl);
+        return placeholderUrl;
       }
 
       const data: PexelsResponse = await response.json();
       
       if (!data.photos || data.photos.length === 0) {
         console.warn(`No images found for query: ${searchQuery}`);
-        return this.generatePlaceholderImage(query);
+        const placeholderUrl = this.generatePlaceholderImage(query);
+        this.imageCache.set(cacheKey, placeholderUrl);
+        return placeholderUrl;
       }
 
-      // Select the best image (usually the first one as they're sorted by relevance)
-      const selectedPhoto = data.photos[0];
-      console.log(`Selected image: ${selectedPhoto.alt} by ${selectedPhoto.photographer}`);
+      // Select image based on index to ensure different images for different articles
+      const selectedPhoto = data.photos[imageIndex % data.photos.length];
+      console.log(`Selected image ${imageIndex}: ${selectedPhoto.alt} by ${selectedPhoto.photographer}`);
       
-      // Return the large size image URL for hero display
-      return selectedPhoto.src.large;
+      // Cache the result
+      const imageUrl = selectedPhoto.src.large;
+      this.imageCache.set(cacheKey, imageUrl);
+      
+      return imageUrl;
 
     } catch (error) {
       console.error('Error fetching image from Pexels:', error);
-      return this.generatePlaceholderImage(query);
+      const placeholderUrl = this.generatePlaceholderImage(query);
+      this.imageCache.set(cacheKey, placeholderUrl);
+      return placeholderUrl;
     }
   }
 

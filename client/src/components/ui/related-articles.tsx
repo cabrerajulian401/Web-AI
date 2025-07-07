@@ -26,13 +26,13 @@ export function RelatedArticles({ articles }: RelatedArticlesProps) {
               <img 
                 src={article.imageUrl}
                 alt={article.title}
-                className="w-20 h-16 object-cover rounded-lg flex-shrink-0"
+                className="w-28 h-20 object-cover rounded-lg flex-shrink-0"
               />
               <div className="flex-1 min-w-0">
+                <p className="text-xs text-gray-500 mb-1">{article.source}</p>
                 <h4 className="font-semibold text-brand-dark text-sm line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
                   {article.title}
                 </h4>
-                <p className="text-xs text-muted mt-1">{article.source}</p>
                 <p className="text-xs text-gray-500 mt-1 line-clamp-2">{article.excerpt}</p>
               </div>
             </div>

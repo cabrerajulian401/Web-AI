@@ -130,8 +130,8 @@ Use real, current information from authentic sources. Make reports comprehensive
           description: item.description
         })),
         relatedArticles: await Promise.all(reportData.relatedArticles.map(async (article: any, index: number) => {
-          // Fetch image from Pexels based on article title
-          const imageUrl = await pexelsService.searchImageByTopic(article.title);
+          // Fetch image from Pexels based on article title with unique index
+          const imageUrl = await pexelsService.searchImageByTopic(article.title, index + 1);
           
           return {
             id: Date.now() + index,

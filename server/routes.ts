@@ -44,8 +44,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log(`Generating research report for: ${query}`);
       
-      // Fetch relevant image from Pexels based on the query
-      const heroImageUrl = await pexelsService.searchImageByTopic(query);
+      // Fetch relevant image from Pexels based on the query (index 0 for main article)
+      const heroImageUrl = await pexelsService.searchImageByTopic(query, 0);
       console.log(`Fetched hero image from Pexels: ${heroImageUrl}`);
       
       const researchReport = await openAIResearchService.generateResearchReport(query, heroImageUrl);
