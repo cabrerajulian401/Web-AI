@@ -17,6 +17,35 @@ export interface ResearchReport {
 
 export class OpenAIResearchService {
   
+  // Search for real news articles from specific sources
+  private async searchRealNewsArticles(query: string, sources: string[]): Promise<{ [sourceName: string]: string }> {
+    const newsSearchService = require('./news-search-service').newsSearchService;
+    const urlMap: { [sourceName: string]: string } = {};
+    
+    try {
+      // Search for real articles related to the query
+      const articles = await newsSearchService.searchNews(query, 10);
+      
+      // Match articles to our cited sources
+      sources.forEach(sourceName => {
+        const matchedArticle = articles.find((article: any) => 
+          article.source.toLowerCase().includes(sourceName.toLowerCase()) ||
+          sourceName.toLowerCase().includes(article.source.toLowerCase())
+        );
+        
+        if (matchedArticle && matchedArticle.url) {
+          urlMap[sourceName] = matchedArticle.url;
+        }
+      });
+      
+      console.log(`Found real article URLs for ${Object.keys(urlMap).length} sources`);
+      return urlMap;
+    } catch (error) {
+      console.error('Error searching for real news articles:', error);
+      return {};
+    }
+  }
+
   // Extract and collect all cited sources from the report
   async collectCitedSources(reportData: any): Promise<CitedSource[]> {
     try {
@@ -69,6 +98,10 @@ export class OpenAIResearchService {
         });
       }
       
+      // Search for real news articles for these sources
+      const sourceNames = citedSourcesArray.map(s => s.name);
+      const realArticleUrls = await this.searchRealNewsArticles(reportData.query || '', sourceNames);
+      
       // Generate unique Pexels images for each source
       const citedSourcesWithImages = await Promise.all(
         citedSourcesArray.map(async (source, index) => {
@@ -81,7 +114,7 @@ export class OpenAIResearchService {
             name: source.name,
             type: source.type,
             description: source.description,
-            url: null, // Most sources won't have direct URLs
+            url: realArticleUrls[source.name] || null,
             imageUrl: imageUrl
           };
         })
@@ -207,7 +240,7 @@ Use real, current information from authentic sources. Make reports comprehensive
           title: item.title,
           description: item.description
         })),
-        citedSources: await this.collectCitedSources(reportData),
+        citedSources: await this.collectCitedSources({ ...reportData, query }),
         rawFacts: this.groupRawFactsByCategory(reportData.rawFacts),
         perspectives: reportData.perspectives.map((perspective: any, index: number) => ({
           id: Date.now() + index,
