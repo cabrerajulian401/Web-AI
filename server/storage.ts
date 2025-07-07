@@ -3,7 +3,7 @@ import {
   articles, 
   executiveSummary, 
   timelineItems, 
-  relatedArticles, 
+  citedSources, 
   rawFacts, 
   perspectives,
   type User, 
@@ -14,8 +14,8 @@ import {
   type InsertExecutiveSummary,
   type TimelineItem,
   type InsertTimelineItem,
-  type RelatedArticle,
-  type InsertRelatedArticle,
+  type CitedSource,
+  type InsertCitedSource,
   type RawFacts,
   type InsertRawFacts,
   type Perspective,
@@ -27,7 +27,7 @@ interface ArticleData {
   article: Article;
   executiveSummary: ExecutiveSummary;
   timelineItems: TimelineItem[];
-  relatedArticles: RelatedArticle[];
+  citedSources: CitedSource[];
   rawFacts: RawFacts[];
   perspectives: Perspective[];
 }
@@ -133,33 +133,33 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    const sampleRelatedArticles: RelatedArticle[] = [
+    const sampleCitedSources: CitedSource[] = [
       {
         id: 1,
         articleId: 1,
-        title: "OpenAI's Next Model: What to Expect",
-        excerpt: "Experts discuss the anticipated features and timeline for OpenAI's next major release, GPT-5.",
-        source: "AI News Daily",
-        imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120",
-        url: "/article/openai-next-model"
+        name: "AI News Daily",
+        type: "Industry Analysis",
+        description: "Experts discuss the anticipated features and timeline for OpenAI's next major release, GPT-5.",
+        url: "/article/openai-next-model",
+        imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120"
       },
       {
         id: 2,
         articleId: 1,
-        title: "The Future of AI Reasoning",
-        excerpt: "Analysis of recent advances in AI reasoning capabilities and their implications.",
-        source: "TechCrunch",
-        imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120",
-        url: "/article/future-ai-reasoning"
+        name: "TechCrunch",
+        type: "News Analysis",
+        description: "Analysis of recent advances in AI reasoning capabilities and their implications.",
+        url: "/article/future-ai-reasoning",
+        imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120"
       },
       {
         id: 3,
         articleId: 1,
-        title: "AI Market Impact Analysis",
-        excerpt: "How GPT-5's advanced reasoning could reshape the AI industry landscape.",
-        source: "The Verge",
-        imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120",
-        url: "/article/ai-market-impact"
+        name: "The Verge",
+        type: "Industry Analysis",
+        description: "How GPT-5's advanced reasoning could reshape the AI industry landscape.",
+        url: "/article/ai-market-impact",
+        imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120"
       }
     ];
 
@@ -214,7 +214,7 @@ export class MemStorage implements IStorage {
       article: sampleArticle,
       executiveSummary: sampleExecutiveSummary,
       timelineItems: sampleTimelineItems,
-      relatedArticles: sampleRelatedArticles,
+      citedSources: sampleCitedSources,
       rawFacts: sampleRawFacts,
       perspectives: samplePerspectives
     });
@@ -316,33 +316,42 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       }
     ];
 
-    const dummyRelatedArticles: RelatedArticle[] = [
+    const dummyCitedSources: CitedSource[] = [
       {
         id: 999,
         articleId: 999,
-        title: "Congressional Budget Office Official Analysis: 12 Million Could Lose Insurance Under New Law",
-        excerpt: "Congressional Budget Office projects significant coverage losses due to work requirements and funding cuts.",
+        name: "Congressional Budget Office",
+        type: "Government Analysis",
+        description: "Official cost estimates and coverage projections for healthcare provisions",
         url: "https://www.cbo.gov/cost-estimates",
-        source: "Congressional Budget Office",
         imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
       },
       {
         id: 1000,
         articleId: 999,
-        title: "State Governors Prepare Legal Challenges to Federal Cuts",
-        excerpt: "Multiple state attorneys general announce coordinated legal strategy to challenge federal healthcare cuts.",
-        url: "https://apnews.com/politics",
-        source: "Associated Press",
+        name: "White House Press Office",
+        type: "Official Statement",
+        description: "Presidential statements and administration policy announcements",
+        url: null,
         imageUrl: "/assets/capitol_building.png"
       },
       {
         id: 1001,
         articleId: 999,
-        title: "Business Groups Praise Permanent Tax Relief",
-        excerpt: "Industry organizations applaud permanent tax cuts and business deduction expansions in new legislation.",
-        url: "https://www.wsj.com/politics",
-        source: "Wall Street Journal",
+        name: "America First Policy Institute",
+        type: "Policy Analysis",
+        description: "Conservative policy research and legislative analysis",
+        url: null,
         imageUrl: "/assets/big_beautiful_bill_logo.png"
+      },
+      {
+        id: 1002,
+        articleId: 999,
+        name: "Wall Street Journal",
+        type: "News Analysis",
+        description: "Business community reactions and economic impact reporting",
+        url: null,
+        imageUrl: "/assets/placeholder_1751663094502.jpg"
       }
     ];
 
@@ -417,7 +426,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       article: dummyArticle,
       executiveSummary: dummyExecutiveSummary,
       timelineItems: dummyTimelineItems,
-      relatedArticles: dummyRelatedArticles,
+      citedSources: dummyCitedSources,
       rawFacts: dummyRawFacts,
       perspectives: dummyPerspectives
     });
@@ -535,32 +544,32 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
             sourceUrl: null
           }
         ],
-        relatedArticles: [
+        citedSources: [
           {
             id: index * 10 + 1,
             articleId: article.id,
-            title: "Background: Previous Developments",
-            excerpt: "Context and background information on this developing story",
+            name: "Tech Insider",
+            type: "Industry Analysis",
+            description: "Technical journalism and industry insights",
             url: "https://example.com/background-" + article.slug,
-            source: "Tech Insider",
             imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop"
           },
           {
             id: index * 10 + 2,
             articleId: article.id,
-            title: "Opinion: What Industry Leaders Think",
-            excerpt: "Expert perspectives on the implications and future impact",
+            name: "Industry Weekly",
+            type: "Business Analysis",
+            description: "Industry leadership perspectives and market impact analysis",
             url: "https://example.com/opinion-" + article.slug,
-            source: "Industry Weekly",
             imageUrl: "https://images.unsplash.com/photo-1556761175-4b46a572b786?w=300&h=200&fit=crop"
           },
           {
             id: index * 10 + 3,
             articleId: article.id,
-            title: "Deep Dive: Technical Analysis",
-            excerpt: "Detailed technical breakdown and analysis of the development",
+            name: "Technical Review",
+            type: "Technical Analysis",
+            description: "Detailed technical breakdown and analysis of the development",
             url: "https://example.com/analysis-" + article.slug,
-            source: "Technical Review",
             imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop"
           }
         ],
@@ -657,32 +666,32 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
             sourceUrl: null
           }
         ],
-        relatedArticles: [
+        citedSources: [
           {
             id: 1,
             articleId: rssArticle.id,
-            title: "Related: Understanding the Background",
-            excerpt: "Context and background information on this developing story",
+            name: "Industry Journal",
+            type: "Industry Analysis",
+            description: "Background research and industry context",
             url: "https://example.com/background",
-            source: "Industry Journal",
             imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop"
           },
           {
             id: 2,
             articleId: rssArticle.id,
-            title: "Analysis: What This Means for the Industry",
-            excerpt: "Expert perspectives on the implications and future impact",
+            name: "Tech Weekly",
+            type: "Analysis",
+            description: "Expert perspectives on implications and future impact",
             url: "https://example.com/analysis",
-            source: "Tech Weekly",
             imageUrl: "https://images.unsplash.com/photo-1556761175-4b46a572b786?w=300&h=200&fit=crop"
           },
           {
             id: 3,
             articleId: rssArticle.id,
-            title: "Expert Opinion: Future Implications",
-            excerpt: "Detailed analysis of long-term consequences and predictions",
+            name: "Expert Views",
+            type: "Expert Opinion",
+            description: "Detailed analysis of long-term consequences and predictions",
             url: "https://example.com/expert-opinion",
-            source: "Expert Views",
             imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop"
           }
         ],
@@ -719,7 +728,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       title: report.article?.title,
       hasExecutiveSummary: !!report.executiveSummary,
       timelineItemsCount: report.timelineItems?.length || 0,
-      relatedArticlesCount: report.relatedArticles?.length || 0
+      citedSourcesCount: report.citedSources?.length || 0
     }));
     
     this.articles.set(slug, report);

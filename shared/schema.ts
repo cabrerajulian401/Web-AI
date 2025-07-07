@@ -34,14 +34,14 @@ export const timelineItems = pgTable("timeline_items", {
   sourceUrl: text("source_url"),
 });
 
-export const relatedArticles = pgTable("related_articles", {
+export const citedSources = pgTable("cited_sources", {
   id: serial("id").primaryKey(),
   articleId: integer("article_id").notNull().references(() => articles.id),
-  title: text("title").notNull(),
-  excerpt: text("excerpt").notNull(),
-  source: text("source").notNull(),
+  name: text("name").notNull(),
+  type: text("type").notNull(), // e.g., "Government Document", "News Article", "Official Statement"
+  description: text("description").notNull(),
+  url: text("url"),
   imageUrl: text("image_url").notNull(),
-  url: text("url").notNull(),
 });
 
 export const rawFacts = pgTable("raw_facts", {
@@ -71,7 +71,7 @@ export const insertTimelineItemSchema = createInsertSchema(timelineItems).omit({
   id: true,
 });
 
-export const insertRelatedArticleSchema = createInsertSchema(relatedArticles).omit({
+export const insertCitedSourceSchema = createInsertSchema(citedSources).omit({
   id: true,
 });
 
@@ -89,8 +89,8 @@ export type ExecutiveSummary = typeof executiveSummary.$inferSelect;
 export type InsertExecutiveSummary = z.infer<typeof insertExecutiveSummarySchema>;
 export type TimelineItem = typeof timelineItems.$inferSelect;
 export type InsertTimelineItem = z.infer<typeof insertTimelineItemSchema>;
-export type RelatedArticle = typeof relatedArticles.$inferSelect;
-export type InsertRelatedArticle = z.infer<typeof insertRelatedArticleSchema>;
+export type CitedSource = typeof citedSources.$inferSelect;
+export type InsertCitedSource = z.infer<typeof insertCitedSourceSchema>;
 export type RawFacts = typeof rawFacts.$inferSelect;
 export type InsertRawFacts = z.infer<typeof insertRawFactsSchema>;
 export type Perspective = typeof perspectives.$inferSelect;

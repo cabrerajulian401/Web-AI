@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
+import type { Article, ExecutiveSummary, TimelineItem, CitedSource, RawFacts, Perspective } from "@shared/schema";
 import { pexelsService } from "./pexels-service";
 import { RSSService } from "./rss-service";
 
@@ -10,78 +10,96 @@ export interface ResearchReport {
   article: Article;
   executiveSummary: ExecutiveSummary;
   timelineItems: TimelineItem[];
-  relatedArticles: RelatedArticle[];
+  citedSources: CitedSource[];
   rawFacts: RawFacts[];
   perspectives: Perspective[];
 }
 
 export class OpenAIResearchService {
   
-  // Real news search using RSS feeds
-  async searchRealNews(query: string, limit: number = 6): Promise<any[]> {
+  // Extract and collect all cited sources from the report
+  async collectCitedSources(reportData: any): Promise<CitedSource[]> {
     try {
-      // Use RSS service to get real news articles
-      const rssService = new RSSService();
-      const articles = await rssService.fetchArticles();
+      const sources = new Set<string>();
+      const citedSourcesArray: any[] = [];
       
-      // Filter articles based on query relevance and limit results
-      const relevantArticles = articles
-        .filter(article => {
-          const searchTerm = query.toLowerCase();
-          const title = article.title.toLowerCase();
-          const excerpt = article.excerpt.toLowerCase();
-          return title.includes(searchTerm) || excerpt.includes(searchTerm);
-        })
-        .slice(0, limit);
-      
-      // If no relevant articles found, return recent articles
-      if (relevantArticles.length === 0) {
-        console.log('No relevant articles found for query, returning recent articles');
-        return articles.slice(0, limit).map((article: any) => ({
-          title: article.title,
-          excerpt: article.excerpt,
-          url: `https://example.com/article/${article.slug}`, // RSS articles don't have external URLs
-          source: article.category || 'Political News',
-          publishedAt: article.publishedAt
-        }));
+      // Extract sources from raw facts
+      if (reportData.rawFacts) {
+        reportData.rawFacts.forEach((factGroup: any) => {
+          if (factGroup.facts) {
+            factGroup.facts.forEach((fact: any) => {
+              if (fact.source && !sources.has(fact.source)) {
+                sources.add(fact.source);
+                citedSourcesArray.push({
+                  name: fact.source,
+                  type: "Primary Source",
+                  description: `Source cited for factual information about ${factGroup.category}`
+                });
+              }
+            });
+          }
+        });
       }
       
-      return relevantArticles.map((article: any) => ({
-        title: article.title,
-        excerpt: article.excerpt,
-        url: `https://example.com/article/${article.slug}`, // RSS articles don't have external URLs
-        source: article.category || 'Political News',
-        publishedAt: article.publishedAt
-      }));
+      // Extract sources from perspectives
+      if (reportData.perspectives) {
+        reportData.perspectives.forEach((perspective: any) => {
+          if (perspective.source && !sources.has(perspective.source)) {
+            sources.add(perspective.source);
+            citedSourcesArray.push({
+              name: perspective.source,
+              type: "News Analysis",
+              description: `Source for perspective: "${perspective.viewpoint}"`
+            });
+          }
+        });
+      }
+      
+      // Extract sources from timeline items (if they have sources)
+      if (reportData.timelineItems) {
+        reportData.timelineItems.forEach((item: any) => {
+          if (item.source && !sources.has(item.source)) {
+            sources.add(item.source);
+            citedSourcesArray.push({
+              name: item.source,
+              type: "Timeline Reference",
+              description: `Source for timeline event: "${item.title}"`
+            });
+          }
+        });
+      }
+      
+      // Generate unique Pexels images for each source
+      const citedSourcesWithImages = await Promise.all(
+        citedSourcesArray.map(async (source, index) => {
+          // Use source name directly for Pexels search with unique index
+          const imageUrl = await pexelsService.searchImageByTopic(source.name, index + 10);
+          
+          return {
+            id: Date.now() + index,
+            articleId: Date.now(),
+            name: source.name,
+            type: source.type,
+            description: source.description,
+            url: null, // Most sources won't have direct URLs
+            imageUrl: imageUrl
+          };
+        })
+      );
+      
+      console.log(`Generated ${citedSourcesWithImages.length} cited sources with unique images`);
+      return citedSourcesWithImages;
     } catch (error) {
-      console.error('Error searching RSS feeds:', error);
+      console.error('Error collecting cited sources:', error);
       return [];
     }
   }
 
   async generateResearchReport(query: string, heroImageUrl?: string): Promise<ResearchReport> {
     try {
-      // First, search for related news articles using RSS feeds
-      console.log('\n=== RSS FEED SEARCH ===');
+      console.log('\n=== GENERATING RESEARCH REPORT ===');
       console.log('Query:', query);
-      console.log('Using RSS feeds for authentic news...');
-      
-      const searchResults = await this.searchRealNews(query, 6);
-      console.log('Articles found:', searchResults.length);
-      
-      if (searchResults.length > 0) {
-        searchResults.forEach((article, index) => {
-          console.log(`\nArticle ${index + 1}:`);
-          console.log('  Title:', article.title);
-          console.log('  Source:', article.source);
-          console.log('  URL:', article.url);
-          console.log('  Published:', article.publishedAt);
-          console.log('  URL valid format:', article.url?.startsWith('http') ? 'YES' : 'NO');
-        });
-      } else {
-        console.log('No articles returned from RSS feed search');
-      }
-      console.log('=== END RSS FEED SEARCH ===\n');
+      console.log('Generating comprehensive report with cited sources...');
       
       // Then generate comprehensive research report
       const response = await openai.chat.completions.create({
@@ -189,21 +207,7 @@ Use real, current information from authentic sources. Make reports comprehensive
           title: item.title,
           description: item.description
         })),
-        relatedArticles: await Promise.all(searchResults.map(async (article: any, index: number) => {
-          // Fetch image from Pexels based on article title with unique index
-          // Use index + 1 to ensure different images from the main hero image (index 0)
-          const imageUrl = await pexelsService.searchImageByTopic(article.title, index + 1);
-          
-          return {
-            id: Date.now() + index,
-            articleId: Date.now(),
-            title: article.title, // Use the exact title from web search results (black text)
-            excerpt: article.excerpt, // Use the description from web search results (gray text)
-            url: article.url,
-            source: article.source,
-            imageUrl: imageUrl
-          };
-        })),
+        citedSources: await this.collectCitedSources(reportData),
         rawFacts: this.groupRawFactsByCategory(reportData.rawFacts),
         perspectives: reportData.perspectives.map((perspective: any, index: number) => ({
           id: Date.now() + index,

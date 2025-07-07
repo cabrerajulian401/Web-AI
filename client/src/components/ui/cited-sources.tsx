@@ -1,0 +1,53 @@
+import type { CitedSource } from "@shared/schema";
+import { Card } from "./card";
+import { FileText } from "lucide-react";
+
+interface CitedSourcesProps {
+  sources: CitedSource[];
+}
+
+export function CitedSources({ sources }: CitedSourcesProps) {
+  if (!sources || sources.length === 0) {
+    return (
+      <Card className="shadow-card p-6">
+        <h3 className="text-xl font-semibold text-brand-dark mb-6 pb-3 border-b-2 border-black flex items-center">
+          <FileText className="h-5 w-5 mr-2 text-brand-blue" />
+          Cited Sources
+        </h3>
+        <div className="text-gray-500 text-sm">No sources available</div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="shadow-card p-6">
+      <h3 className="text-xl font-semibold text-brand-dark mb-6 pb-3 border-b-2 border-black flex items-center">
+        <FileText className="h-5 w-5 mr-2 text-brand-blue" />
+        Cited Sources
+      </h3>
+      <div className="space-y-4">
+        {sources.map((source) => (
+          <div 
+            key={source.id} 
+            className="group cursor-pointer block hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200"
+          >
+            <div className="flex space-x-4">
+              <img 
+                src={source.imageUrl}
+                alt={source.name}
+                className="w-28 h-20 object-cover rounded-lg flex-shrink-0"
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-gray-500 mb-1">{source.type}</p>
+                <h4 className="font-semibold text-black text-sm line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
+                  {source.name}
+                </h4>
+                <p className="text-xs text-gray-500 mt-1 line-clamp-2">{source.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}

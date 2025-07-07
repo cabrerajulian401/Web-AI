@@ -7,13 +7,13 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ExpandableSection } from "@/components/ui/expandable-section";
 import { Timeline } from "@/components/ui/timeline";
-import { RelatedArticles } from "@/components/ui/related-articles";
+import { CitedSources } from "@/components/ui/cited-sources";
 import { ThemeController } from "@/components/theme-controller";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
-import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
+import type { Article, ExecutiveSummary, TimelineItem, CitedSource, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import execSummaryIcon from "@assets/hour clear_1751669332914.png";
 import conflictIcon from "@assets/image (4)_1751670771904.png";
@@ -23,7 +23,7 @@ interface ArticleData {
   article: Article;
   executiveSummary: ExecutiveSummary;
   timelineItems: TimelineItem[];
-  relatedArticles: RelatedArticle[];
+  citedSources: CitedSource[];
   rawFacts: RawFacts[];
   perspectives: Perspective[];
 }
@@ -218,7 +218,7 @@ export default function ArticlePage() {
     );
   }
 
-  const { article, executiveSummary, timelineItems, relatedArticles, rawFacts, perspectives } = articleData;
+  const { article, executiveSummary, timelineItems, citedSources, rawFacts, perspectives } = articleData;
 
   return (
     <div className="min-h-screen theme-page-bg">
@@ -734,7 +734,7 @@ export default function ArticlePage() {
           <div className="lg:col-span-4 space-y-8">
             <Timeline items={timelineItems} />
             <div className="border-t-2 border-gray-300 my-6"></div>
-            <RelatedArticles articles={relatedArticles} />
+            <CitedSources sources={citedSources} />
             <div className="border-t-2 border-gray-300 my-6"></div>
           </div>
         </div>
