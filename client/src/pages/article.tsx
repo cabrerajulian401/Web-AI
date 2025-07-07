@@ -44,7 +44,7 @@ export default function ArticlePage() {
     if (query) {
       setSearchQuery(query);
     }
-  }, []);
+  }, [window.location.search]);
   
   const { data: articleData, isLoading } = useQuery<ArticleData>({
     queryKey: ["/api/article", slug],
@@ -178,13 +178,15 @@ export default function ArticlePage() {
                   {/* Headline overlay */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 z-20 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
                     <div className="flex items-center space-x-3 mb-3 bg-black/30 rounded-lg px-3 py-2">
-                      <img 
-                        src={timioLogo} 
-                        alt="TIMIO News" 
-                        className="h-6 w-6 rounded-lg"
-                        onError={(e) => console.error('Logo failed to load:', e)}
-                      />
-                      <span className="text-lg font-bold text-white">TIMIO News</span>
+                      <div className="h-6 w-6 rounded-lg bg-white flex items-center justify-center">
+                        <img 
+                          src={timioLogo} 
+                          alt="TIMIO News" 
+                          className="h-4 w-4 rounded object-cover"
+                          style={{display: 'block', visibility: 'visible'}}
+                        />
+                      </div>
+                      <span className="text-lg font-bold text-white" style={{display: 'block', visibility: 'visible'}}>TIMIO News</span>
                     </div>
                     
                     {/* Search Bar */}
