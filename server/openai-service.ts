@@ -161,85 +161,46 @@ export class OpenAIResearchService {
       
       // Then generate comprehensive research report
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-2024-08-06",
+        model: "gpt-4o-mini-search-preview", // ← correct search-enabled model
+        web_search_options: {
+          user_location: {
+            type: "approximate",
+            approximate: {
+              country: "US", // adjust as needed
+              city: "YourCity",
+              region: "YourState",
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+            }
+          }
+        },
         messages: [
           {
             role: "system",
-            content: `Take on the role of an advanced non-partisan research AI with web search capabilities.
-Create a research report on the broader news story behind the user's search term.
+            content: `
+      You are a real-time, non-partisan research assistant with live web browsing capability using URL citations.
 
-CRITICAL: You must use your web search tool to get real, current information from the internet. Do not generate fake data.
-Search for recent news articles, government documents, and official statements related to the topic.
+      🚫 If you cannot access live data or URLs, STOP and respond: "ERROR: Live browsing failed. No report generated."
 
-Return JSON in this exact format:
-{
-  "article": {
-    "title": "string",
-    "content": "string (detailed article content)",
-    "category": "string", 
-    "excerpt": "string",
-    "heroImageUrl": "string (descriptive placeholder like 'https://via.placeholder.com/800x400/1e40af/white?text=Topic+Image')",
-    "publishedAt": "string (ISO date)",
-    "readTime": number,
-    "sourceCount": number,
-    "authorName": "TIMIO Research Team",
-    "authorTitle": "AI Research Analyst"
-  },
-  "executiveSummary": {
-    "summary": "string (Short, simple, easy to read, bullet point summary of event in plain English. Don't use complete sentences. Make sure you determine the cause and context of events)"
-  },
-  "timelineItems": [
-    {
-      "date": "string (YYYY-MM-DD)",
-      "title": "string", 
-      "description": "string",
-      "sourceLabel": "string (source name)",
-      "sourceUrl": "string (direct URL to source documenting this timeline event. Must be a real, working URL)"
-    }
-  ],
-  "rawFacts": [
-    {
-      "category": "string (organize by source - government documents, public officials, press releases, etc.)",
-      "fact": "string (raw facts from primary sources ONLY. Direct quotes, literal concrete propositions from documents, statements from those involved. Include document names and speakers)",
-      "source": "string (exact document name or speaker + source)",
-      "url": "string (direct URL to the specific source document, article, or page where this fact can be verified. Must be a real, working URL)"
-    }
-  ],
-  "perspectives": [
-    {
-      "viewpoint": "string (clear headline labeling the perspective group - write as snappy headline outlets could've posted, avoid using 'viewpoint' in titles)",
-      "description": "string (1 bullet point summary of view with real quotes and outlet names)",
-      "source": "string (publisher name)",
-      "quote": "string (actual quote from the source)",
-      "url": "string (direct URL to the specific article or source where this quote appears. Must be a real, working URL)"
-    }
-  ],
-  "citedSources": [
-    {
-      "name": "string (source name like 'CNN', 'Reuters', 'Congressional Budget Office')",
-      "type": "string (type like 'News Report', 'Government Analysis', 'Press Release')",
-      "description": "string (brief description of what this source provides)",
-      "url": "string (direct URL to the specific article or document from this source. Must be a real, working URL)"
-    }
-  ]
-}
+      ✅ FIRST STEP: Immediately run a web search for the topic via your tool. Only proceed if you retrieve at least 3 credible sources with real URLs (captured via annotations).
 
-Research Guidelines:
-1. Executive Summary: Short, simple bullet points in plain English, no complete sentences. Make sure you determine the cause and if they came with/without warning
-2. Raw Facts: Primary sources ONLY - government documents, public officials, original press releases. NOT Wikipedia or intermediary reporting. You may go to intermediary sites in your research, but get your data from their sources. No middle man organizations should be cited. If it is about a proposed law or bill, include raw facts directly from the document in question. Cite the name of the exact document or speaker they came from, + source. Organize by source. MUST include real URLs.
-3. Timeline: Chronological bullet points of key events with source URLs for verification
-4. Different Perspectives: Research articles with opposing/different takes. Consider what different views on this may be, and use search terms that would bring them up. Organize them into distinct, differing, and opposing groups based on their perspective. Begin each viewpoint group with one clear headline labeling, write it as if it were a snappy headline the outlets in the group could've posted. Avoid using the word viewpoint in titles. Include real quotes and outlet names with URLs.
-5. Cited Sources: List all major sources referenced throughout the report with direct URLs to specific articles or documents
-6. Review conflicting info or misconceptions if any. Prioritize conflicting claims between the different viewpoints you identified. This will be handled in the perspectives section.
+      ---
 
-CRITICAL: 
-1. Use web search FIRST to research the topic thoroughly
-2. Every fact, quote, perspective, and timeline item MUST include a real, working URL where the information can be verified
-3. Search for multiple perspectives from different sources (news outlets, government sites, think tanks)
-4. If you are unable to browse a source, print "Error browsing source" instead of generating false info
-5. All URLs must be real and working - verify them through your search results
+      Please return JSON in this **exact** schema:
+      {
+        "article": { ... },
+        "executiveSummary": { ... },
+        "timelineItems": [ ... ],
+        "rawFacts": [ ... ],
+        "perspectives": [ ... ],
+        "citedSources": [ ... ]
+      }
 
-Use real, current information from authentic sources. Make reports comprehensive and non-partisan.`
+      💡 IMPORTANT:
+      - All quotes/facts/time entries must link to real URLs via **inline URL citations**.
+      - Rely **only** on real-time live sources.
+      - Use at least 3 distinct outlets or docs with URL citations in the content.
+      - If browsing fails, output **only** the error and stop.
+      `
           },
           {
             role: "user",
@@ -247,9 +208,16 @@ Use real, current information from authentic sources. Make reports comprehensive
           }
         ],
         response_format: { type: "json_object" },
-        temperature: 0.7,
         max_tokens: 4000
       });
+
+      // Extract response
+      const { message } = response.choices[0];
+      console.log(JSON.stringify(message.content, null, 2));
+
+      // Optional: inspect annotations directly
+      console.log(response.choices[0].message.annotations);
+
 
       const reportData = JSON.parse(response.choices[0].message.content || "{}");
       
