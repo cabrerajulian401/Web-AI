@@ -329,11 +329,11 @@ export default function ArticlePage() {
                     {/* Pro-Trump Perspective */}
                     <Collapsible defaultOpen={false}>
                       <CollapsibleTrigger className="w-full">
-                        <div className="bg-red-400 text-white p-6 rounded-lg hover:bg-red-500 transition-colors">
+                        <div className="bg-red-600 text-white p-6 rounded-lg hover:bg-red-700 transition-colors">
                           <div className="flex items-center justify-between">
                             <div className="text-left">
                               <h3 className="font-bold text-xl mb-2">A Golden Age for America: Trump Delivers on Promises</h3>
-                              <p className="text-base font-medium opacity-90">Sources: 3</p>
+                              <p className="text-sm opacity-80">Sources: 3</p>
                             </div>
                             <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
                           </div>
@@ -387,11 +387,11 @@ export default function ArticlePage() {
                     {/* Democratic Opposition */}
                     <Collapsible defaultOpen={false}>
                       <CollapsibleTrigger className="w-full">
-                        <div className="bg-blue-400 text-white p-6 rounded-lg hover:bg-blue-500 transition-colors">
+                        <div className="bg-blue-600 text-white p-6 rounded-lg hover:bg-blue-700 transition-colors">
                           <div className="flex items-center justify-between">
                             <div className="text-left">
                               <h3 className="font-bold text-xl mb-2">A Gift to the Wealthy, a Blow to the Vulnerable</h3>
-                              <p className="text-base font-medium opacity-90">Sources: 3</p>
+                              <p className="text-sm opacity-80">Sources: 3</p>
                             </div>
                             <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
                           </div>
@@ -445,11 +445,11 @@ export default function ArticlePage() {
                     {/* Public Opinion */}
                     <Collapsible defaultOpen={false}>
                       <CollapsibleTrigger className="w-full">
-                        <div className="bg-gray-400 text-white p-6 rounded-lg hover:bg-gray-500 transition-colors">
+                        <div className="bg-gray-600 text-white p-6 rounded-lg hover:bg-gray-700 transition-colors">
                           <div className="flex items-center justify-between">
                             <div className="text-left">
                               <h3 className="font-bold text-xl mb-2">Skeptical Public: Most Oppose, But Some Provisions Popular</h3>
-                              <p className="text-base font-medium opacity-90">Sources: 3</p>
+                              <p className="text-sm opacity-80">Sources: 3</p>
                             </div>
                             <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
                           </div>
@@ -510,31 +510,51 @@ export default function ArticlePage() {
                 content={
                   <div className="mt-6 space-y-6">
                     <div className="border-l-4 border-red-500 pl-4 pb-4 border-b-2 border-gray-200">
-                      <h4 className="font-semibold text-brand-dark mb-1">CBO Deficit Impact</h4>
-                      <p className="text-gray-600 text-sm mb-2">White House claims "nearly $1.7 trillion in mandatory savings," while CBO estimates the bill "adds $3.3 trillion to the deficit over 10 years."</p>
+                      <h4 className="font-semibold text-brand-dark mb-1">Does the bill cut Medicaid?</h4>
+                      <p className="text-gray-600 text-sm mb-2">
+                        <strong>White House:</strong> "There will be no cuts to Medicaid…protects and strengthens Medicaid for those who rely on it."
+                      </p>
+                      <p className="text-gray-600 text-sm mb-2">
+                        <strong>CBO, Governor Moore, hospital groups:</strong> Bill will cut Medicaid, millions will lose coverage
+                      </p>
                       <div className="text-xs text-gray-500">
-                        <span className="font-medium">Sources:</span> White House vs Congressional Budget Office
+                        <span className="font-medium">[White House] vs [CBO, AHA, Governor Moore]</span>
                       </div>
                     </div>
                     <div className="border-l-4 border-orange-500 pl-4 pb-4 border-b-2 border-gray-200">
-                      <h4 className="font-semibold text-brand-dark mb-1">Health Insurance Coverage</h4>
-                      <p className="text-gray-600 text-sm mb-2">Administration officials claim "healthcare access will be improved through work requirements," while CBO projects "12 million Americans could lose health insurance by 2034."</p>
+                      <h4 className="font-semibold text-brand-dark mb-1">Effect on Deficit</h4>
+                      <p className="text-gray-600 text-sm mb-2">
+                        <strong>White House:</strong> "Reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse."
+                      </p>
+                      <p className="text-gray-600 text-sm mb-2">
+                        <strong>CBO:</strong> "Adds $3.4 trillion to federal deficits over the next 10 years."
+                      </p>
                       <div className="text-xs text-gray-500">
-                        <span className="font-medium">Sources:</span> Department of Health vs CBO Analysis
+                        <span className="font-medium">[White House] vs [CBO]</span>
                       </div>
                     </div>
                     <div className="border-l-4 border-yellow-500 pl-4 pb-4 border-b-2 border-gray-200">
-                      <h4 className="font-semibold text-brand-dark mb-1">Economic Growth Projections</h4>
-                      <p className="text-gray-600 text-sm mb-2">Business groups predict "historic economic growth from tax cuts," while Penn Wharton Budget Model shows "lifetime losses for all future generations."</p>
+                      <h4 className="font-semibold text-brand-dark mb-1">Impact on Vulnerable Americans</h4>
+                      <p className="text-gray-600 text-sm mb-2">
+                        <strong>White House:</strong> "Delivers largest middle-class tax cut…improves the lives of Americans on every rung of the economic ladder."
+                      </p>
+                      <p className="text-gray-600 text-sm mb-2">
+                        <strong>Hospitals, state officials:</strong> "Irreparable harm to healthcare, millions lose coverage, food assistance gutted."
+                      </p>
                       <div className="text-xs text-gray-500">
-                        <span className="font-medium">Sources:</span> Chamber of Commerce vs Penn Wharton Budget Model
+                        <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
                       </div>
                     </div>
                     <div className="border-l-4 border-purple-500 pl-4">
-                      <h4 className="font-semibold text-brand-dark mb-1">Public Support</h4>
-                      <p className="text-gray-600 text-sm mb-2">Republican pollsters report "strong support for tax relief," while independent polling shows "support drops to 21% after hearing about hospital funding cuts."</p>
+                      <h4 className="font-semibold text-brand-dark mb-1">Work Requirements and Safety Net</h4>
+                      <p className="text-gray-600 text-sm mb-2">
+                        <strong>White House:</strong> "Promotes work, responsibility, and restores SNAP to serve the truly needy."
+                      </p>
+                      <p className="text-gray-600 text-sm mb-2">
+                        <strong>Critics:</strong> "Millions will lose benefits due to new work requirements."
+                      </p>
                       <div className="text-xs text-gray-500">
-                        <span className="font-medium">Sources:</span> GOP Internal Polling vs Independent Survey Research
+                        <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
                       </div>
                     </div>
                   </div>
