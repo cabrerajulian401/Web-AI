@@ -324,84 +324,111 @@ export default function ArticlePage() {
                 icon="pivot"
                 customIcon={pivotIcon}
                 content={
-                  <div className="mt-6">
-                    <Accordion type="multiple" className="w-full space-y-4">
-                      <AccordionItem value="republican" className="border border-blue-200 rounded-lg">
-                        <AccordionTrigger className="hover:no-underline px-6 py-4 bg-blue-50 hover:bg-blue-100 rounded-t-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">R</span>
-                            </div>
-                            <span className="font-semibold text-blue-900">Republican Leadership</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-6 py-4 bg-white">
-                          <blockquote className="border-l-4 border-blue-600 pl-4 italic text-gray-700 mb-4">
-                            "The One Big Beautiful Bill delivers on every promise we made to the American people. This comprehensive legislation cuts taxes for working families, secures our border, and puts America first in trade. It's the largest tax cut in American history while reducing the deficit through smart spending reforms."
-                          </blockquote>
-                          <div className="text-sm text-blue-700">
-                            <strong>Source:</strong> <a href="https://www.speaker.gov/newsroom" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">House Speaker's Office Press Release</a>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
+                  <div className="mt-4 space-y-6">
+                    {/* Pro-Trump Perspective */}
+                    <div className="bg-red-600 text-white p-4 rounded-lg">
+                      <h3 className="font-bold text-lg mb-2">"A Golden Age for America: Trump Delivers on Promises"</h3>
+                      <p className="text-sm opacity-90">View: Bill is historic, pro-growth, fulfills campaign promises, benefits families and businesses.</p>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="border-l-4 border-red-500 pl-4 bg-gray-50 p-4 rounded-r-lg">
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-red-600">White House</span>
+                        </div>
+                        <blockquote className="text-gray-700 italic">
+                          "President Trump's One Big, Beautiful Bill delivers on the commonsense agenda that nearly 80 million Americans voted for – the largest middle-class tax cut in history, permanent border security, massive military funding, and restoring fiscal sanity."
+                        </blockquote>
+                      </div>
+                      
+                      <div className="border-l-4 border-red-500 pl-4 bg-gray-50 p-4 rounded-r-lg">
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-red-600">America First Policy Institute</span>
+                        </div>
+                        <blockquote className="text-gray-700 italic">
+                          "The One, Big, Beautiful Bill cuts taxes for ALL Americans, secures the border, stands up to the woke mob by empowering parents and protecting women and children, and much more!"
+                        </blockquote>
+                      </div>
+                      
+                      <div className="border-l-4 border-red-500 pl-4 bg-gray-50 p-4 rounded-r-lg">
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-red-600">AMAC Action</span>
+                        </div>
+                        <blockquote className="text-gray-700 italic">
+                          "...a bold and necessary step toward securing the financial future of both our nation and its seniors...a win for seniors, for taxpayers, and for the future of our country."
+                        </blockquote>
+                      </div>
+                    </div>
 
-                      <AccordionItem value="democratic" className="border border-red-200 rounded-lg">
-                        <AccordionTrigger className="hover:no-underline px-6 py-4 bg-red-50 hover:bg-red-100 rounded-t-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">D</span>
-                            </div>
-                            <span className="font-semibold text-red-900">Democratic Minority</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-6 py-4 bg-white">
-                          <blockquote className="border-l-4 border-red-600 pl-4 italic text-gray-700 mb-4">
-                            "This bill is a disaster for working families and a gift to billionaires. While promising tax relief, it cuts Medicare and Medicaid, threatens healthcare for millions, and adds trillions to the deficit. The CBO analysis shows this will hurt the very people Republicans claim to help."
-                          </blockquote>
-                          <div className="text-sm text-red-700">
-                            <strong>Source:</strong> <a href="https://www.democraticleader.house.gov/" target="_blank" rel="noopener noreferrer" className="underline hover:text-red-900">House Democratic Leadership Statement</a>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
+                    {/* Democratic Opposition */}
+                    <div className="bg-blue-600 text-white p-4 rounded-lg">
+                      <h3 className="font-bold text-lg mb-2">"A Gift to the Wealthy, a Blow to the Vulnerable"</h3>
+                      <p className="text-sm opacity-90">View: Bill slashes social safety net, benefits rich, harms poor/elderly, increases deficit.</p>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="border-l-4 border-blue-500 pl-4 bg-gray-50 p-4 rounded-r-lg">
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-blue-600">Governor Wes Moore (Maryland)</span>
+                        </div>
+                        <blockquote className="text-gray-700 italic">
+                          "This so-called 'Big Beautiful Bill' marks a direct and heartless assault on the American people...taking health care away from nearly 200,000 Marylanders, and hurting 684,000 Marylanders that rely on food assistance..."
+                        </blockquote>
+                      </div>
+                      
+                      <div className="border-l-4 border-blue-500 pl-4 bg-gray-50 p-4 rounded-r-lg">
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-blue-600">Democratic Minority Leader Hakeem Jeffries (via Al Jazeera)</span>
+                        </div>
+                        <blockquote className="text-gray-700 italic">
+                          "...harms everyday Americans while granting billionaires substantial tax benefits."
+                        </blockquote>
+                      </div>
+                      
+                      <div className="border-l-4 border-blue-500 pl-4 bg-gray-50 p-4 rounded-r-lg">
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-blue-600">Elon Musk (via Al Jazeera)</span>
+                        </div>
+                        <blockquote className="text-gray-700 italic">
+                          "...would inflate spending and exacerbate the nation's already unparalleled debt."
+                        </blockquote>
+                      </div>
+                    </div>
 
-                      <AccordionItem value="business" className="border border-green-200 rounded-lg">
-                        <AccordionTrigger className="hover:no-underline px-6 py-4 bg-green-50 hover:bg-green-100 rounded-t-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">B</span>
-                            </div>
-                            <span className="font-semibold text-green-900">Business Groups</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-6 py-4 bg-white">
-                          <blockquote className="border-l-4 border-green-600 pl-4 italic text-gray-700 mb-4">
-                            "The business community strongly supports this legislation. The permanent tax cuts and deregulation measures will unleash economic growth, create jobs, and restore American competitiveness. The manufacturing incentives alone will bring production back to the United States."
-                          </blockquote>
-                          <div className="text-sm text-green-700">
-                            <strong>Source:</strong> <a href="https://www.uschamber.com/policy/taxes" target="_blank" rel="noopener noreferrer" className="underline hover:text-green-900">U.S. Chamber of Commerce Policy Statement</a>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="analysts" className="border border-purple-200 rounded-lg">
-                        <AccordionTrigger className="hover:no-underline px-6 py-4 bg-purple-50 hover:bg-purple-100 rounded-t-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">A</span>
-                            </div>
-                            <span className="font-semibold text-purple-900">Independent Analysts</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-6 py-4 bg-white">
-                          <blockquote className="border-l-4 border-purple-600 pl-4 italic text-gray-700 mb-4">
-                            "This bill presents significant trade-offs. While tax cuts may stimulate short-term growth, the long-term fiscal impact is concerning. The healthcare provisions could reduce coverage, but the infrastructure investments show promise. The net effect depends heavily on implementation and economic conditions."
-                          </blockquote>
-                          <div className="text-sm text-purple-700">
-                            <strong>Source:</strong> <a href="https://www.brookings.edu/research/" target="_blank" rel="noopener noreferrer" className="underline hover:text-purple-900">Brookings Institution Analysis</a>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
+                    {/* Public Opinion */}
+                    <div className="bg-gray-600 text-white p-4 rounded-lg">
+                      <h3 className="font-bold text-lg mb-2">"Skeptical Public: Most Oppose, But Some Provisions Popular"</h3>
+                      <p className="text-sm opacity-90">View: Majority of Americans oppose bill overall; support for some tax cuts and Medicaid work requirements.</p>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="border-l-4 border-gray-500 pl-4 bg-gray-50 p-4 rounded-r-lg">
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-gray-600">Pew Research Center</span>
+                        </div>
+                        <blockquote className="text-gray-700 italic">
+                          "Far more Americans oppose the legislation than favor it. Nearly half (49%) oppose it, while 29% favor it. Another 21% are not sure."
+                        </blockquote>
+                      </div>
+                      
+                      <div className="border-l-4 border-gray-500 pl-4 bg-gray-50 p-4 rounded-r-lg">
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-gray-600">Quinnipiac University Poll (via ABC News)</span>
+                        </div>
+                        <blockquote className="text-gray-700 italic">
+                          "Fifty-five percent of voters said that they oppose the bill, while 29% said they support it and 16% were unsure."
+                        </blockquote>
+                      </div>
+                      
+                      <div className="border-l-4 border-gray-500 pl-4 bg-gray-50 p-4 rounded-r-lg">
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-gray-600">Axios</span>
+                        </div>
+                        <blockquote className="text-gray-700 italic">
+                          "Americans largely disapprove of the megabill but are more split on some of the specific provisions."
+                        </blockquote>
+                      </div>
+                    </div>
                   </div>
                 }
               />
