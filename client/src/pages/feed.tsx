@@ -81,14 +81,14 @@ export default function FeedPage() {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
+      // Save search query to localStorage for persistence (for both dummy and real modes)
+      localStorage.setItem('searchQuery', searchQuery);
+      
       if (useDummyMode) {
         // If dummy mode is enabled, navigate directly to the dummy article without any API calls
         setLocation('/article/one-big-beautiful-bill-trump-2025');
         return;
       }
-      
-      // Save search query to localStorage for persistence
-      localStorage.setItem('searchQuery', searchQuery);
       
       // Navigate to loading page which will handle the research
       setLocation('/research-loading');
