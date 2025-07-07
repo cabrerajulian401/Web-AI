@@ -206,7 +206,9 @@ export default function ArticlePage() {
                           rel="noopener noreferrer"
                           className="hover:text-gray-600 transition-colors"
                         >
-                          Directly from the bill (H.R.1, 119th Congress) - Congress.gov, IRS.gov, Treasury.gov, Energy.gov, HHS.gov, DHS.gov, Defense.gov
+                          Directly from the bill<br />
+                          H.R.1 - One Big Beautiful Bill Act<br />
+                          (Congress.gov)
                         </a>
                       </h3>
                       <div className="w-full h-0.5 bg-black mb-6"></div>
@@ -289,7 +291,8 @@ export default function ArticlePage() {
                     <div>
                       <h3 className="text-lg font-bold text-black mb-3">
                         <a href="https://www.cbo.gov/system/files/2025-01/59927-Reconciliation.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 transition-colors">
-                          CBO Analysis - CBO.gov
+                          Congressional Budget Office Analysis<br />
+                          (CBO.gov)
                         </a>
                       </h3>
                       <div className="w-full h-0.5 bg-black mb-6"></div>
