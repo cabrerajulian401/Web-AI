@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings, ChevronDown } from "lucide-react";
+import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,7 +11,7 @@ import { RelatedArticles } from "@/components/ui/related-articles";
 import { ThemeController } from "@/components/theme-controller";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import execSummaryIcon from "@assets/hour clear_1751669332914.png";
@@ -31,10 +31,20 @@ export default function ArticlePage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [showThemeController, setShowThemeController] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Extract slug from URL path
   const currentPath = window.location.pathname;
   const slug = currentPath.split('/article/')[1] || 'gpt-5-announcement';
+  
+  // Extract search query from URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, []);
   
   const { data: articleData, isLoading } = useQuery<ArticleData>({
     queryKey: ["/api/article", slug],
@@ -67,6 +77,18 @@ export default function ArticlePage() {
 
   const handleBackToFeed = () => {
     setLocation("/");
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to the same research report with updated search query
+      setLocation(`/article/one-big-beautiful-bill-trump-2025?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   if (isLoading) {
@@ -111,7 +133,7 @@ export default function ArticlePage() {
     );
   }
 
-  if (!articleData) {
+  if (!articleData || !articleData.article) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="w-full max-w-md mx-4">
@@ -168,6 +190,30 @@ export default function ArticlePage() {
                       {article.title}
                     </h1>
                   </div>
+                </div>
+
+                {/* Search Bar */}
+                <div className="p-6 border-b border-gray-200">
+                  <form onSubmit={handleSearch} className="relative">
+                    <div className="relative bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-200">
+                      <div className="flex items-center space-x-3">
+                        <Search className="h-5 w-5 text-blue-600" />
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={handleSearchInputChange}
+                          placeholder="Generate a report on any event"
+                          className="flex-1 bg-transparent text-gray-900 placeholder-gray-600 focus:outline-none text-lg"
+                        />
+                        <Button 
+                          type="submit" 
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors duration-200"
+                        >
+                          Research
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
 
                 {/* Executive Summary - Collapsible */}
