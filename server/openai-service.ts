@@ -165,9 +165,11 @@ export class OpenAIResearchService {
         messages: [
           {
             role: "system",
-            content: `Take on the role of an advanced non-partisan research AI.
+            content: `Take on the role of an advanced non-partisan research AI with web search capabilities.
 Create a research report on the broader news story behind the user's search term.
-Use your web search ability to get real info from the internet.
+
+CRITICAL: You must use your web search tool to get real, current information from the internet. Do not generate fake data.
+Search for recent news articles, government documents, and official statements related to the topic.
 
 Return JSON in this exact format:
 {
@@ -230,9 +232,12 @@ Research Guidelines:
 5. Cited Sources: List all major sources referenced throughout the report with direct URLs to specific articles or documents
 6. Review conflicting info or misconceptions if any. Prioritize conflicting claims between the different viewpoints you identified. This will be handled in the perspectives section.
 
-CRITICAL: Every fact, quote, perspective, and timeline item MUST include a real, working URL where the information can be verified. Use web search to find authentic sources and their URLs.
-
-If you are unable to browse a source, print "Error browsing source" instead of generating false info.
+CRITICAL: 
+1. Use web search FIRST to research the topic thoroughly
+2. Every fact, quote, perspective, and timeline item MUST include a real, working URL where the information can be verified
+3. Search for multiple perspectives from different sources (news outlets, government sites, think tanks)
+4. If you are unable to browse a source, print "Error browsing source" instead of generating false info
+5. All URLs must be real and working - verify them through your search results
 
 Use real, current information from authentic sources. Make reports comprehensive and non-partisan.`
           },
