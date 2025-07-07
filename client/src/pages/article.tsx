@@ -195,7 +195,7 @@ export default function ArticlePage() {
                 title="Raw Facts"
                 icon="database"
                 content={
-                  <div className="space-y-8">
+                  <div className="mt-4 space-y-8">
                     {/* Bill Source */}
                     <div>
                       <h3 className="text-lg font-bold text-black mb-3">
@@ -216,70 +216,70 @@ export default function ArticlePage() {
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          Makes Trump tax cuts permanent <a href="https://www.congress.gov/bill/119th-congress/house-bill/1/text" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          Makes Trump tax cuts permanent <a href="https://www.congress.gov/bill/119th-congress/house-bill/1/text" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">Congress.gov</a>
                         </span>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          Tax reductions for incomes &lt;$500k (5-year limit) <a href="https://www.irs.gov/newsroom/tax-reform" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          Tax reductions for incomes &lt;$500k (5-year limit) <a href="https://www.irs.gov/newsroom/tax-reform" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">IRS.gov</a>
                         </span>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          New deductions: tips, overtime, auto loans (expire 2028) <a href="https://www.treasury.gov/resource-center/tax-policy/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          New deductions: tips, overtime, auto loans (expire 2028) <a href="https://www.treasury.gov/resource-center/tax-policy/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">Treasury.gov</a>
                         </span>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          Adds $200 to child tax credit <a href="https://www.irs.gov/credits-deductions/individuals/child-tax-credit" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          Adds $200 to child tax credit <a href="https://www.irs.gov/credits-deductions/individuals/child-tax-credit" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">IRS.gov</a>
                         </span>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          1% remittance tax; increases endowment investment taxes <a href="https://www.treasury.gov/resource-center/tax-policy/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          1% remittance tax; increases endowment investment taxes <a href="https://www.treasury.gov/resource-center/tax-policy/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">Treasury.gov</a>
                         </span>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          Ends clean energy credits; opens federal land to oil & gas <a href="https://www.energy.gov/policy/policy-initiatives" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          Ends clean energy credits; opens federal land to oil & gas <a href="https://www.energy.gov/policy/policy-initiatives" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">Energy.gov</a>
                         </span>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          Cuts to Medicaid, Medicare, SNAP; shifts SNAP costs to states <a href="https://www.hhs.gov/about/budget/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          Cuts to Medicaid, Medicare, SNAP; shifts SNAP costs to states <a href="https://www.hhs.gov/about/budget/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">HHS.gov</a>
                         </span>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          ICE funding increases tenfold to $100B by 2029 <a href="https://www.dhs.gov/sites/default/files/publications/u.s._immigration_and_customs_enforcement.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          ICE funding increases tenfold to $100B by 2029 <a href="https://www.dhs.gov/sites/default/files/publications/u.s._immigration_and_customs_enforcement.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">DHS.gov</a>
                         </span>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          Adds $150B to defense, $150B to border enforcement <a href="https://www.defense.gov/News/Releases/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          Adds $150B to defense, $150B to border enforcement <a href="https://www.defense.gov/News/Releases/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">Defense.gov</a>
                         </span>
                       </div>
                       
                       <div className="flex items-start">
                         <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                         <span className="text-gray-900 leading-relaxed">
-                          Raises debt ceiling by $5T <a href="https://www.treasury.gov/resource-center/data-chart-center/quarterly-refunding/Pages/debt-ceiling.aspx" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                          Raises debt ceiling by $5T <a href="https://www.treasury.gov/resource-center/data-chart-center/quarterly-refunding/Pages/debt-ceiling.aspx" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">Treasury.gov</a>
                         </span>
                       </div>
                     </div>
@@ -296,21 +296,21 @@ export default function ArticlePage() {
                         <div className="flex items-start">
                           <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                           <span className="text-gray-900 leading-relaxed">
-                            Adds $2.8T to deficit by 2034 <a href="https://www.cbo.gov/publication/59927" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                            Adds $2.8T to deficit by 2034 <a href="https://www.cbo.gov/publication/59927" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">CBO.gov</a>
                           </span>
                         </div>
                         
                         <div className="flex items-start">
                           <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                           <span className="text-gray-900 leading-relaxed">
-                            10.9M lose insurance, mainly from Medicaid <a href="https://www.cbo.gov/publication/59928" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                            10.9M lose insurance, mainly from Medicaid <a href="https://www.cbo.gov/publication/59928" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">CBO.gov</a>
                           </span>
                         </div>
                         
                         <div className="flex items-start">
                           <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                           <span className="text-gray-900 leading-relaxed">
-                            Medicaid & CHIP enrollment drops by 10.5M <a href="https://www.cbo.gov/topics/health-care/medicaid" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">[Source]</a>
+                            Medicaid & CHIP enrollment drops by 10.5M <a href="https://www.cbo.gov/topics/health-care/medicaid" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 text-sm">CBO.gov</a>
                           </span>
                         </div>
                       </div>
