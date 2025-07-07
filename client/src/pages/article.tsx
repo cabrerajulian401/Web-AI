@@ -206,8 +206,8 @@ export default function ArticlePage() {
                           rel="noopener noreferrer"
                           className="hover:text-gray-600 transition-colors"
                         >
-                          Directly from the bill:<br />
-                          H.R.1 - One Big Beautiful Bill Act
+                          Directly from the Bill: H.R.1 - One Big Beautiful Bill Act<br />
+                          (Congress.gov)
                         </a>
                       </h3>
                       <div className="w-full h-0.5 bg-black mb-6"></div>
