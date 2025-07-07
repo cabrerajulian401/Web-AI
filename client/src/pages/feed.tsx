@@ -132,9 +132,6 @@ export default function FeedPage() {
             </div>
             
             <div className="flex items-center space-x-2 sm:space-x-4">
-              <Badge variant="secondary" className="bg-brand-blue text-white px-2 py-1 sm:px-3 text-xs sm:text-sm">
-                Live
-              </Badge>
               <Button
                 variant="outline"
                 size="sm"
