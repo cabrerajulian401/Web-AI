@@ -184,32 +184,32 @@ export default function ArticlePage() {
                   <div className="absolute inset-0 bg-black bg-opacity-40"></div>
                   
                   {/* TIMIO Logo and Search Bar - Over Image */}
-                  <div className="absolute top-6 left-6 right-6">
-                    <div className="flex items-center space-x-3 mb-4">
+                  <div className="absolute top-4 left-4 right-4">
+                    <div className="flex items-center space-x-2 mb-3">
                       <img 
                         src={timioLogo} 
                         alt="TIMIO News" 
-                        className="h-8 w-8 rounded-lg"
+                        className="h-6 w-6 rounded-lg"
                       />
-                      <span className="text-2xl font-bold text-white">TIMIO News</span>
+                      <span className="text-lg font-bold text-white">TIMIO News</span>
                     </div>
                     
-                    {/* Search Bar */}
+                    {/* Search Bar - Smaller and Transparent */}
                     <div className="relative">
                       <form onSubmit={handleSearch} className="relative">
-                        <div className="relative flex items-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 focus-within:border-blue-400 focus-within:shadow-xl">
-                          <Search className="h-5 w-5 text-blue-600 ml-4" />
+                        <div className="relative flex items-center bg-white/20 backdrop-blur-sm rounded-lg border border-white/30 shadow-lg hover:bg-white/30 transition-all duration-300 focus-within:bg-white/30 focus-within:border-white/50">
+                          <Search className="h-4 w-4 text-white ml-3" />
                           <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onKeyPress={handleKeyPress}
                             placeholder="Generate a report on any event"
-                            className="w-full py-4 px-4 text-gray-900 placeholder-gray-500 bg-transparent border-none outline-none text-lg font-medium"
+                            className="w-full py-2 px-3 text-white placeholder-white/70 bg-transparent border-none outline-none text-sm font-medium"
                           />
                           <Button
                             type="submit"
-                            className="mr-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg"
+                            className="mr-2 bg-blue-600/80 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm font-semibold transition-all duration-200 hover:shadow-lg"
                           >
                             Research
                           </Button>
