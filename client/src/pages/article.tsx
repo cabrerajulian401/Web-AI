@@ -248,8 +248,8 @@ export default function ArticlePage() {
                     <ul className="space-y-3">
                       {executiveSummary.points.map((point, index) => (
                         <li key={index} className="flex items-start">
-                          <div className="h-2 w-2 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">{point}</span>
+                          <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
+                          <span className="text-black">{point}</span>
                         </li>
                       ))}
                     </ul>
