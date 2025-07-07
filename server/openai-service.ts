@@ -46,9 +46,34 @@ export class OpenAIResearchService {
     }
   }
 
+
+
   // Extract and collect all cited sources from the report
   async collectCitedSources(reportData: any): Promise<CitedSource[]> {
     try {
+      // If OpenAI directly provided citedSources, use those
+      if (reportData.citedSources && Array.isArray(reportData.citedSources) && reportData.citedSources.length > 0) {
+        const citedSourcesWithImages = await Promise.all(
+          reportData.citedSources.map(async (source: any, index: number) => {
+            const imageUrl = await pexelsService.searchImageByTopic(source.name, index + 10);
+            
+            return {
+              id: Date.now() + index,
+              articleId: Date.now(),
+              name: source.name,
+              type: source.type,
+              description: source.description,
+              url: source.url,
+              imageUrl: imageUrl
+            };
+          })
+        );
+        
+        console.log(`Generated ${citedSourcesWithImages.length} cited sources with URLs from OpenAI`);
+        return citedSourcesWithImages;
+      }
+      
+      // Fallback: extract sources from other sections
       const sources = new Set<string>();
       const citedSourcesArray: any[] = [];
       
@@ -165,14 +190,17 @@ Return JSON in this exact format:
     {
       "date": "string (YYYY-MM-DD)",
       "title": "string", 
-      "description": "string"
+      "description": "string",
+      "sourceLabel": "string (source name)",
+      "sourceUrl": "string (direct URL to source documenting this timeline event. Must be a real, working URL)"
     }
   ],
   "rawFacts": [
     {
       "category": "string (organize by source - government documents, public officials, press releases, etc.)",
       "fact": "string (raw facts from primary sources ONLY. Direct quotes, literal concrete propositions from documents, statements from those involved. Include document names and speakers)",
-      "source": "string (exact document name or speaker + source)"
+      "source": "string (exact document name or speaker + source)",
+      "url": "string (direct URL to the specific source document, article, or page where this fact can be verified. Must be a real, working URL)"
     }
   ],
   "perspectives": [
@@ -180,17 +208,31 @@ Return JSON in this exact format:
       "viewpoint": "string (clear headline labeling the perspective group - write as snappy headline outlets could've posted, avoid using 'viewpoint' in titles)",
       "description": "string (1 bullet point summary of view with real quotes and outlet names)",
       "source": "string (publisher name)",
-      "quote": "string (actual quote from the source)"
+      "quote": "string (actual quote from the source)",
+      "url": "string (direct URL to the specific article or source where this quote appears. Must be a real, working URL)"
+    }
+  ],
+  "citedSources": [
+    {
+      "name": "string (source name like 'CNN', 'Reuters', 'Congressional Budget Office')",
+      "type": "string (type like 'News Report', 'Government Analysis', 'Press Release')",
+      "description": "string (brief description of what this source provides)",
+      "url": "string (direct URL to the specific article or document from this source. Must be a real, working URL)"
     }
   ]
 }
 
 Research Guidelines:
-1. Executive Summary: Short, simple bullet points in plain English, no complete sentences
-2. Raw Facts: Primary sources ONLY - government documents, public officials, original press releases. NOT Wikipedia or intermediary reporting. Organize by source.
-3. Timeline: Chronological bullet points of key events
-4. Different Perspectives: Research articles with opposing/different takes. Organize into distinct viewpoint groups with snappy headlines. Include real quotes and outlet names.
-5. Conflicting Info: Identify conflicts between viewpoints with sources vs opposing sources format.
+1. Executive Summary: Short, simple bullet points in plain English, no complete sentences. Make sure you determine the cause and if they came with/without warning
+2. Raw Facts: Primary sources ONLY - government documents, public officials, original press releases. NOT Wikipedia or intermediary reporting. You may go to intermediary sites in your research, but get your data from their sources. No middle man organizations should be cited. If it is about a proposed law or bill, include raw facts directly from the document in question. Cite the name of the exact document or speaker they came from, + source. Organize by source. MUST include real URLs.
+3. Timeline: Chronological bullet points of key events with source URLs for verification
+4. Different Perspectives: Research articles with opposing/different takes. Consider what different views on this may be, and use search terms that would bring them up. Organize them into distinct, differing, and opposing groups based on their perspective. Begin each viewpoint group with one clear headline labeling, write it as if it were a snappy headline the outlets in the group could've posted. Avoid using the word viewpoint in titles. Include real quotes and outlet names with URLs.
+5. Cited Sources: List all major sources referenced throughout the report with direct URLs to specific articles or documents
+6. Review conflicting info or misconceptions if any. Prioritize conflicting claims between the different viewpoints you identified. This will be handled in the perspectives section.
+
+CRITICAL: Every fact, quote, perspective, and timeline item MUST include a real, working URL where the information can be verified. Use web search to find authentic sources and their URLs.
+
+If you are unable to browse a source, print "Error browsing source" instead of generating false info.
 
 Use real, current information from authentic sources. Make reports comprehensive and non-partisan.`
           },
@@ -238,7 +280,10 @@ Use real, current information from authentic sources. Make reports comprehensive
           articleId: Date.now(),
           date: item.date,
           title: item.title,
-          description: item.description
+          description: item.description,
+          type: "event",
+          sourceLabel: item.sourceLabel || "Source",
+          sourceUrl: item.sourceUrl || null
         })),
         citedSources: await this.collectCitedSources({ ...reportData, query }),
         rawFacts: this.groupRawFactsByCategory(reportData.rawFacts),
@@ -248,7 +293,8 @@ Use real, current information from authentic sources. Make reports comprehensive
           viewpoint: perspective.viewpoint,
           description: perspective.description,
           source: perspective.source,
-          quote: perspective.quote
+          quote: perspective.quote,
+          url: perspective.url || null
         }))
       };
 
@@ -266,9 +312,13 @@ Use real, current information from authentic sources. Make reports comprehensive
       if (!acc[category]) {
         acc[category] = [];
       }
-      // Add the fact with source annotation
-      const factWithSource = item.source ? `${item.fact} (${item.source})` : item.fact;
-      acc[category].push(factWithSource);
+      // Add the fact with source annotation and URL
+      const factData = {
+        text: item.fact,
+        source: item.source,
+        url: item.url || null
+      };
+      acc[category].push(factData);
       return acc;
     }, {});
 

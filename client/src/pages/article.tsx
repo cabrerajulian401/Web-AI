@@ -387,7 +387,28 @@ export default function ArticlePage() {
                                   <div key={index} className="flex items-start">
                                     <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                                     <div className="text-gray-900 leading-relaxed">
-                                      <span>{fact}</span>
+                                      {typeof fact === 'string' ? (
+                                        <span>{fact}</span>
+                                      ) : (
+                                        <div className="space-y-2">
+                                          <span>{fact.text}</span>
+                                          {fact.source && (
+                                            <div className="text-sm text-gray-600">
+                                              Source: {fact.source}
+                                              {fact.url && (
+                                                <a 
+                                                  href={fact.url} 
+                                                  target="_blank" 
+                                                  rel="noopener noreferrer"
+                                                  className="ml-2 text-blue-600 hover:text-blue-800 underline"
+                                                >
+                                                  View Source
+                                                </a>
+                                              )}
+                                            </div>
+                                          )}
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
                                 ))}
@@ -448,10 +469,10 @@ export default function ArticlePage() {
                                     <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                       "{perspective.quote}"
                                     </blockquote>
-                                    {findSourceUrl(perspective.source, citedSources) && (
+                                    {(perspective.url || findSourceUrl(perspective.source, citedSources)) && (
                                       <div className="border border-blue-600 rounded-md p-2 inline-block">
                                         <a 
-                                          href={findSourceUrl(perspective.source, citedSources)!} 
+                                          href={perspective.url || findSourceUrl(perspective.source, citedSources)!} 
                                           target="_blank" 
                                           rel="noopener noreferrer"
                                           className="text-blue-600 hover:text-blue-800 text-sm font-medium"

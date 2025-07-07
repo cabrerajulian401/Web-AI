@@ -56,7 +56,10 @@ export const perspectives = pgTable("perspectives", {
   articleId: integer("article_id").notNull().references(() => articles.id),
   viewpoint: text("viewpoint").notNull(),
   description: text("description").notNull(),
+  source: text("source"),
+  quote: text("quote"),
   color: text("color").notNull(), // 'green', 'yellow', 'blue', etc.
+  url: text("url"),
 });
 
 export const insertArticleSchema = createInsertSchema(articles).omit({
