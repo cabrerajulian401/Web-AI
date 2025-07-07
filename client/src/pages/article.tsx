@@ -220,7 +220,7 @@ export default function ArticlePage() {
                           />
                           <Button
                             type="submit"
-                            className="mr-2 bg-blue-600/80 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm font-semibold transition-all duration-200 hover:shadow-lg"
+                            className="bg-blue-600/80 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm font-semibold transition-all duration-200 hover:shadow-lg"
                           >
                             Research
                           </Button>
