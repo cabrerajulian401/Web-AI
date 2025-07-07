@@ -342,9 +342,9 @@ export default function ArticlePage() {
                         </div>
                       </CollapsibleTrigger>
                       <CollapsibleContent>
-                        <div className="p-6 space-y-6 bg-red-50">
+                        <div className="p-6 space-y-6 bg-gray-100">
                           <p className="text-gray-800 text-lg font-semibold">Bill is historic, pro-growth, fulfills campaign promises, benefits families and businesses.</p>
-                          <div className="w-full h-0.5 bg-gray-300"></div>
+                          <div className="w-full h-0.5 bg-black my-2"></div>
 
                           <div className="space-y-6">
                             <div>
@@ -401,9 +401,9 @@ export default function ArticlePage() {
                         </div>
                       </CollapsibleTrigger>
                       <CollapsibleContent>
-                        <div className="p-6 space-y-6 bg-blue-50">
+                        <div className="p-6 space-y-6 bg-gray-100">
                           <p className="text-gray-800 text-lg font-semibold">Bill slashes social safety net, benefits rich, harms poor/elderly, increases deficit.</p>
-                          <div className="w-full h-0.5 bg-gray-300"></div>
+                          <div className="w-full h-0.5 bg-black my-2"></div>
 
                           <div className="space-y-6">
                             <div>
@@ -460,9 +460,9 @@ export default function ArticlePage() {
                         </div>
                       </CollapsibleTrigger>
                       <CollapsibleContent>
-                        <div className="p-6 space-y-6 bg-gray-50">
+                        <div className="p-6 space-y-6 bg-gray-100">
                           <p className="text-gray-800 text-lg font-semibold">Majority of Americans oppose bill overall; support for some tax cuts and Medicaid work requirements.</p>
-                          <div className="w-full h-0.5 bg-gray-300"></div>
+                          <div className="w-full h-0.5 bg-black my-2"></div>
 
                           <div className="space-y-6">
                             <div>
