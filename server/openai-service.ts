@@ -300,8 +300,37 @@ export class OpenAIResearchService {
         console.log('Parsed report data successfully');
       } catch (parseError) {
         console.error('JSON parse error:', parseError);
-        console.error('Content that failed to parse:', cleanContent);
-        throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+        console.error('Content length:', cleanContent.length);
+        console.error('First 500 chars:', cleanContent.substring(0, 500));
+        console.error('Last 500 chars:', cleanContent.substring(cleanContent.length - 500));
+        
+        // Try to fix common JSON issues
+        let fixedContent = cleanContent;
+        
+        // Remove incomplete last element if the error is at the end
+        if (parseError.message.includes('Expected') && parseError.message.includes('after array element')) {
+          // Find the last complete array or object
+          const lastCommaIndex = fixedContent.lastIndexOf(',');
+          const lastBraceIndex = fixedContent.lastIndexOf('}');
+          const lastBracketIndex = fixedContent.lastIndexOf(']');
+          
+          if (lastCommaIndex > Math.max(lastBraceIndex, lastBracketIndex)) {
+            // Remove content after the last comma
+            fixedContent = fixedContent.substring(0, lastCommaIndex) + '\n' + 
+              fixedContent.substring(lastCommaIndex + 1).replace(/[^}\]]/g, '').trim();
+          }
+          
+          // Try parsing the fixed content
+          try {
+            reportData = JSON.parse(fixedContent);
+            console.log('Successfully parsed fixed JSON');
+          } catch (secondError) {
+            console.error('Failed to parse fixed content as well:', secondError);
+            throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+          }
+        } else {
+          throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+        }
       }
       
       // Create slug from title
