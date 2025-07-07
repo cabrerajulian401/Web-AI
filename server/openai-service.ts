@@ -78,16 +78,26 @@ Return JSON in this exact format:
 
 Research Guidelines:
 1. Executive Summary: Short, simple bullet points in plain English, no complete sentences
-2. Raw Facts: Primary sources ONLY - government documents, public officials, original press releases. NOT Wikipedia or intermediary reporting. Organize by source.
-3. Timeline: Chronological bullet points of key events
-4. Different Perspectives: Research articles with opposing/different takes. Organize into distinct viewpoint groups with snappy headlines. Include real quotes and outlet names.
-5. Conflicting Info: Identify conflicts between viewpoints with sources vs opposing sources format.
+2. Raw Facts: Primary sources ONLY - government documents, public officials, original press releases. NOT Wikipedia or intermediary reporting. Organize by source. MUST include at least 6-8 facts.
+3. Timeline: Chronological bullet points of key events. MUST include at least 5-7 timeline items with specific dates.
+4. Different Perspectives: Research articles with opposing/different takes. Organize into distinct viewpoint groups with snappy headlines. Include real quotes and outlet names. MUST include at least 3-4 different perspectives.
+5. Related Articles: MUST include at least 4-5 related articles with real URLs and sources.
+6. Conflicting Info: Identify conflicts between viewpoints with sources vs opposing sources format.
 
-Use real, current information from authentic sources. Make reports comprehensive and non-partisan.`
+IMPORTANT: All sections (timelineItems, rawFacts, perspectives, relatedArticles) must be populated with comprehensive content. Do not leave any section empty or with minimal content. Use real, current information from authentic sources. Make reports comprehensive and non-partisan.`
           },
           {
             role: "user",
-            content: `Generate a comprehensive research report on: ${query}`
+            content: `Generate a comprehensive research report on: ${query}
+
+Please ensure ALL sections are fully populated with detailed, authentic content:
+- Executive Summary: 3-4 bullet points
+- Timeline: 5-7 chronological events with specific dates
+- Raw Facts: 6-8 facts from primary sources, organized by category
+- Different Perspectives: 3-4 distinct viewpoints with real quotes
+- Related Articles: 4-5 related articles with real URLs
+
+Focus on recent developments, key stakeholders, and multiple viewpoints. Use authentic sources and current information.`
           }
         ],
         response_format: { type: "json_object" },

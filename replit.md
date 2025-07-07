@@ -119,6 +119,7 @@ Changelog:
 - July 06, 2025. Redesigned Raw Facts section with minimalist, authoritative layout removing colorful bullet points in favor of clean typography, bold statements, proper source attribution, and clear hierarchical organization with border dividers
 - July 07, 2025. Updated Different Perspectives section with authentic content from provided text, featuring three distinct viewpoints: "A Golden Age for America" (pro-Trump), "A Gift to the Wealthy" (Democratic opposition), and "Skeptical Public" (polling data). Implemented colored header sections similar to attached design reference with red, blue, and gray color schemes for each perspective
 - July 07, 2025. Enhanced OpenAI research system with comprehensive non-partisan methodology, primary source focus, and authentic perspective analysis. Added dummy article toggle in theme settings to switch between original "Big Beautiful Bill" content and real AI research results. Fixed executive summary display error and data structure compatibility between dummy and AI-generated articles
+- July 07, 2025. Integrated Pexels API for automatic image fetching in research reports, enhanced OpenAI prompts to ensure all sections are populated with comprehensive content (6-8 raw facts, 5-7 timeline items, 3-4 perspectives, 4-5 related articles), set dummy mode toggle to default OFF, prevented real API calls when dummy mode is enabled, fixed Raw Facts section to display dynamic AI-generated content instead of hardcoded dummy data
 
 ## User Preferences
 
