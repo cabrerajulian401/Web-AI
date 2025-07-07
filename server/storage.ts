@@ -333,7 +333,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         excerpt: "Multiple state attorneys general announce coordinated legal strategy to challenge federal healthcare cuts.",
         url: "https://apnews.com/politics",
         source: "Associated Press",
-        imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
+        imageUrl: "/assets/capitol_building.png"
       },
       {
         id: 1001,
@@ -342,7 +342,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         excerpt: "Industry organizations applaud permanent tax cuts and business deduction expansions in new legislation.",
         url: "https://www.wsj.com/politics",
         source: "Wall Street Journal",
-        imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
+        imageUrl: "/assets/big_beautiful_bill_logo.png"
       }
     ];
 
