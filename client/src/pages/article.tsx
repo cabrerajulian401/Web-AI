@@ -509,51 +509,59 @@ export default function ArticlePage() {
                 customIcon={conflictIcon}
                 content={
                   <div className="mt-6 space-y-6">
-                    <div className="border-l-4 border-red-500 pl-4 pb-4 border-b-2 border-gray-200">
-                      <h4 className="font-semibold text-brand-dark mb-1">Does the bill cut Medicaid?</h4>
-                      <p className="text-gray-600 text-sm mb-2">
-                        <strong>White House:</strong> "There will be no cuts to Medicaid…protects and strengthens Medicaid for those who rely on it."
-                      </p>
-                      <p className="text-gray-600 text-sm mb-2">
-                        <strong>CBO, Governor Moore, hospital groups:</strong> Bill will cut Medicaid, millions will lose coverage
-                      </p>
-                      <div className="text-xs text-gray-500">
+                    <div className="pl-4 pb-4 border-b-2 border-gray-200">
+                      <h4 className="font-semibold text-brand-dark mb-3 text-lg">Does the bill cut Medicaid?</h4>
+                      <div className="ml-4">
+                        <p className="text-gray-700 text-base mb-3">
+                          <strong>White House:</strong> "There will be no cuts to Medicaid…protects and strengthens Medicaid for those who rely on it."
+                        </p>
+                        <p className="text-gray-700 text-base mb-3">
+                          <strong>CBO, Governor Moore, hospital groups:</strong> Bill will cut Medicaid, millions will lose coverage
+                        </p>
+                      </div>
+                      <div className="text-sm text-gray-500">
                         <span className="font-medium">[White House] vs [CBO, AHA, Governor Moore]</span>
                       </div>
                     </div>
-                    <div className="border-l-4 border-orange-500 pl-4 pb-4 border-b-2 border-gray-200">
-                      <h4 className="font-semibold text-brand-dark mb-1">Effect on Deficit</h4>
-                      <p className="text-gray-600 text-sm mb-2">
-                        <strong>White House:</strong> "Reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse."
-                      </p>
-                      <p className="text-gray-600 text-sm mb-2">
-                        <strong>CBO:</strong> "Adds $3.4 trillion to federal deficits over the next 10 years."
-                      </p>
-                      <div className="text-xs text-gray-500">
+                    <div className="pl-4 pb-4 border-b-2 border-gray-200">
+                      <h4 className="font-semibold text-brand-dark mb-3 text-lg">Effect on Deficit</h4>
+                      <div className="ml-4">
+                        <p className="text-gray-700 text-base mb-3">
+                          <strong>White House:</strong> "Reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse."
+                        </p>
+                        <p className="text-gray-700 text-base mb-3">
+                          <strong>CBO:</strong> "Adds $3.4 trillion to federal deficits over the next 10 years."
+                        </p>
+                      </div>
+                      <div className="text-sm text-gray-500">
                         <span className="font-medium">[White House] vs [CBO]</span>
                       </div>
                     </div>
-                    <div className="border-l-4 border-yellow-500 pl-4 pb-4 border-b-2 border-gray-200">
-                      <h4 className="font-semibold text-brand-dark mb-1">Impact on Vulnerable Americans</h4>
-                      <p className="text-gray-600 text-sm mb-2">
-                        <strong>White House:</strong> "Delivers largest middle-class tax cut…improves the lives of Americans on every rung of the economic ladder."
-                      </p>
-                      <p className="text-gray-600 text-sm mb-2">
-                        <strong>Hospitals, state officials:</strong> "Irreparable harm to healthcare, millions lose coverage, food assistance gutted."
-                      </p>
-                      <div className="text-xs text-gray-500">
+                    <div className="pl-4 pb-4 border-b-2 border-gray-200">
+                      <h4 className="font-semibold text-brand-dark mb-3 text-lg">Impact on Vulnerable Americans</h4>
+                      <div className="ml-4">
+                        <p className="text-gray-700 text-base mb-3">
+                          <strong>White House:</strong> "Delivers largest middle-class tax cut…improves the lives of Americans on every rung of the economic ladder."
+                        </p>
+                        <p className="text-gray-700 text-base mb-3">
+                          <strong>Hospitals, state officials:</strong> "Irreparable harm to healthcare, millions lose coverage, food assistance gutted."
+                        </p>
+                      </div>
+                      <div className="text-sm text-gray-500">
                         <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
                       </div>
                     </div>
-                    <div className="border-l-4 border-purple-500 pl-4">
-                      <h4 className="font-semibold text-brand-dark mb-1">Work Requirements and Safety Net</h4>
-                      <p className="text-gray-600 text-sm mb-2">
-                        <strong>White House:</strong> "Promotes work, responsibility, and restores SNAP to serve the truly needy."
-                      </p>
-                      <p className="text-gray-600 text-sm mb-2">
-                        <strong>Critics:</strong> "Millions will lose benefits due to new work requirements."
-                      </p>
-                      <div className="text-xs text-gray-500">
+                    <div className="pl-4">
+                      <h4 className="font-semibold text-brand-dark mb-3 text-lg">Work Requirements and Safety Net</h4>
+                      <div className="ml-4">
+                        <p className="text-gray-700 text-base mb-3">
+                          <strong>White House:</strong> "Promotes work, responsibility, and restores SNAP to serve the truly needy."
+                        </p>
+                        <p className="text-gray-700 text-base mb-3">
+                          <strong>Critics:</strong> "Millions will lose benefits due to new work requirements."
+                        </p>
+                      </div>
+                      <div className="text-sm text-gray-500">
                         <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
                       </div>
                     </div>
