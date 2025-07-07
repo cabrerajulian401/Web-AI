@@ -161,7 +161,7 @@ export class OpenAIResearchService {
       
       // Then generate comprehensive research report
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini-search-preview", // ← correct search-enabled model
+        model: "gpt-4o-search-preview",
         web_search_options: {
           user_location: {
             type: "approximate",
@@ -185,14 +185,70 @@ export class OpenAIResearchService {
 
       ---
 
-      Please return JSON in this **exact** schema:
+      Please return **ONLY** valid JSON in this exact schema (no extra text, no markdown formatting):
       {
-        "article": { ... },
-        "executiveSummary": { ... },
-        "timelineItems": [ ... ],
-        "rawFacts": [ ... ],
-        "perspectives": [ ... ],
-        "citedSources": [ ... ]
+        "article": {
+          "id": number,
+          "title": "string",
+          "excerpt": "string",
+          "heroImageUrl": "string",
+          "content": "string",
+          "author": "string",
+          "publishedAt": "string",
+          "readTime": number,
+          "category": "string",
+          "slug": "string"
+        },
+        "executiveSummary": {
+          "id": number,
+          "articleId": number,
+          "keyPoints": ["string"],
+          "impact": "string",
+          "stakeholders": ["string"]
+        },
+        "timelineItems": [
+          {
+            "id": number,
+            "articleId": number,
+            "date": "string",
+            "title": "string",
+            "description": "string",
+            "url": "string"
+          }
+        ],
+        "rawFacts": [
+          {
+            "id": number,
+            "articleId": number,
+            "category": "string",
+            "fact": "string",
+            "source": "string",
+            "url": "string"
+          }
+        ],
+        "perspectives": [
+          {
+            "id": number,
+            "articleId": number,
+            "viewpoint": "string",
+            "author": "string",
+            "organization": "string",
+            "stance": "string",
+            "quote": "string",
+            "url": "string"
+          }
+        ],
+        "citedSources": [
+          {
+            "id": number,
+            "articleId": number,
+            "title": "string",
+            "url": "string",
+            "source": "string",
+            "publishedAt": "string",
+            "description": "string"
+          }
+        ]
       }
 
       💡 IMPORTANT:
@@ -207,19 +263,43 @@ export class OpenAIResearchService {
             content: `Generate a comprehensive research report on: ${query}`
           }
         ],
-        response_format: { type: "json_object" },
-        max_tokens: 4000
+
+        max_tokens: 2000
       });
 
       // Extract response
       const { message } = response.choices[0];
-      console.log(JSON.stringify(message.content, null, 2));
-
+      console.log('Raw response:', message.content);
+      
       // Optional: inspect annotations directly
-      console.log(response.choices[0].message.annotations);
+      console.log('Annotations:', response.choices[0].message.annotations);
 
-
-      const reportData = JSON.parse(response.choices[0].message.content || "{}");
+      // Parse JSON response - clean up any markdown formatting
+      let cleanContent = message.content || '{}';
+      
+      // Remove markdown code blocks if present
+      if (cleanContent.includes('```json')) {
+        cleanContent = cleanContent.replace(/```json\n?/, '').replace(/\n?```$/, '');
+      }
+      
+      // Extract JSON from the response if it contains extra text
+      const jsonMatch = cleanContent.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        cleanContent = jsonMatch[0];
+      }
+      
+      // Remove any leading/trailing whitespace
+      cleanContent = cleanContent.trim();
+      
+      let reportData;
+      try {
+        reportData = JSON.parse(cleanContent);
+        console.log('Parsed report data successfully');
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        console.error('Content that failed to parse:', cleanContent);
+        throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+      }
       
       // Create slug from title
       const slug = this.createSlug(reportData.article.title);
