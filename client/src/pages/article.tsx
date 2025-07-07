@@ -432,6 +432,7 @@ export default function ArticlePage() {
                         </span>
                       </div>
                     </div>
+                      </div>
 
                     {/* CBO Analysis Section */}
                     <div>
