@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { Timeline } from "@/components/ui/timeline";
 import { RelatedArticles } from "@/components/ui/related-articles";
 import { ThemeController } from "@/components/theme-controller";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
@@ -32,6 +33,33 @@ export default function ArticlePage() {
   const [, setLocation] = useLocation();
   const [showThemeController, setShowThemeController] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const researchMutation = useMutation({
+    mutationFn: async (query: string) => {
+      const response = await apiRequest("/api/research", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      // Navigate to the generated research report
+      setLocation(`/article/${data.slug}`);
+      toast({
+        title: "Research Report Generated",
+        description: "Your comprehensive research report is ready to view.",
+      });
+    },
+    onError: (error) => {
+      console.error("Research generation failed:", error);
+      toast({
+        title: "Research Failed",
+        description: "Unable to generate research report. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
 
   // Extract slug from URL path
   const currentPath = window.location.pathname;
@@ -89,9 +117,8 @@ export default function ArticlePage() {
     if (searchQuery.trim()) {
       // Save search query to localStorage
       localStorage.setItem('searchQuery', searchQuery);
-      // Navigate to this same research report (dummy functionality)
-      const url = `/article/one-big-beautiful-bill-trump-2025?q=${encodeURIComponent(searchQuery)}`;
-      window.history.pushState({}, '', url);
+      // Generate research report using OpenAI
+      researchMutation.mutate(searchQuery);
     }
   };
 
@@ -220,9 +247,10 @@ export default function ArticlePage() {
                           />
                           <Button
                             type="submit"
-                            className="bg-blue-600/80 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm font-semibold transition-all duration-200 hover:shadow-lg"
+                            disabled={researchMutation.isPending}
+                            className="bg-blue-600/80 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm font-semibold transition-all duration-200 hover:shadow-lg disabled:opacity-50"
                           >
-                            Research
+                            {researchMutation.isPending ? "Researching..." : "Research"}
                           </Button>
                         </div>
                       </form>

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,6 +8,8 @@ import { Clock, TrendingUp, Eye, ArrowRight, Search, Settings } from "lucide-rea
 import { Link, useLocation } from "wouter";
 import { ThemeController } from "@/components/theme-controller";
 import { useTheme } from "@/hooks/use-theme";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { useState } from "react";
 
 import timioLogo from "@assets/App Icon_1751662407764.png";
@@ -35,11 +37,42 @@ export default function FeedPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [, setLocation] = useLocation();
   const { currentTheme } = useTheme();
+  const { toast } = useToast();
+
+  const researchMutation = useMutation({
+    mutationFn: async (query: string) => {
+      const response = await apiRequest("/api/research", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      // Navigate to the generated research report
+      setLocation(`/article/${data.slug}`);
+      toast({
+        title: "Research Report Generated",
+        description: "Your comprehensive research report is ready to view.",
+      });
+    },
+    onError: (error) => {
+      console.error("Research generation failed:", error);
+      toast({
+        title: "Research Failed",
+        description: "Unable to generate research report. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      // Navigate to dummy report regardless of search query
-      setLocation("/article/one-big-beautiful-bill-trump-2025");
+      // Save search query to localStorage for persistence
+      localStorage.setItem('searchQuery', searchQuery);
+      
+      // Generate research report using OpenAI
+      researchMutation.mutate(searchQuery);
     }
   };
 
@@ -172,9 +205,10 @@ export default function FeedPage() {
                   <div className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2">
                     <Button 
                       onClick={handleSearch}
-                      className="bg-blue-600 hover:bg-blue-700 px-3 sm:px-6 py-1.5 sm:py-2 text-white font-semibold rounded-lg shadow-md text-sm sm:text-base"
+                      disabled={researchMutation.isPending}
+                      className="bg-blue-600 hover:bg-blue-700 px-3 sm:px-6 py-1.5 sm:py-2 text-white font-semibold rounded-lg shadow-md text-sm sm:text-base disabled:opacity-50"
                     >
-                      Research
+                      {researchMutation.isPending ? "Researching..." : "Research"}
                     </Button>
                   </div>
                 </div>

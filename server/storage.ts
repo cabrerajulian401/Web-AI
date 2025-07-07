@@ -38,6 +38,7 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   getArticleBySlug(slug: string): Promise<ArticleData | undefined>;
   getAllArticles(): Promise<Article[]>;
+  storeResearchReport(slug: string, report: ArticleData): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -706,6 +707,11 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
     }
     
     return this.rssArticles;
+  }
+
+  async storeResearchReport(slug: string, report: ArticleData): Promise<void> {
+    this.articles.set(slug, report);
+    console.log(`Stored research report: ${slug}`);
   }
 }
 
