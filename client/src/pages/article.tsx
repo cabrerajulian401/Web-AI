@@ -122,6 +122,15 @@ export default function ArticlePage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
+      // Check if dummy article mode is enabled
+      const useDummyArticle = localStorage.getItem('useDummyArticle') === 'true';
+      
+      if (useDummyArticle) {
+        // If dummy mode is enabled, navigate directly to the dummy article
+        setLocation('/article/one-big-beautiful-bill-trump-2025');
+        return;
+      }
+      
       // Save search query to localStorage
       localStorage.setItem('searchQuery', searchQuery);
       // Generate research report using OpenAI
@@ -281,12 +290,23 @@ export default function ArticlePage() {
                   defaultOpen={true}
                   content={
                     <div className="space-y-3">
-                      {executiveSummary.summary.split('\n').filter(line => line.trim()).map((point, index) => (
-                        <div key={index} className="flex items-start">
-                          <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                          <span className="text-black">{point.replace(/^-\s*/, '')}</span>
-                        </div>
-                      ))}
+                      {executiveSummary.points ? 
+                        // Handle dummy article format (array of points)
+                        executiveSummary.points.map((point, index) => (
+                          <div key={index} className="flex items-start">
+                            <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
+                            <span className="text-black">{point}</span>
+                          </div>
+                        ))
+                        : 
+                        // Handle AI-generated article format (string with bullet points)
+                        (executiveSummary.summary ? executiveSummary.summary.split('\n').filter(line => line.trim()).map((point, index) => (
+                          <div key={index} className="flex items-start">
+                            <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
+                            <span className="text-black">{point.replace(/^-\s*/, '')}</span>
+                          </div>
+                        )) : [])
+                      }
                     </div>
                   }
                 />
