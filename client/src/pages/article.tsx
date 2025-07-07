@@ -173,41 +173,6 @@ export default function ArticlePage() {
             {/* Combined Header and Article Hero */}
             <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
               <CardContent className="p-0">
-                {/* TIMIO Logo and Search Bar */}
-                <div className="p-6 pb-0">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <img 
-                      src={timioLogo} 
-                      alt="TIMIO News" 
-                      className="h-8 w-8 rounded-lg"
-                    />
-                    <span className="text-2xl font-bold text-gray-900">TIMIO News</span>
-                  </div>
-                  
-                  {/* Search Bar */}
-                  <div className="relative mb-6">
-                    <form onSubmit={handleSearch} className="relative">
-                      <div className="relative flex items-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 focus-within:border-blue-400 focus-within:shadow-xl">
-                        <Search className="h-5 w-5 text-blue-600 ml-4" />
-                        <input
-                          type="text"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          onKeyPress={handleKeyPress}
-                          placeholder="Generate a report on any event"
-                          className="w-full py-4 px-4 text-gray-900 placeholder-gray-500 bg-transparent border-none outline-none text-lg font-medium"
-                        />
-                        <Button
-                          type="submit"
-                          className="mr-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg"
-                        >
-                          Research
-                        </Button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-                
                 {/* Hero Image with Overlay */}
                 <div className="relative overflow-hidden">
                   <img 
@@ -218,18 +183,43 @@ export default function ArticlePage() {
                   {/* Semitransparent mask */}
                   <div className="absolute inset-0 bg-black bg-opacity-40"></div>
                   
-
-                  
-                  {/* Headline overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <div className="flex items-center space-x-3 mb-2">
+                  {/* TIMIO Logo and Search Bar - Over Image */}
+                  <div className="absolute top-6 left-6 right-6">
+                    <div className="flex items-center space-x-3 mb-4">
                       <img 
                         src={timioLogo} 
                         alt="TIMIO News" 
-                        className="h-6 w-6 rounded-lg"
+                        className="h-8 w-8 rounded-lg"
                       />
-                      <span className="text-lg font-bold text-white">TIMIO News</span>
+                      <span className="text-2xl font-bold text-white">TIMIO News</span>
                     </div>
+                    
+                    {/* Search Bar */}
+                    <div className="relative">
+                      <form onSubmit={handleSearch} className="relative">
+                        <div className="relative flex items-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 focus-within:border-blue-400 focus-within:shadow-xl">
+                          <Search className="h-5 w-5 text-blue-600 ml-4" />
+                          <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                            placeholder="Generate a report on any event"
+                            className="w-full py-4 px-4 text-gray-900 placeholder-gray-500 bg-transparent border-none outline-none text-lg font-medium"
+                          />
+                          <Button
+                            type="submit"
+                            className="mr-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg"
+                          >
+                            Research
+                          </Button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  
+                  {/* Headline overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
                     <p className="text-xl font-bold text-blue-300 mb-3 tracking-wide">RESEARCH REPORT</p>
                     <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
                       {article.title}
