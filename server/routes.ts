@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { openAIResearchService } from "./openai-service";
+import { pexelsService } from "./pexels-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all articles for feed
@@ -43,7 +44,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log(`Generating research report for: ${query}`);
       
-      const researchReport = await openAIResearchService.generateResearchReport(query);
+      // Fetch relevant image from Pexels based on the query
+      const heroImageUrl = await pexelsService.searchImageByTopic(query);
+      console.log(`Fetched hero image from Pexels: ${heroImageUrl}`);
+      
+      const researchReport = await openAIResearchService.generateResearchReport(query, heroImageUrl);
       
       // Store the generated report in our storage
       await storage.storeResearchReport(researchReport.article.slug, researchReport);

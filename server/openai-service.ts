@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
+import { pexelsService } from "./pexels-service";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -14,7 +15,7 @@ export interface ResearchReport {
 }
 
 export class OpenAIResearchService {
-  async generateResearchReport(query: string): Promise<ResearchReport> {
+  async generateResearchReport(query: string, heroImageUrl?: string): Promise<ResearchReport> {
     try {
       // Generate comprehensive research report
       const response = await openai.chat.completions.create({
@@ -108,7 +109,7 @@ Use real, current information from authentic sources. Make reports comprehensive
           content: reportData.article.content,
           category: reportData.article.category || "Research",
           excerpt: reportData.article.excerpt,
-          heroImageUrl: reportData.article.heroImageUrl || "https://via.placeholder.com/800x400/1e40af/white?text=Research+Report",
+          heroImageUrl: heroImageUrl || reportData.article.heroImageUrl || "https://via.placeholder.com/800x400/1e40af/white?text=Research+Report",
           publishedAt: reportData.article.publishedAt || new Date().toISOString(),
           readTime: reportData.article.readTime || 8,
           sourceCount: reportData.article.sourceCount || 12,
