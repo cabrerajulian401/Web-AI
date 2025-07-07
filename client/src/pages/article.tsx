@@ -269,14 +269,14 @@ export default function ArticlePage() {
                   customIcon={execSummaryIcon}
                   defaultOpen={true}
                   content={
-                    <ul className="space-y-3">
-                      {executiveSummary.points.map((point, index) => (
-                        <li key={index} className="flex items-start">
+                    <div className="space-y-3">
+                      {executiveSummary.summary.split('\n').filter(line => line.trim()).map((point, index) => (
+                        <div key={index} className="flex items-start">
                           <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                          <span className="text-black">{point}</span>
-                        </li>
+                          <span className="text-black">{point.replace(/^-\s*/, '')}</span>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   }
                 />
               </CardContent>
