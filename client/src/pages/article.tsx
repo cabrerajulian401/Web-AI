@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings, ChevronDown } from "lucide-react";
+import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,7 +11,7 @@ import { RelatedArticles } from "@/components/ui/related-articles";
 import { ThemeController } from "@/components/theme-controller";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, RelatedArticle, RawFacts, Perspective } from "@shared/schema";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import execSummaryIcon from "@assets/hour clear_1751669332914.png";
@@ -31,10 +31,25 @@ export default function ArticlePage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [showThemeController, setShowThemeController] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   // Extract slug from URL path
   const currentPath = window.location.pathname;
   const slug = currentPath.split('/article/')[1] || 'gpt-5-announcement';
+  
+  // Get search query from URL params or localStorage
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryFromUrl = urlParams.get('q');
+    if (queryFromUrl) {
+      setSearchQuery(queryFromUrl);
+    } else {
+      const savedQuery = localStorage.getItem('searchQuery');
+      if (savedQuery) {
+        setSearchQuery(savedQuery);
+      }
+    }
+  }, []);
   
   const { data: articleData, isLoading } = useQuery<ArticleData>({
     queryKey: ["/api/article", slug],
@@ -67,6 +82,23 @@ export default function ArticlePage() {
 
   const handleBackToFeed = () => {
     setLocation("/");
+  };
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Save search query to localStorage
+      localStorage.setItem('searchQuery', searchQuery);
+      // Navigate to this same research report (dummy functionality)
+      const url = `/article/one-big-beautiful-bill-trump-2025?q=${encodeURIComponent(searchQuery)}`;
+      window.history.pushState({}, '', url);
+    }
+  };
+  
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
   };
 
   if (isLoading) {
@@ -141,6 +173,41 @@ export default function ArticlePage() {
             {/* Combined Header and Article Hero */}
             <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover shadow-card hover:shadow-card-hover transition-shadow duration-200 overflow-hidden animate-fade-in">
               <CardContent className="p-0">
+                {/* TIMIO Logo and Search Bar */}
+                <div className="p-6 pb-0">
+                  <div className="flex items-center space-x-3 mb-6">
+                    <img 
+                      src={timioLogo} 
+                      alt="TIMIO News" 
+                      className="h-8 w-8 rounded-lg"
+                    />
+                    <span className="text-2xl font-bold text-gray-900">TIMIO News</span>
+                  </div>
+                  
+                  {/* Search Bar */}
+                  <div className="relative mb-6">
+                    <form onSubmit={handleSearch} className="relative">
+                      <div className="relative flex items-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 focus-within:border-blue-400 focus-within:shadow-xl">
+                        <Search className="h-5 w-5 text-blue-600 ml-4" />
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          onKeyPress={handleKeyPress}
+                          placeholder="Generate a report on any event"
+                          className="w-full py-4 px-4 text-gray-900 placeholder-gray-500 bg-transparent border-none outline-none text-lg font-medium"
+                        />
+                        <Button
+                          type="submit"
+                          className="mr-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg"
+                        >
+                          Research
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                
                 {/* Hero Image with Overlay */}
                 <div className="relative overflow-hidden">
                   <img 
