@@ -264,7 +264,7 @@ export class OpenAIResearchService {
           }
         ],
 
-        max_tokens: 2000
+        max_tokens: 4000
       });
 
       // Extract response
@@ -283,9 +283,12 @@ export class OpenAIResearchService {
       }
       
       // Extract JSON from the response if it contains extra text
-      const jsonMatch = cleanContent.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        cleanContent = jsonMatch[0];
+      // Look for the first complete JSON object
+      const jsonStart = cleanContent.indexOf('{');
+      const jsonEnd = cleanContent.lastIndexOf('}');
+      
+      if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+        cleanContent = cleanContent.substring(jsonStart, jsonEnd + 1);
       }
       
       // Remove any leading/trailing whitespace

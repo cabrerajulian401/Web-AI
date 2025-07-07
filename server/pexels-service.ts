@@ -128,7 +128,7 @@ export class PexelsService {
       'security': 'security government building'
     };
 
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = (query || '').toLowerCase();
     
     // Check for exact matches first
     for (const [key, value] of Object.entries(topicMappings)) {
@@ -157,7 +157,8 @@ export class PexelsService {
 
   private generatePlaceholderImage(query: string): string {
     // Generate a descriptive placeholder as fallback
-    const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '+');
+    const safeQuery = query || 'news';
+    const cleanQuery = safeQuery.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '+');
     return `https://via.placeholder.com/800x400/1e40af/white?text=${encodeURIComponent(cleanQuery)}`;
   }
 }
