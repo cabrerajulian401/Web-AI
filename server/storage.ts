@@ -395,30 +395,32 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 999,
         articleId: 999,
-        viewpoint: "Administration Supporters",
-        description: "Praise the legislation as 'historic tax relief' and 'unleashing economic growth while restoring fiscal sanity.' Business groups applaud permanent tax cuts for small businesses and wholesaler-distributors.",
-        color: "green"
+        viewpoint: "A Golden Age for America",
+        description: "Trump Delivers on Promises",
+        source: "America First Policy Institute",
+        quote: "This legislation represents the largest middle-class tax cut in American history and puts America First by unleashing economic growth while restoring fiscal sanity to Washington.",
+        color: "red",
+        url: "https://americafirstpolicy.com"
       },
       {
         id: 1000,
         articleId: 999,
-        viewpoint: "State Officials & Critics", 
-        description: "Call it a 'heartless assault on the American people' that strips healthcare and food assistance. State governors say they lack resources to fill the massive federal funding hole.",
-        color: "red"
+        viewpoint: "A Gift to the Wealthy",
+        description: "Democratic Opposition",
+        source: "House Democratic Leadership",
+        quote: "This bill is nothing more than a massive tax giveaway to billionaires and corporations, paid for by stripping healthcare and food assistance from millions of working families.",
+        color: "blue",
+        url: "https://democrats.house.gov"
       },
       {
         id: 1001,
         articleId: 999,
-        viewpoint: "Health Organizations",
-        description: "Describe it as 'among the darkest days in U.S. health care history,' warning that people will suffer and die due to cuts funding tax cuts for billionaires.",
-        color: "orange"
-      },
-      {
-        id: 1002,
-        articleId: 999,
-        viewpoint: "Nonpartisan Analysis",
-        description: "Penn Wharton Budget Model projects lifetime losses for all future generations, ranging from $5,700 for high-income to $22,000 for low-income households. Public support drops to 21% after hearing about hospital funding cuts.",
-        color: "blue"
+        viewpoint: "Skeptical Public",
+        description: "Polling Data Shows Concerns",
+        source: "Penn Wharton Budget Model",
+        quote: "Our analysis shows that while the bill provides short-term benefits, it creates long-term fiscal challenges that will burden future generations with debt.",
+        color: "gray",
+        url: "https://budgetmodel.wharton.upenn.edu"
       }
     ];
 

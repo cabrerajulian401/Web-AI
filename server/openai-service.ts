@@ -307,8 +307,20 @@ export class OpenAIResearchService {
         // Try to fix common JSON issues
         let fixedContent = cleanContent;
         
+        // Handle control characters in strings
+        if (parseError.message.includes('Bad control character')) {
+          console.log('Attempting to fix control characters...');
+          fixedContent = this.fixControlCharacters(fixedContent);
+          try {
+            reportData = JSON.parse(fixedContent);
+            console.log('Successfully parsed after control character repair');
+          } catch (controlError) {
+            console.error('Failed to parse after control character repair:', controlError);
+            throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+          }
+        }
         // Handle unterminated strings  
-        if (parseError.message.includes('Unterminated string')) {
+        else if (parseError.message.includes('Unterminated string')) {
           console.log('Attempting to fix unterminated string...');
           fixedContent = this.repairUnterminatedStrings(fixedContent);
           try {
@@ -451,6 +463,18 @@ export class OpenAIResearchService {
       category,
       facts: facts as string[]
     }));
+  }
+
+  private fixControlCharacters(content: string): string {
+    // Remove or escape control characters that break JSON parsing
+    return content
+      .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
+      .replace(/\\/g, '\\\\') // Escape backslashes
+      .replace(/"/g, '\\"') // Escape quotes within strings
+      .replace(/\\"/g, '"') // Fix over-escaped quotes at boundaries
+      .replace(/\n/g, '\\n') // Escape newlines
+      .replace(/\r/g, '\\r') // Escape carriage returns
+      .replace(/\t/g, '\\t'); // Escape tabs
   }
 
   private repairUnterminatedStrings(content: string): string {
