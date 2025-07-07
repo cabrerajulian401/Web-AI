@@ -17,41 +17,44 @@ export interface ResearchReport {
 export class OpenAIResearchService {
   async generateResearchReport(query: string, heroImageUrl?: string): Promise<ResearchReport> {
     try {
-      // First, search for related news articles
+      // First, search for related news articles using GPT-4o-mini with web search
       const relatedArticlesResponse = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
-            content: `You are a web search assistant. Search for recent news articles related to the given topic.
-            
+            content: `You are a web search assistant with access to real-time web search. Your task is to find actual, recent news articles related to the given topic.
+
+IMPORTANT: You must use your web search capabilities to find real articles with actual URLs from legitimate news sources. Do not generate fake or placeholder articles.
+
 Return JSON in this exact format:
 {
   "articles": [
     {
-      "title": "string (exact article title as it appears in search results)",
+      "title": "string (exact article title as it appears on the actual website)",
       "excerpt": "string (brief 1-2 sentence description/summary of what the article covers)",
-      "url": "string (real URL to the article)",
-      "source": "string (publication name)",
-      "publishedAt": "string (ISO date when available)"
+      "url": "string (actual, working URL to the real article)",
+      "source": "string (actual publication name)",
+      "publishedAt": "string (ISO date when available from the article)"
     }
   ]
 }
 
 Search Guidelines:
-- Find 6-8 recent, relevant news articles from reputable sources
-- Use current web search to find real articles, not cached information
-- Include diverse perspectives and sources
-- Focus on recent developments and breaking news
-- Ensure all URLs are real and accessible`
+- MUST use web search to find 6-8 real, recent news articles from legitimate sources
+- Include diverse perspectives from different reputable news outlets
+- Focus on articles published within the last 30 days when possible
+- Verify all URLs are actual working links to real articles
+- Sources should include major news outlets like Reuters, AP, BBC, CNN, NPR, etc.
+- Do not generate fictional articles or placeholder content`
           },
           {
             role: "user",
-            content: `Search for recent news articles related to: ${query}`
+            content: `Use web search to find recent real news articles related to: ${query}`
           }
         ],
         response_format: { type: "json_object" },
-        temperature: 0.3,
+        temperature: 0.1,
         max_tokens: 2000
       });
 
