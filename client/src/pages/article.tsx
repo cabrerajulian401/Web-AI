@@ -508,91 +508,99 @@ export default function ArticlePage() {
                 icon="conflict"
                 customIcon={conflictIcon}
                 content={
-                  <div className="mt-6 space-y-8">
-                    <div className="space-y-6">
-                      <h4 className="font-bold text-black text-lg">Does the bill cut Medicaid?</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                        <div className="space-y-3">
-                          <div className="font-bold text-black underline text-sm">WHITE HOUSE</div>
-                          <p className="text-black text-sm">
+                  <div className="mt-6 space-y-10">
+                    <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-gray-300">
+                      <h4 className="font-bold text-black text-xl mb-6 text-center">Does the bill cut Medicaid?</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                        <div className="bg-white rounded-lg p-5 shadow-sm border">
+                          <div className="font-bold text-black text-sm mb-3 text-center pb-2 border-b border-gray-200">WHITE HOUSE</div>
+                          <blockquote className="text-gray-800 text-sm leading-relaxed italic">
                             "There will be no cuts to Medicaid...protects and strengthens Medicaid for those who rely on it."
-                          </p>
+                          </blockquote>
                         </div>
-                        <div className="flex items-center justify-center text-gray-400 text-sm font-medium">
-                          vs
+                        <div className="flex items-center justify-center">
+                          <div className="bg-gray-200 text-gray-600 px-4 py-2 rounded-full text-sm font-semibold">
+                            VS
+                          </div>
                         </div>
-                        <div className="space-y-3">
-                          <div className="font-bold text-black underline text-sm">CBO, GOV. MOORE, HOSPITALS</div>
-                          <p className="text-black text-sm">
+                        <div className="bg-white rounded-lg p-5 shadow-sm border">
+                          <div className="font-bold text-black text-sm mb-3 text-center pb-2 border-b border-gray-200">CBO, GOV. MOORE, HOSPITALS</div>
+                          <blockquote className="text-gray-800 text-sm leading-relaxed italic mb-3">
                             Bill will cut Medicaid, millions will lose coverage
-                          </p>
-                          <p className="text-gray-500 text-xs italic">[CBO, AHA, Governor Moore]</p>
+                          </blockquote>
+                          <p className="text-gray-500 text-xs text-center">[CBO, AHA, Governor Moore]</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-6">
-                      <h4 className="font-bold text-black text-lg">Effect on Deficit</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                        <div className="space-y-3">
-                          <div className="font-bold text-black underline text-sm">WHITE HOUSE</div>
-                          <p className="text-black text-sm">
+                    <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-gray-300">
+                      <h4 className="font-bold text-black text-xl mb-6 text-center">Effect on Deficit</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                        <div className="bg-white rounded-lg p-5 shadow-sm border">
+                          <div className="font-bold text-black text-sm mb-3 text-center pb-2 border-b border-gray-200">WHITE HOUSE</div>
+                          <blockquote className="text-gray-800 text-sm leading-relaxed italic">
                             "Reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse."
-                          </p>
+                          </blockquote>
                         </div>
-                        <div className="flex items-center justify-center text-gray-400 text-sm font-medium">
-                          vs
+                        <div className="flex items-center justify-center">
+                          <div className="bg-gray-200 text-gray-600 px-4 py-2 rounded-full text-sm font-semibold">
+                            VS
+                          </div>
                         </div>
-                        <div className="space-y-3">
-                          <div className="font-bold text-black underline text-sm">CBO</div>
-                          <p className="text-black text-sm">
+                        <div className="bg-white rounded-lg p-5 shadow-sm border">
+                          <div className="font-bold text-black text-sm mb-3 text-center pb-2 border-b border-gray-200">CBO</div>
+                          <blockquote className="text-gray-800 text-sm leading-relaxed italic mb-3">
                             "Adds $3.4 trillion to federal deficits over the next 10 years."
-                          </p>
-                          <p className="text-gray-500 text-xs italic">[CBO]</p>
+                          </blockquote>
+                          <p className="text-gray-500 text-xs text-center">[CBO]</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-6">
-                      <h4 className="font-bold text-black text-lg">Impact on Vulnerable Americans</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                        <div className="space-y-3">
-                          <div className="font-bold text-black underline text-sm">WHITE HOUSE</div>
-                          <p className="text-black text-sm">
+                    <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-gray-300">
+                      <h4 className="font-bold text-black text-xl mb-6 text-center">Impact on Vulnerable Americans</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                        <div className="bg-white rounded-lg p-5 shadow-sm border">
+                          <div className="font-bold text-black text-sm mb-3 text-center pb-2 border-b border-gray-200">WHITE HOUSE</div>
+                          <blockquote className="text-gray-800 text-sm leading-relaxed italic">
                             "Delivers largest middle-class tax cut...improves the lives of Americans on every rung of the economic ladder."
-                          </p>
+                          </blockquote>
                         </div>
-                        <div className="flex items-center justify-center text-gray-400 text-sm font-medium">
-                          vs
+                        <div className="flex items-center justify-center">
+                          <div className="bg-gray-200 text-gray-600 px-4 py-2 rounded-full text-sm font-semibold">
+                            VS
+                          </div>
                         </div>
-                        <div className="space-y-3">
-                          <div className="font-bold text-black underline text-sm">HOSPITALS, STATE OFFICIALS</div>
-                          <p className="text-black text-sm">
+                        <div className="bg-white rounded-lg p-5 shadow-sm border">
+                          <div className="font-bold text-black text-sm mb-3 text-center pb-2 border-b border-gray-200">HOSPITALS, STATE OFFICIALS</div>
+                          <blockquote className="text-gray-800 text-sm leading-relaxed italic mb-3">
                             "Irreparable harm to healthcare, millions lose coverage, food assistance gutted."
-                          </p>
-                          <p className="text-gray-500 text-xs italic">[AHA, Governor Moore]</p>
+                          </blockquote>
+                          <p className="text-gray-500 text-xs text-center">[AHA, Governor Moore]</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-6">
-                      <h4 className="font-bold text-black text-lg">Work Requirements and Safety Net</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                        <div className="space-y-3">
-                          <div className="font-bold text-black underline text-sm">WHITE HOUSE</div>
-                          <p className="text-black text-sm">
+                    <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-gray-300">
+                      <h4 className="font-bold text-black text-xl mb-6 text-center">Work Requirements and Safety Net</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                        <div className="bg-white rounded-lg p-5 shadow-sm border">
+                          <div className="font-bold text-black text-sm mb-3 text-center pb-2 border-b border-gray-200">WHITE HOUSE</div>
+                          <blockquote className="text-gray-800 text-sm leading-relaxed italic">
                             "Promotes work, responsibility, and restores SNAP to serve the truly needy."
-                          </p>
+                          </blockquote>
                         </div>
-                        <div className="flex items-center justify-center text-gray-400 text-sm font-medium">
-                          vs
+                        <div className="flex items-center justify-center">
+                          <div className="bg-gray-200 text-gray-600 px-4 py-2 rounded-full text-sm font-semibold">
+                            VS
+                          </div>
                         </div>
-                        <div className="space-y-3">
-                          <div className="font-bold text-black underline text-sm">CRITICS</div>
-                          <p className="text-black text-sm">
+                        <div className="bg-white rounded-lg p-5 shadow-sm border">
+                          <div className="font-bold text-black text-sm mb-3 text-center pb-2 border-b border-gray-200">CRITICS</div>
+                          <blockquote className="text-gray-800 text-sm leading-relaxed italic mb-3">
                             "Millions will lose benefits due to new work requirements."
-                          </p>
-                          <p className="text-gray-500 text-xs italic">[AHA, Governor Moore]</p>
+                          </blockquote>
+                          <p className="text-gray-500 text-xs text-center">[AHA, Governor Moore]</p>
                         </div>
                       </div>
                     </div>
