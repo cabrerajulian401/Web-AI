@@ -75,14 +75,29 @@ export default function ArticlePage() {
     }
   }, []);
 
+  const [useDummyMode, setUseDummyMode] = useState(false);
+
+  // Check dummy mode on component mount and when localStorage changes
+  useEffect(() => {
+    const checkDummyMode = () => {
+      const isDummy = localStorage.getItem('useDummyArticle') === 'true';
+      setUseDummyMode(isDummy);
+    };
+    
+    checkDummyMode();
+    
+    // Listen for localStorage changes
+    const handleStorageChange = () => checkDummyMode();
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   const { data: articleData, isLoading } = useQuery<ArticleData>({
-    queryKey: ["/api/article", slug, localStorage.getItem('useDummyArticle')],
+    queryKey: ["/api/article", slug, useDummyMode],
     queryFn: async () => {
-      // Check if dummy article mode is enabled
-      const useDummyArticle = localStorage.getItem('useDummyArticle') === 'true';
-      
       // If dummy mode is enabled, always return the original dummy article
-      if (useDummyArticle) {
+      if (useDummyMode) {
         return fetch('/api/article/one-big-beautiful-bill-trump-2025').then(res => res.json());
       }
       
@@ -122,11 +137,8 @@ export default function ArticlePage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Check if dummy article mode is enabled
-      const useDummyArticle = localStorage.getItem('useDummyArticle') === 'true';
-      
-      if (useDummyArticle) {
-        // If dummy mode is enabled, navigate directly to the dummy article
+      if (useDummyMode) {
+        // If dummy mode is enabled, navigate directly to the dummy article without any API calls
         setLocation('/article/one-big-beautiful-bill-trump-2025');
         return;
       }

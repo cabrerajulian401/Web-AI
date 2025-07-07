@@ -10,7 +10,7 @@ import { ThemeController } from "@/components/theme-controller";
 import { useTheme } from "@/hooks/use-theme";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import chromeIcon from "@assets/Google_Chrome_Web_Store_icon_2015 (2)_1751671046716.png";
@@ -38,6 +38,23 @@ export default function FeedPage() {
   const [, setLocation] = useLocation();
   const { currentTheme } = useTheme();
   const { toast } = useToast();
+  const [useDummyMode, setUseDummyMode] = useState(false);
+
+  // Check dummy mode on component mount and when localStorage changes
+  useEffect(() => {
+    const checkDummyMode = () => {
+      const isDummy = localStorage.getItem('useDummyArticle') === 'true';
+      setUseDummyMode(isDummy);
+    };
+    
+    checkDummyMode();
+    
+    // Listen for localStorage changes
+    const handleStorageChange = () => checkDummyMode();
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const researchMutation = useMutation({
     mutationFn: async (query: string) => {
@@ -64,6 +81,12 @@ export default function FeedPage() {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
+      if (useDummyMode) {
+        // If dummy mode is enabled, navigate directly to the dummy article without any API calls
+        setLocation('/article/one-big-beautiful-bill-trump-2025');
+        return;
+      }
+      
       // Save search query to localStorage for persistence
       localStorage.setItem('searchQuery', searchQuery);
       

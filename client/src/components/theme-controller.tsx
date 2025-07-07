@@ -20,7 +20,8 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [useDummyArticle, setUseDummyArticle] = useState(() => {
-    return localStorage.getItem('useDummyArticle') === 'true';
+    const stored = localStorage.getItem('useDummyArticle');
+    return stored ? stored === 'true' : false; // Default to false
   });
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +39,9 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
   const handleDummyArticleToggle = (checked: boolean) => {
     setUseDummyArticle(checked);
     localStorage.setItem('useDummyArticle', checked.toString());
+    
+    // Trigger a storage event to notify other components
+    window.dispatchEvent(new Event('storage'));
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
