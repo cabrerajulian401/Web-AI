@@ -307,8 +307,20 @@ export class OpenAIResearchService {
         // Try to fix common JSON issues
         let fixedContent = cleanContent;
         
+        // Handle unterminated strings  
+        if (parseError.message.includes('Unterminated string')) {
+          console.log('Attempting to fix unterminated string...');
+          fixedContent = this.repairUnterminatedStrings(fixedContent);
+          try {
+            reportData = JSON.parse(fixedContent);
+            console.log('Successfully parsed after string repair');
+          } catch (stringError) {
+            console.error('Failed to parse after string repair:', stringError);
+            throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+          }
+        }
         // Handle truncated JSON responses
-        if (parseError.message.includes('Expected') && parseError.message.includes('after array element')) {
+        else if (parseError.message.includes('Expected') && parseError.message.includes('after array element')) {
           console.log('Attempting to fix truncated JSON...');
           
           // Find the position of the error
@@ -439,6 +451,26 @@ export class OpenAIResearchService {
       category,
       facts: facts as string[]
     }));
+  }
+
+  private repairUnterminatedStrings(content: string): string {
+    // Handle unterminated strings by finding the last quote and closing it properly
+    let fixed = content;
+    
+    // Find unterminated strings at the end
+    const lastQuoteIndex = fixed.lastIndexOf('"');
+    if (lastQuoteIndex !== -1) {
+      // Check if the string after the last quote is unterminated
+      const afterLastQuote = fixed.substring(lastQuoteIndex + 1);
+      
+      // If there's content after the last quote without a closing quote, truncate it
+      if (afterLastQuote && !afterLastQuote.includes('"')) {
+        // Close the string and complete the JSON structure
+        fixed = fixed.substring(0, lastQuoteIndex + 1) + '"}]}}';
+      }
+    }
+    
+    return fixed;
   }
 
   private createSlug(title: string): string {
