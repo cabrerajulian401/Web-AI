@@ -73,21 +73,20 @@ export class OpenAIResearchService {
         return citedSourcesWithImages;
       }
       
-      // Fallback: extract sources from other sections
-      const sources = new Set<string>();
-      const citedSourcesArray: any[] = [];
+      // Comprehensive source extraction from all sections
+      const sourceMap = new Map<string, {name: string, type: string, description: string, url?: string}>();
       
       // Extract sources from raw facts
       if (reportData.rawFacts) {
         reportData.rawFacts.forEach((factGroup: any) => {
           if (factGroup.facts) {
             factGroup.facts.forEach((fact: any) => {
-              if (fact.source && !sources.has(fact.source)) {
-                sources.add(fact.source);
-                citedSourcesArray.push({
+              if (fact.source && !sourceMap.has(fact.source)) {
+                sourceMap.set(fact.source, {
                   name: fact.source,
                   type: "Primary Source",
-                  description: `Source cited for factual information about ${factGroup.category}`
+                  description: `Source cited for factual information about ${factGroup.category}`,
+                  url: fact.url
                 });
               }
             });
@@ -98,30 +97,45 @@ export class OpenAIResearchService {
       // Extract sources from perspectives
       if (reportData.perspectives) {
         reportData.perspectives.forEach((perspective: any) => {
-          if (perspective.source && !sources.has(perspective.source)) {
-            sources.add(perspective.source);
-            citedSourcesArray.push({
+          if (perspective.source && !sourceMap.has(perspective.source)) {
+            sourceMap.set(perspective.source, {
               name: perspective.source,
               type: "News Analysis",
-              description: `Source for perspective: "${perspective.viewpoint}"`
+              description: `Source for perspective: "${perspective.viewpoint}"`,
+              url: perspective.url
             });
           }
         });
       }
       
-      // Extract sources from timeline items (if they have sources)
+      // Extract sources from timeline items
       if (reportData.timelineItems) {
         reportData.timelineItems.forEach((item: any) => {
-          if (item.source && !sources.has(item.source)) {
-            sources.add(item.source);
-            citedSourcesArray.push({
+          if (item.source && !sourceMap.has(item.source)) {
+            sourceMap.set(item.source, {
               name: item.source,
               type: "Timeline Reference",
-              description: `Source for timeline event: "${item.title}"`
+              description: `Source for timeline event: "${item.title}"`,
+              url: item.sourceUrl
             });
           }
         });
       }
+      
+      // Extract sources from executive summary (if available)
+      if (reportData.executiveSummary && reportData.executiveSummary.source) {
+        if (!sourceMap.has(reportData.executiveSummary.source)) {
+          sourceMap.set(reportData.executiveSummary.source, {
+            name: reportData.executiveSummary.source,
+            type: "Executive Summary",
+            description: "Source for executive summary analysis",
+            url: reportData.executiveSummary.url
+          });
+        }
+      }
+      
+      // Convert map to array and add images
+      const citedSourcesArray = Array.from(sourceMap.values());
       
       // Search for real news articles for these sources
       const sourceNames = citedSourcesArray.map(s => s.name);
@@ -139,7 +153,7 @@ export class OpenAIResearchService {
             name: source.name,
             type: source.type,
             description: source.description,
-            url: realArticleUrls[source.name] || null,
+            url: source.url || realArticleUrls[source.name] || null,
             imageUrl: imageUrl
           };
         })
@@ -529,7 +543,7 @@ CRITICAL: Return ONLY the JSON object. No text before or after. Use real URLs fr
       id: Date.now() + index,
       articleId: Date.now(),
       category,
-      facts: facts as string[]
+      facts: facts // Keep the full fact objects with source and url info
     }));
   }
 

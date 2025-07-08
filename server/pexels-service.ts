@@ -125,7 +125,27 @@ export class PexelsService {
       'tax': 'money taxes finance',
       'budget': 'government budget finance',
       'defense': 'military defense pentagon',
-      'security': 'security government building'
+      'security': 'security government building',
+      'flooding': 'flooding disaster water',
+      'floods': 'flooding disaster water',
+      'climate': 'climate change environment',
+      'weather': 'storm weather disaster',
+      'disaster': 'disaster emergency response',
+      'texas': 'texas state government',
+      'california': 'california state government',
+      'technology': 'technology innovation computer',
+      'artificial intelligence': 'technology computer ai',
+      'ai': 'technology computer artificial intelligence',
+      'reuters': 'news media journalism',
+      'associated press': 'news media journalism',
+      'cnn': 'news media journalism',
+      'fox news': 'news media journalism',
+      'bbc': 'news media journalism',
+      'npr': 'news media journalism',
+      'wikipedia': 'books research information',
+      'wall street journal': 'news business finance',
+      'new york times': 'news media journalism',
+      'washington post': 'news politics journalism'
     };
 
     const lowerQuery = (query || '').toLowerCase();
