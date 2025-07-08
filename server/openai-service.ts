@@ -176,95 +176,73 @@ export class OpenAIResearchService {
         messages: [
           {
             role: "system",
-            content: `
-      You are a real-time, non-partisan research assistant with live web browsing capability using URL citations.
+            content: `You are a JSON-only research assistant. You must ONLY return valid JSON - no narrative text, no explanations, no markdown.
 
-      🚫 If you cannot access live data or URLs, STOP and respond: "ERROR: Live browsing failed. No report generated."
+MANDATORY: Start your response with { and end with }. Nothing else.
 
-      ✅ FIRST STEP: Immediately run a web search for the topic via your tool. Only proceed if you retrieve at least 3 credible sources with real URLs (captured via annotations).
+Use web search to find real, current information about the topic. Then format findings as this exact JSON structure:
 
-      ---
+{
+  "article": {
+    "id": 1,
+    "title": "Clear title based on search results",
+    "excerpt": "Brief 2-sentence summary",
+    "heroImageUrl": "",
+    "content": "Full article content with real facts from search",
+    "author": "TIMIO Research Team",
+    "publishedAt": "2025-01-08T00:00:00Z",
+    "readTime": 8,
+    "category": "Research",
+    "slug": "auto-generated"
+  },
+  "executiveSummary": {
+    "id": 1,
+    "articleId": 1,
+    "summary": "Single paragraph executive summary"
+  },
+  "timelineItems": [
+    {
+      "id": 1,
+      "articleId": 1,
+      "date": "2025-01-08",
+      "title": "Event title",
+      "description": "Event details",
+      "url": "https://real-url-from-search.com"
+    }
+  ],
+  "rawFacts": [
+    {
+      "id": 1,
+      "articleId": 1,
+      "category": "Key Facts",
+      "fact": "Specific fact from search results",
+      "source": "Source name",
+      "url": "https://real-url-from-search.com"
+    }
+  ],
+  "perspectives": [
+    {
+      "id": 1,
+      "articleId": 1,
+      "viewpoint": "Perspective title",
+      "author": "Source author",
+      "organization": "Source organization",
+      "stance": "pro/con/neutral",
+      "quote": "Direct quote from source",
+      "url": "https://real-url-from-search.com"
+    }
+  ]
+}
 
-      CRITICAL: Return ONLY valid JSON. No extra text before or after. Keep response concise - maximum 5 items per array to prevent truncation.
-      {
-        "article": {
-          "id": number,
-          "title": "string",
-          "excerpt": "string",
-          "heroImageUrl": "string",
-          "content": "string",
-          "author": "string",
-          "publishedAt": "string",
-          "readTime": number,
-          "category": "string",
-          "slug": "string"
-        },
-        "executiveSummary": {
-          "id": number,
-          "articleId": number,
-          "keyPoints": ["string"],
-          "impact": "string",
-          "stakeholders": ["string"]
-        },
-        "timelineItems": [
-          {
-            "id": number,
-            "articleId": number,
-            "date": "string",
-            "title": "string",
-            "description": "string",
-            "url": "string"
-          }
-        ],
-        "rawFacts": [
-          {
-            "id": number,
-            "articleId": number,
-            "category": "string",
-            "fact": "string",
-            "source": "string",
-            "url": "string"
-          }
-        ],
-        "perspectives": [
-          {
-            "id": number,
-            "articleId": number,
-            "viewpoint": "string",
-            "author": "string",
-            "organization": "string",
-            "stance": "string",
-            "quote": "string",
-            "url": "string"
-          }
-        ],
-        "citedSources": [
-          {
-            "id": number,
-            "articleId": number,
-            "title": "string",
-            "url": "string",
-            "source": "string",
-            "publishedAt": "string",
-            "description": "string"
-          }
-        ]
-      }
-
-      💡 IMPORTANT:
-      - All quotes/facts/time entries must link to real URLs via **inline URL citations**.
-      - Rely **only** on real-time live sources.
-      - Use at least 3 distinct outlets or docs with URL citations in the content.
-      - If browsing fails, output **only** the error and stop.
-      `
+CRITICAL: Return ONLY the JSON object. No text before or after. Use real URLs from your search results.`
           },
           {
             role: "user",
-            content: `Generate a comprehensive research report on: ${query}`
+            content: `Research topic: ${query}`
           }
         ],
 
-        max_tokens: 2800
+        max_tokens: 3000
       });
 
       // Extract response
@@ -316,7 +294,29 @@ export class OpenAIResearchService {
             console.log('Successfully parsed after control character repair');
           } catch (controlError) {
             console.error('Failed to parse after control character repair:', controlError);
-            throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+            // Create fallback response
+            reportData = {
+              article: {
+                id: Date.now(),
+                title: `Research Report: ${query}`,
+                excerpt: "Research generation encountered an error. Please try again.",
+                heroImageUrl: "",
+                content: "Our research system is currently experiencing technical difficulties. Please try your search again.",
+                author: "TIMIO Research Team",
+                publishedAt: new Date().toISOString(),
+                readTime: 2,
+                category: "Research",
+                slug: this.createSlug(query)
+              },
+              executiveSummary: {
+                id: Date.now(),
+                articleId: Date.now(),
+                summary: "Research generation failed due to technical issues. Please try again."
+              },
+              timelineItems: [],
+              rawFacts: [],
+              perspectives: []
+            };
           }
         }
         // Handle unterminated strings  
@@ -328,7 +328,29 @@ export class OpenAIResearchService {
             console.log('Successfully parsed after string repair');
           } catch (stringError) {
             console.error('Failed to parse after string repair:', stringError);
-            throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+            // Create fallback response
+            reportData = {
+              article: {
+                id: Date.now(),
+                title: `Research Report: ${query}`,
+                excerpt: "Research generation encountered an error. Please try again.",
+                heroImageUrl: "",
+                content: "Our research system is currently experiencing technical difficulties. Please try your search again.",
+                author: "TIMIO Research Team",
+                publishedAt: new Date().toISOString(),
+                readTime: 2,
+                category: "Research",
+                slug: this.createSlug(query)
+              },
+              executiveSummary: {
+                id: Date.now(),
+                articleId: Date.now(),
+                summary: "Research generation failed due to technical issues. Please try again."
+              },
+              timelineItems: [],
+              rawFacts: [],
+              perspectives: []
+            };
           }
         }
         // Handle truncated JSON responses
@@ -375,10 +397,55 @@ export class OpenAIResearchService {
             console.log('Successfully parsed truncated JSON');
           } catch (secondError) {
             console.error('Failed to parse fixed content:', secondError);
-            throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+            // Create fallback response
+            reportData = {
+              article: {
+                id: Date.now(),
+                title: `Research Report: ${query}`,
+                excerpt: "Research generation encountered an error. Please try again.",
+                heroImageUrl: "",
+                content: "Our research system is currently experiencing technical difficulties. Please try your search again.",
+                author: "TIMIO Research Team",
+                publishedAt: new Date().toISOString(),
+                readTime: 2,
+                category: "Research",
+                slug: this.createSlug(query)
+              },
+              executiveSummary: {
+                id: Date.now(),
+                articleId: Date.now(),
+                summary: "Research generation failed due to technical issues. Please try again."
+              },
+              timelineItems: [],
+              rawFacts: [],
+              perspectives: []
+            };
           }
         } else {
-          throw new Error(`Failed to parse OpenAI response as JSON: ${parseError.message}`);
+          // If all JSON repair attempts fail, create a fallback response
+          console.log('All JSON repair attempts failed - creating fallback response');
+          reportData = {
+            article: {
+              id: Date.now(),
+              title: `Research Report: ${query}`,
+              excerpt: "Research generation encountered an error. Please try again.",
+              heroImageUrl: "",
+              content: "Our research system is currently experiencing technical difficulties. Please try your search again.",
+              author: "TIMIO Research Team",
+              publishedAt: new Date().toISOString(),
+              readTime: 2,
+              category: "Research",
+              slug: this.createSlug(query)
+            },
+            executiveSummary: {
+              id: Date.now(),
+              articleId: Date.now(),
+              summary: "Research generation failed due to technical issues. Please try again."
+            },
+            timelineItems: [],
+            rawFacts: [],
+            perspectives: []
+          };
         }
       }
       
