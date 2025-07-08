@@ -222,10 +222,10 @@ export class MemStorage implements IStorage {
     // Add dummy "One Big Beautiful Bill" report
     const dummyArticle: Article = {
       id: 999,
-      title: "Trump Signs 'One Big Beautiful Bill' Into Law on July 4, 2024",
+      title: "Trump Signs 'One Big Beautiful Bill' Into Law on July 4, 2025",
       slug: "one-big-beautiful-bill-trump-2025",
-      excerpt: "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2024, featuring permanent tax cuts, massive cuts to Medicaid and SNAP, and work requirements that could leave 12 million without health insurance by 2034.",
-      content: `President Trump signed the "One Big Beautiful Bill" into law on July 4, 2024, marking what supporters call "the start of a new golden age for America" and critics denounce as "a direct and heartless assault on the American people."
+      excerpt: "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2025, featuring permanent tax cuts, massive cuts to Medicaid and SNAP, and work requirements that could leave 12 million without health insurance by 2034.",
+      content: `President Trump signed the "One Big Beautiful Bill" into law on July 4, 2025, marking what supporters call "the start of a new golden age for America" and critics denounce as "a direct and heartless assault on the American people."
 
 The comprehensive legislation makes permanent the largest tax cuts in U.S. history while implementing the most significant reductions to Medicaid, SNAP, and the Affordable Care Act since their creation. The Congressional Budget Office estimates that 12 million Americans could lose health insurance by 2034 due to the changes.
 
@@ -233,7 +233,7 @@ The bill passed on strict party lines, with the Senate approving it 51-50 (with 
 
 Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, elimination of taxes on tips and overtime, expanded work requirements for Medicaid and SNAP, and approximately $930 billion in cuts to healthcare programs over ten years.`,
       category: "Politics",
-      publishedAt: new Date("2024-07-05T00:00:00Z"),
+      publishedAt: new Date("2025-07-05T00:00:00Z"),
       readTime: 8,
       sourceCount: 24,
       heroImageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg",
@@ -245,7 +245,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       id: 999,
       articleId: 999,
       points: [
-        "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2024",
+        "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2025",
         "Bill includes permanent tax cuts, especially benefiting businesses and high earners",
         "Large reductions to Medicaid, SNAP, and ACA; millions may lose insurance",
         "Massive funding boost for border enforcement, ICE, and defense",
@@ -257,7 +257,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 999,
         articleId: 999,
-        date: new Date("2024-05-22T00:00:00Z"),
+        date: new Date("2025-05-22T00:00:00Z"),
         title: "House Initial Passage",
         description: "House passes initial version 215-214",
         type: "legislative",
@@ -267,7 +267,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 1000,
         articleId: 999,
-        date: new Date("2024-06-16T00:00:00Z"),
+        date: new Date("2025-06-16T00:00:00Z"),
         title: "Senate Committee Action",
         description: "Senate Finance Committee releases final text and summary",
         type: "legislative",
@@ -277,7 +277,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 1001,
         articleId: 999,
-        date: new Date("2024-07-01T00:00:00Z"),
+        date: new Date("2025-07-01T00:00:00Z"),
         title: "Senate Passage",
         description: "Senate passes revised bill 51-50, VP breaks tie",
         type: "legislative",
@@ -287,7 +287,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 1002,
         articleId: 999,
-        date: new Date("2024-07-02T00:00:00Z"),
+        date: new Date("2025-07-02T00:00:00Z"),
         title: "House Final Passage",
         description: "House passes final bill 218-214",
         type: "legislative",
@@ -297,7 +297,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 1003,
         articleId: 999,
-        date: new Date("2024-07-04T00:00:00Z"),
+        date: new Date("2025-07-04T00:00:00Z"),
         title: "Presidential Signature",
         description: "Trump signs the bill into law on Independence Day",
         type: "signing",
@@ -307,7 +307,7 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 1004,
         articleId: 999,
-        date: new Date("2024-07-05T00:00:00Z"),
+        date: new Date("2025-07-05T00:00:00Z"),
         title: "Protests Begin",
         description: "Protests and rallies against the law begin in major cities",
         type: "protest",
