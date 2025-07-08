@@ -448,30 +448,31 @@ export default function ArticlePage() {
                     {useDummyMode ? (
                       // Show dummy data for the "Big Beautiful Bill"
                       <>
-                        <div>
-                          <h3 className="text-lg font-bold text-black mb-3">
-                            <a 
-                              href="https://www.congress.gov/search?q=%7B%22source%22:%22legislation%22%7D" 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="hover:text-gray-600 transition-colors"
-                            >
-                              Directly from the Bill: H.R.1 - "One Big Beautiful Bill Act"<br />
-                              (Congress.gov)
-                            </a>
-                          </h3>
-                          <div className="w-full h-0.5 bg-black mb-6"></div>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div className="flex items-start">
-                            <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                            <span className="text-gray-900 leading-relaxed">
-                              Makes Trump tax cuts permanent
-                            </span>
+                        {/* Use the actual rawFacts data from storage */}
+                        {rawFacts && rawFacts.length > 0 ? (
+                          rawFacts.map((factGroup, groupIndex) => (
+                            <div key={groupIndex} className="mb-8">
+                              <h3 className="text-lg font-bold text-black mb-3">
+                                {factGroup.category}
+                              </h3>
+                              <div className="w-full h-0.5 bg-black mb-6"></div>
+                              <div className="space-y-3">
+                                {factGroup.facts.map((fact, index) => (
+                                  <div key={index} className="flex items-start">
+                                    <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
+                                    <span className="text-gray-900 leading-relaxed">
+                                      {fact}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-gray-600 italic">
+                            No raw facts available for this report.
                           </div>
-                          {/* Additional dummy facts... */}
-                        </div>
+                        )}
                       </>
                     ) : (
                       // Show OpenAI-generated raw facts
