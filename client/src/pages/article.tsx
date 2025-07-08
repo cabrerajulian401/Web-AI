@@ -10,6 +10,7 @@ import { Timeline } from "@/components/ui/timeline";
 import { CitedSources } from "@/components/ui/cited-sources";
 import { ThemeController } from "@/components/theme-controller";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/hooks/use-theme";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
@@ -30,6 +31,7 @@ interface ArticleData {
 
 export default function ArticlePage() {
   const { toast } = useToast();
+  const { currentTheme } = useTheme();
   const [, setLocation] = useLocation();
   const [showThemeController, setShowThemeController] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -85,12 +87,23 @@ export default function ArticlePage() {
   }, []);
 
   const [useDummyMode, setUseDummyMode] = useState(false);
+  const [dummyModeLoading, setDummyModeLoading] = useState(false);
 
   // Check dummy mode on component mount and when localStorage changes
   useEffect(() => {
     const checkDummyMode = () => {
       const isDummy = localStorage.getItem('useDummyArticle') === 'true';
-      setUseDummyMode(isDummy);
+      
+      // If switching to dummy mode, show loading for a brief moment
+      if (isDummy && !useDummyMode) {
+        setDummyModeLoading(true);
+        setTimeout(() => {
+          setDummyModeLoading(false);
+          setUseDummyMode(isDummy);
+        }, 800); // 800ms loading animation
+      } else {
+        setUseDummyMode(isDummy);
+      }
     };
     
     checkDummyMode();
@@ -165,6 +178,30 @@ export default function ArticlePage() {
       handleSearch(e);
     }
   };
+
+  // Show dummy mode loading screen
+  if (dummyModeLoading) {
+    return (
+      <div className="min-h-screen theme-page-bg flex items-center justify-center">
+        <Card className="w-full max-w-md mx-4 theme-article-card-bg shadow-card">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-4">
+              <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center animate-pulse">
+                <Search className="h-8 w-8 text-white" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-gray-900">Loading Dummy Article</h3>
+                <p className="text-sm text-gray-600">Switching to the original "Big Beautiful Bill" content...</p>
+              </div>
+              <div className="flex justify-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
