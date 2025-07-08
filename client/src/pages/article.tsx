@@ -179,47 +179,81 @@ export default function ArticlePage() {
     }
   };
 
-  // Show dummy mode loading screen
+  // Show dummy mode loading overlay (keeping search bar visible)
   if (dummyModeLoading) {
     return (
-      <div className="min-h-screen theme-page-bg flex items-center justify-center p-4">
-        <div className="w-full max-w-lg">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
-            <div className="text-center">
-              {/* Logo/Icon */}
-              <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                <img src={timioLogo} alt="TIMIO" className="w-12 h-12 object-contain filter brightness-0 invert" />
-              </div>
-              
-              {/* Loading Text */}
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading Article</h2>
-              <p className="text-gray-600 mb-8">Preparing your research report...</p>
-              
-              {/* Progress Bar */}
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-6 overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full loading-progress"></div>
-              </div>
-              
-              {/* Loading Steps */}
-              <div className="space-y-3 text-sm text-gray-500">
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>Fetching content</span>
-                </div>
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>Processing research data</span>
-                </div>
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                  <span>Formatting article</span>
-                </div>
-              </div>
+      <div className="min-h-screen theme-page-bg">
+        {/* Keep the header with search bar */}
+        <header className="theme-header-bg shadow-sm relative">
+          <div className="flex items-center justify-between h-20 sm:h-24 md:h-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <img 
+                src={timioLogo} 
+                alt="TIMIO News" 
+                className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 object-contain" 
+              />
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold theme-text-primary">
+                TIMIO News
+              </h1>
+            </div>
+            
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowThemeController(!showThemeController)}
+                className="p-2"
+              >
+                <Settings className="h-5 w-5" />
+              </Button>
             </div>
           </div>
-        </div>
-        
+          
+          {/* Search Bar */}
+          <div className="border-t theme-header-border">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+              <form onSubmit={handleSearch} className="flex max-w-2xl mx-auto">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Generate a report on any event"
+                    className="w-full px-6 py-4 text-lg theme-search-bg theme-search-text theme-search-border rounded-l-2xl border-2 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200"
+                    disabled
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  size="lg"
+                  disabled
+                  className="px-8 py-4 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-2 border-transparent rounded-r-2xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
+                >
+                  Research
+                </Button>
+              </form>
+            </div>
+          </div>
+        </header>
 
+        {/* Loading overlay for content area */}
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center space-y-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+              <h3 className="text-lg font-medium text-gray-900">Loading article...</h3>
+              <p className="text-sm text-gray-600">Switching to dummy content</p>
+            </div>
+          </div>
+        </main>
+
+        {/* Theme Controller */}
+        {showThemeController && (
+          <div className="fixed inset-0 z-50 pointer-events-none">
+            <ThemeController onClose={() => setShowThemeController(false)} />
+          </div>
+        )}
       </div>
     );
   }
