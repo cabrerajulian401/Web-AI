@@ -237,7 +237,7 @@ export default function FeedPage() {
             {/* Page Header */}
             <div className="mb-6 sm:mb-8 px-4 sm:px-0">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold theme-header-text mb-2">
-                Today's Stories
+                Today's News Reports
               </h1>
               <p className="text-base sm:text-lg theme-tagline-text">
                 AI Driven Research on popular stories

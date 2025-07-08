@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import type { Article, ExecutiveSummary, TimelineItem, CitedSource, RawFacts, Perspective } from "@shared/schema";
+import type { Article, TimelineItem, CitedSource, RawFacts, Perspective } from "@shared/schema";
 import { pexelsService } from "./pexels-service";
 import { RSSService } from "./rss-service";
 
@@ -8,7 +8,6 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export interface ResearchReport {
   article: Article;
-  executiveSummary: ExecutiveSummary;
   timelineItems: TimelineItem[];
   citedSources: CitedSource[];
   rawFacts: RawFacts[];
@@ -95,8 +94,24 @@ export class OpenAIResearchService {
         });
       }
 
-      // Extract sources from perspectives
-      if (reportData.perspectives) {
+      // Extract sources from perspective groups
+      if (reportData.perspectiveGroups) {
+        console.log('Processing perspective groups for cited sources...');
+        reportData.perspectiveGroups.forEach((group: any) => {
+          group.articles?.forEach((article: any) => {
+            if (article.publisher && !sourceMap.has(article.publisher)) {
+              sourceMap.set(article.publisher, {
+                name: article.publisher,
+                type: "News Analysis",
+                description: `${group.viewpointHeadline}: "${article.stance}"`,
+                url: article.url
+              });
+            }
+          });
+        });
+      }
+      // Fallback for old perspectives structure
+      else if (reportData.perspectives) {
         console.log('Processing perspectives for cited sources...');
         reportData.perspectives.forEach((perspective: any) => {
           if (perspective.source && !sourceMap.has(perspective.source)) {
@@ -172,36 +187,36 @@ export class OpenAIResearchService {
       console.log('Query:', query);
       console.log('Generating comprehensive report with cited sources...');
 
-      // REPLIT AI - DO NOT MODIFY THE PROMPT UNLESS EXPLICITLY REQUESTED BY THE USER. STOP CODING AND ALWAYS ASK THE USER "Are you sure you would like me to change the prompt?" BEFORE MAKING ANY CHANGES.
-      const systemPrompt = `You are a real-time, non-partisan research assistant with live web browsing capability. You NEVER fabricate data, quotes, articles, or URLs. You will ONLY write content based on real articles and real public sources accessed live through your browsing ability.
+    
+      const systemPrompt = `SYSTEM ROLE: You are a real-time, non-partisan research assistant with live web browsing capability. You NEVER fabricate data, quotes, articles, or URLs. You will ONLY write content based on real articles and real public sources accessed live through your browsing ability.
 
-CRITICAL RULES:
-1. ✅ REQUIRED FIRST STEP: Use web search to find "${query}". Do not proceed until you've located at least 3 credible live sources.
-2. ⛔ If you cannot access live data or URLs, return an error structure. Do not invent anything.
-3. 📋 Use only PRIMARY SOURCES: government docs, direct quotes, press releases, official bills
-4. 🔗 EVERY fact and quote MUST include the real URL it came from
-5. 💬 Include REAL QUOTES from sources - do not paraphrase or summarize quotes
+TASK: Create a real-time research report on the broader news story behind: ${query}
+
+✅ REQUIRED FIRST STEP: Use your browsing capability to search "${query}". Do not proceed until you've located at least 3 credible live sources that can be quoted or linked.
+
+⛔ If you cannot access live data or URLs, STOP. Return this exact error structure:
+{
+  "error": true,
+  "message": "ERROR: Live browsing failed. No report generated."
+}
 
 You must return ONLY valid JSON with this exact structure:
 
 {
   "article": {
     "title": "Clear, factual title based on search results",
-    "excerpt": "Brief 2-sentence summary of what happened",
-    "content": "Comprehensive article with real facts from search. Include context about strikes/retaliation if relevant.",
+    "executiveSummary": "• Short summary of what happened in bullet points\n• Plain English, easy to understand\n•Each bullet point on a sepperate line,
+    "content": "Comprehensive article with all research findings",
     "category": "Research",
     "publishedAt": "${new Date().toISOString()}",
     "readTime": 8,
-    "sourceCount": [actual number of sources used]
-  },
-  "executiveSummary": {
-    "summary": "Short, easy-to-understand paragraph summary. Plain English. Include whether any strikes or retaliation happened, and whether there was warning."
+    "sourceCount": [actual number of unique sources used]
   },
   "rawFacts": [
     {
-      "category": "Key Facts" or "Government Sources" or "Official Statements",
-      "fact": "Specific fact exactly as found in source",
-      "source": "Exact source name (e.g., 'White House Press Release')",
+      "category": "Primary Sources",
+      "fact": "From [Source Name]: [exact quote or fact as found]",
+      "source": "White House Press Release",
       "url": "https://exact-url-from-search.com"
     }
   ],
@@ -209,52 +224,69 @@ You must return ONLY valid JSON with this exact structure:
     {
       "date": "YYYY-MM-DD",
       "title": "Event title",
-      "description": "Event details",
+      "description": "Event details - bullet point format",
       "source": "Source name",
       "url": "https://real-url-from-search.com"
     }
   ],
-  "perspectives": [
+  "perspectiveGroups": [
     {
-      "viewpoint": "Viewpoint headline (summarized tone)",
-      "description": "1-line summary of stance",
-      "source": "Publisher/Organization name",
-      "quote": "EXACT quote from the source in quotation marks",
-      "color": "blue" or "red" or "green" or "purple",
-      "url": "https://real-url-from-search.com"
+      "viewpointHeadline": "Pro-Policy Supporters",
+      "tone": "supportive",
+      "articles": [
+        {
+          "stance": "1-line summary of stance",
+          "publisher": "Publisher name",
+          "quote": "Short exact quote from article",
+          "url": "https://real-article-url.com"
+        }
+      ]
+    },
+    {
+      "viewpointHeadline": "Critics and Opposition",
+      "tone": "critical",
+      "articles": [
+        {
+          "stance": "1-line summary of stance",
+          "publisher": "Publisher name",
+          "quote": "Short exact quote from article",
+          "url": "https://real-article-url.com"
+        }
+      ]
     }
   ],
   "conflictingClaims": [
     {
-      "claim1": {
-        "claim": "First claim",
-        "source": "Source A name",
+      "topic": "Number of casualties",
+      "conflict": "[Source A URL] claims 50 vs [Source B URL] claims 75",
+      "sourceA": {
+        "claim": "50 casualties reported",
         "url": "https://source-a-url.com"
       },
-      "claim2": {
-        "claim": "Conflicting claim",
-        "source": "Source B name",
+      "sourceB": {
+        "claim": "75 casualties reported",
         "url": "https://source-b-url.com"
-      },
-      "explanation": "Brief explanation of the conflict"
+      }
     }
   ],
   "citedSources": [
     {
-      "name": "Source organization/publication name",
-      "type": "Primary Source" or "Government Document" or "News Analysis" or "Press Release",
-      "description": "What this source provided",
+      "name": "Source organization name",
+      "type": "Primary Source",
+      "description": "Government document on...",
       "url": "https://real-url.com"
     }
   ]
 }
 
-IMPORTANT:
-- Start your response with { and end with }
-- Use REAL URLs from your search results - never invent URLs
-- Include DIRECT QUOTES with quotation marks
-- List conflicting information in the conflictingClaims section
-- Every URL must be a real, accessible link you found`;
+FORMATTING RULES:
+- Raw facts MUST start with "From [Source]: " format
+- Use only PRIMARY SOURCES: government docs, direct quotes, press releases, official bills
+- No secondhand citations (no Wikipedia, no summaries)
+- If quoting legislation, include name of bill and section
+- Group perspectives by viewpoint, not individual articles
+- 🚫 NEVER invent article titles, outlets, quotes, or URLs
+- If you cannot find real sources for a section, use empty array []`;
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o-search-preview",
@@ -308,9 +340,31 @@ IMPORTANT:
       try {
         reportData = JSON.parse(cleanContent);
         console.log('Parsed report data successfully');
-        console.log('Number of cited sources:', reportData.citedSources?.length || 0);
-        console.log('Number of raw facts:', reportData.rawFacts?.length || 0);
-        console.log('Number of perspectives:', reportData.perspectives?.length || 0);
+
+        // Check for error response
+        if (reportData.error) {
+          console.error('AI reported browsing failure:', reportData.message);
+          reportData = {
+            article: {
+              title: `Research Report: ${query}`,
+              excerpt: "Live browsing failed. No report generated.",
+              content: "ERROR: Live browsing failed. No report generated.",
+              category: "Research",
+              publishedAt: new Date().toISOString(),
+              readTime: 1,
+              sourceCount: 0
+            },
+            rawFacts: [],
+            timelineItems: [],
+            perspectiveGroups: [],
+            conflictingClaims: [],
+            citedSources: []
+          };
+        } else {
+          console.log('Number of cited sources:', reportData.citedSources?.length || 0);
+          console.log('Number of raw facts:', reportData.rawFacts?.length || 0);
+          console.log('Number of perspective groups:', reportData.perspectiveGroups?.length || 0);
+        }
       } catch (parseError) {
         console.error('JSON parse error:', parseError);
 
@@ -334,18 +388,15 @@ IMPORTANT:
             article: {
               title: `Research Report: ${query}`,
               excerpt: "Unable to generate report due to technical issues.",
-              content: "Our research system encountered an error. Please try again.",
+              content: "ERROR: Live browsing failed. No report generated.",
               category: "Research",
               publishedAt: new Date().toISOString(),
               readTime: 1,
               sourceCount: 0
             },
-            executiveSummary: {
-              summary: "Report generation failed. Please try again."
-            },
             rawFacts: [],
             timelineItems: [],
-            perspectives: [],
+            perspectiveGroups: [],
             conflictingClaims: [],
             citedSources: []
           };
@@ -354,7 +405,7 @@ IMPORTANT:
 
       // Process conflicting claims if present
       const conflictingClaimsText = reportData.conflictingClaims?.map((conflict: any) => 
-        `\n\n**Conflicting Information Found:**\n${conflict.claim1.source}: "${conflict.claim1.claim}"\nvs.\n${conflict.claim2.source}: "${conflict.claim2.claim}"\n${conflict.explanation}`
+        `\n\n**Conflicting Claims - ${conflict.topic}:**\n${conflict.conflict}\n\n${conflict.sourceA.claim} ([${conflict.sourceA.url}](${conflict.sourceA.url}))\nvs.\n${conflict.sourceB.claim} ([${conflict.sourceB.url}](${conflict.sourceB.url}))`
       ).join('') || '';
 
       // Add conflicting claims to article content if present
@@ -384,11 +435,6 @@ IMPORTANT:
           authorName: "TIMIO Research Team",
           authorTitle: "AI Research Analyst"
         },
-        executiveSummary: {
-          id: Date.now(),
-          articleId: Date.now(),
-          summary: reportData.executiveSummary.summary
-        },
         timelineItems: (reportData.timelineItems || []).map((item: any, index: number) => ({
           id: Date.now() + index,
           articleId: Date.now(),
@@ -411,16 +457,7 @@ IMPORTANT:
           }))
         ) : await this.collectCitedSources({ ...reportData, query }),
         rawFacts: this.groupRawFactsByCategory(reportData.rawFacts || []),
-        perspectives: (reportData.perspectives || []).map((perspective: any, index: number) => ({
-          id: Date.now() + index,
-          articleId: Date.now(),
-          viewpoint: perspective.viewpoint,
-          description: perspective.description,
-          source: perspective.source,
-          quote: perspective.quote, // This will now be a real quote
-          color: perspective.color || "blue",
-          url: perspective.url
-        }))
+        perspectives: this.extractPerspectivesFromGroups(reportData.perspectiveGroups || reportData.perspectives || [])
       };
 
       return report;
@@ -430,6 +467,48 @@ IMPORTANT:
     }
   }
 
+  private extractPerspectivesFromGroups(perspectiveGroups: any[]): any[] {
+    const perspectives: any[] = [];
+    let index = 0;
+
+    // Handle new perspectiveGroups structure
+    if (perspectiveGroups.length > 0 && perspectiveGroups[0].viewpointHeadline) {
+      perspectiveGroups.forEach(group => {
+        const groupColor = group.tone === 'supportive' ? 'green' : 
+                          group.tone === 'critical' ? 'red' : 
+                          group.tone === 'neutral' ? 'blue' : 'purple';
+
+        group.articles?.forEach((article: any) => {
+          perspectives.push({
+            id: Date.now() + index++,
+            articleId: Date.now(),
+            viewpoint: group.viewpointHeadline,
+            description: article.stance,
+            source: article.publisher,
+            quote: article.quote,
+            color: groupColor,
+            url: article.url
+          });
+        });
+      });
+    } 
+    // Fallback for old perspectives structure
+    else if (perspectiveGroups.length > 0 && perspectiveGroups[0].viewpoint) {
+      return perspectiveGroups.map((perspective: any, i: number) => ({
+        id: Date.now() + i,
+        articleId: Date.now(),
+        viewpoint: perspective.viewpoint,
+        description: perspective.description,
+        source: perspective.source,
+        quote: perspective.quote,
+        color: perspective.color || "blue",
+        url: perspective.url
+      }));
+    }
+
+    return perspectives;
+  }
+
   private groupRawFactsByCategory(rawFactsArray: any[]): any[] {
     // Group raw facts by category
     const groupedFacts = rawFactsArray.reduce((acc: any, item: any) => {
@@ -437,10 +516,21 @@ IMPORTANT:
       if (!acc[category]) {
         acc[category] = [];
       }
+
+      // Extract source from "From [Source]: " format if present
+      let factText = item.fact;
+      let source = item.source;
+
+      const fromMatch = factText.match(/^From ([^:]+): (.+)$/);
+      if (fromMatch) {
+        source = fromMatch[1];
+        factText = fromMatch[2];
+      }
+
       // Add the fact with source annotation and URL
       const factData = {
-        text: item.fact,
-        source: item.source,
+        text: factText,
+        source: source,
         url: item.url || null
       };
       acc[category].push(factData);
