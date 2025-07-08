@@ -89,7 +89,7 @@ export class OpenAIResearchService {
                 sourceMap.set(fact.source, {
                   name: fact.source,
                   type: "Primary Source",
-                  description: `Source cited for factual information about ${factGroup.category}`,
+                  description: `Source cited for factual information`,
                   url: fact.url
                 });
               } else if (fact.source) {
@@ -99,24 +99,54 @@ export class OpenAIResearchService {
           }
         });
       }
+
+      // Also extract sources from raw facts if they're in string format (legacy)
+      if (reportData.rawFacts && Array.isArray(reportData.rawFacts)) {
+        reportData.rawFacts.forEach((factGroup: any) => {
+          if (factGroup.facts && Array.isArray(factGroup.facts)) {
+            factGroup.facts.forEach((fact: any) => {
+              if (typeof fact === 'string') {
+                // Skip string facts as they don't have source info
+                return;
+              }
+              // Handle object facts with source info
+              if (fact.source && !sourceMap.has(fact.source)) {
+                sourceMap.set(fact.source, {
+                  name: fact.source,
+                  type: "Primary Source",
+                  description: `Source cited for factual information`,
+                  url: fact.url
+                });
+              }
+            });
+          }
+        });
+      }
       
       // Extract sources from perspectives
       if (reportData.perspectives) {
+        console.log('Processing perspectives for cited sources...');
         reportData.perspectives.forEach((perspective: any) => {
+          console.log(`Processing perspective: ${perspective.viewpoint} Source: ${perspective.source}`);
           if (perspective.source && !sourceMap.has(perspective.source)) {
+            console.log(`Adding perspective source to map: ${perspective.source}`);
             sourceMap.set(perspective.source, {
               name: perspective.source,
               type: "News Analysis",
               description: `Source for perspective: "${perspective.viewpoint}"`,
               url: perspective.url
             });
+          } else if (perspective.source) {
+            console.log(`Perspective source already exists in map: ${perspective.source}`);
           }
         });
       }
       
       // Extract sources from timeline items
       if (reportData.timelineItems) {
+        console.log('Processing timeline items for cited sources...');
         reportData.timelineItems.forEach((item: any) => {
+          console.log(`Processing timeline item: ${item.title}`);
           let sourceUrl = item.sourceUrl || item.url || null;
           let sourceName = item.source;
           
@@ -125,15 +155,19 @@ export class OpenAIResearchService {
           if (urlMatch) {
             sourceName = sourceName || urlMatch[1];
             sourceUrl = sourceUrl || urlMatch[2];
+            console.log(`Extracted timeline source from markdown: ${sourceName} -> ${sourceUrl}`);
           }
           
           if (sourceName && !sourceMap.has(sourceName)) {
+            console.log(`Adding timeline source to map: ${sourceName}`);
             sourceMap.set(sourceName, {
               name: sourceName,
               type: "Timeline Reference",
               description: `Source for timeline event: "${item.title}"`,
               url: sourceUrl
             });
+          } else if (sourceName) {
+            console.log(`Timeline source already exists in map: ${sourceName}`);
           }
         });
       }
@@ -154,14 +188,26 @@ export class OpenAIResearchService {
       const citedSourcesArray = Array.from(sourceMap.values());
       console.log(`Source map contains ${citedSourcesArray.length} sources:`, citedSourcesArray.map(s => s.name));
       
+      // Remove duplicates and consolidate sources by URL
+      const uniqueSourcesMap = new Map<string, any>();
+      citedSourcesArray.forEach(source => {
+        const key = source.url || source.name;
+        if (!uniqueSourcesMap.has(key)) {
+          uniqueSourcesMap.set(key, source);
+        }
+      });
+      
+      const uniqueSourcesArray = Array.from(uniqueSourcesMap.values());
+      console.log(`After deduplication: ${uniqueSourcesArray.length} unique sources`);
+      
       // Search for real news articles for these sources
-      const sourceNames = citedSourcesArray.map(s => s.name);
+      const sourceNames = uniqueSourcesArray.map(s => s.name);
       const realArticleUrls = await this.searchRealNewsArticles(reportData.query || '', sourceNames);
       console.log('Real article URLs found:', realArticleUrls);
       
       // Generate unique Pexels images for each source
       const citedSourcesWithImages = await Promise.all(
-        citedSourcesArray.map(async (source, index) => {
+        uniqueSourcesArray.map(async (source, index) => {
           // Use source name directly for Pexels search with unique index
           const imageUrl = await pexelsService.searchImageByTopic(source.name, index + 10);
           
