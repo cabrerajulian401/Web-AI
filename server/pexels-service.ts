@@ -137,15 +137,18 @@ export class PexelsService {
       'artificial intelligence': 'technology computer ai',
       'ai': 'technology computer artificial intelligence',
       'reuters': 'news media journalism',
-      'associated press': 'news media journalism',
+      'associated press': 'news media journalism', 
       'cnn': 'news media journalism',
       'fox news': 'news media journalism',
       'bbc': 'news media journalism',
       'npr': 'news media journalism',
-      'wikipedia': 'books research information',
-      'wall street journal': 'news business finance',
-      'new york times': 'news media journalism',
-      'washington post': 'news politics journalism'
+      'wikipedia': 'books library research',
+      'wall street journal': 'business finance newspaper',
+      'new york times': 'newspaper journalism media',
+      'washington post': 'newspaper politics journalism',
+      'serve source': 'community volunteers helping',
+      'ap news': 'news media journalism',
+      'usa today': 'newspaper journalism media'
     };
 
     const lowerQuery = (query || '').toLowerCase();

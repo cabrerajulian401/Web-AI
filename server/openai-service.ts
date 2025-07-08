@@ -78,16 +78,22 @@ export class OpenAIResearchService {
       
       // Extract sources from raw facts
       if (reportData.rawFacts) {
+        console.log('Processing raw facts for cited sources...');
         reportData.rawFacts.forEach((factGroup: any) => {
+          console.log(`Processing fact group: ${factGroup.category}`);
           if (factGroup.facts) {
             factGroup.facts.forEach((fact: any) => {
+              console.log(`Processing fact: ${fact.text?.substring(0, 50)}... Source: ${fact.source}`);
               if (fact.source && !sourceMap.has(fact.source)) {
+                console.log(`Adding source to map: ${fact.source}`);
                 sourceMap.set(fact.source, {
                   name: fact.source,
                   type: "Primary Source",
                   description: `Source cited for factual information about ${factGroup.category}`,
                   url: fact.url
                 });
+              } else if (fact.source) {
+                console.log(`Source already exists in map: ${fact.source}`);
               }
             });
           }
@@ -136,10 +142,12 @@ export class OpenAIResearchService {
       
       // Convert map to array and add images
       const citedSourcesArray = Array.from(sourceMap.values());
+      console.log(`Source map contains ${citedSourcesArray.length} sources:`, citedSourcesArray.map(s => s.name));
       
       // Search for real news articles for these sources
       const sourceNames = citedSourcesArray.map(s => s.name);
       const realArticleUrls = await this.searchRealNewsArticles(reportData.query || '', sourceNames);
+      console.log('Real article URLs found:', realArticleUrls);
       
       // Generate unique Pexels images for each source
       const citedSourcesWithImages = await Promise.all(
@@ -147,13 +155,16 @@ export class OpenAIResearchService {
           // Use source name directly for Pexels search with unique index
           const imageUrl = await pexelsService.searchImageByTopic(source.name, index + 10);
           
+          const finalUrl = source.url || realArticleUrls[source.name] || null;
+          console.log(`Source ${source.name}: original URL=${source.url}, real URL=${realArticleUrls[source.name]}, final URL=${finalUrl}`);
+          
           return {
             id: Date.now() + index,
             articleId: Date.now(),
             name: source.name,
             type: source.type,
             description: source.description,
-            url: source.url || realArticleUrls[source.name] || null,
+            url: finalUrl,
             imageUrl: imageUrl
           };
         })
