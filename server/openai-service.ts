@@ -79,11 +79,13 @@ export class OpenAIResearchService {
       // Extract sources from raw facts
       if (reportData.rawFacts) {
         console.log('Processing raw facts for cited sources...');
+        console.log(`Raw facts structure:`, JSON.stringify(reportData.rawFacts, null, 2));
+        
         reportData.rawFacts.forEach((factGroup: any) => {
           console.log(`Processing fact group: ${factGroup.category}`);
-          if (factGroup.facts) {
-            factGroup.facts.forEach((fact: any) => {
-              console.log(`Processing fact: ${fact.text?.substring(0, 50)}... Source: ${fact.source}`);
+          if (factGroup.facts && Array.isArray(factGroup.facts)) {
+            factGroup.facts.forEach((fact: any, index: number) => {
+              console.log(`Processing fact ${index}: ${fact.text?.substring(0, 50)}... Source: ${fact.source}`);
               if (fact.source && !sourceMap.has(fact.source)) {
                 console.log(`Adding source to map: ${fact.source}`);
                 sourceMap.set(fact.source, {
@@ -94,6 +96,8 @@ export class OpenAIResearchService {
                 });
               } else if (fact.source) {
                 console.log(`Source already exists in map: ${fact.source}`);
+              } else {
+                console.log(`Fact has no source: ${fact.text?.substring(0, 50)}...`);
               }
             });
           }
