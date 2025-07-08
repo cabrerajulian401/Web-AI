@@ -182,23 +182,44 @@ export default function ArticlePage() {
   // Show dummy mode loading screen
   if (dummyModeLoading) {
     return (
-      <div className="min-h-screen theme-page-bg flex items-center justify-center">
-        <Card className="w-full max-w-md mx-4 theme-article-card-bg shadow-card">
-          <CardContent className="pt-6">
-            <div className="text-center space-y-4">
-              <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center animate-pulse">
-                <Search className="h-8 w-8 text-white" />
+      <div className="min-h-screen theme-page-bg flex items-center justify-center p-4">
+        <div className="w-full max-w-lg">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+            <div className="text-center">
+              {/* Logo/Icon */}
+              <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <img src={timioLogo} alt="TIMIO" className="w-12 h-12 object-contain filter brightness-0 invert" />
               </div>
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-gray-900">Loading Dummy Article</h3>
-                <p className="text-sm text-gray-600">Switching to the original "Big Beautiful Bill" content...</p>
+              
+              {/* Loading Text */}
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading Article</h2>
+              <p className="text-gray-600 mb-8">Preparing your research report...</p>
+              
+              {/* Progress Bar */}
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-6 overflow-hidden">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full loading-progress"></div>
               </div>
-              <div className="flex justify-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+              
+              {/* Loading Steps */}
+              <div className="space-y-3 text-sm text-gray-500">
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span>Fetching content</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span>Processing research data</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span>Formatting article</span>
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+        
+
       </div>
     );
   }
