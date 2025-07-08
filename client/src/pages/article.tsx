@@ -592,248 +592,256 @@ export default function ArticlePage() {
                         );
                       })
                     ) : (
-                      // Show dummy data for the "Big Beautiful Bill"
-                      <>
-                        {/* Pro-Trump Perspective */}
-                    <Collapsible defaultOpen={false}>
-                      <CollapsibleTrigger className="w-full">
-                        <div className="bg-red-600 text-white p-6 rounded-lg hover:bg-red-700 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <div className="text-left">
-                              <h3 className="font-bold text-xl mb-2">A Golden Age for America: Trump Delivers on Promises</h3>
-                              <p className="text-sm opacity-80">Sources: 3</p>
+                      // Only show dummy data if dummy mode is enabled
+                      useDummyMode ? (
+                        <>
+                          {/* Pro-Trump Perspective */}
+                        <Collapsible defaultOpen={false}>
+                          <CollapsibleTrigger className="w-full">
+                            <div className="bg-red-600 text-white p-6 rounded-lg hover:bg-red-700 transition-colors">
+                              <div className="flex items-center justify-between">
+                                <div className="text-left">
+                                  <h3 className="font-bold text-xl mb-2">A Golden Age for America: Trump Delivers on Promises</h3>
+                                  <p className="text-sm opacity-80">Sources: 3</p>
+                                </div>
+                                <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
+                              </div>
                             </div>
-                            <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
-                          </div>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <div className="p-6 space-y-6 bg-gray-100">
+                              <p className="text-gray-800 text-lg font-semibold">Bill is historic, pro-growth, fulfills campaign promises, benefits families and businesses.</p>
+                              <div className="w-full h-0.5 bg-black my-2"></div>
+
+                              <div className="space-y-6">
+                                <div>
+                                  <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">WHITE HOUSE</div>
+                                  <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    "President Trump's One Big, Beautiful Bill delivers on the commonsense agenda that nearly 80 million Americans voted for – the largest middle-class tax cut in history, permanent border security, massive military funding, and restoring fiscal sanity."
+                                  </blockquote>
+                                  {findSourceUrl("White House", citedSources) && (
+                                    <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                      <a 
+                                        href={findSourceUrl("White House", citedSources)!} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      >
+                                        Read the article →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div>
+                                  <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">AMERICA FIRST POLICY INSTITUTE</div>
+                                  <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    "The One, Big, Beautiful Bill cuts taxes for ALL Americans, secures the border, stands up to the woke mob by empowering parents and protecting women and children, and much more!"
+                                  </blockquote>
+                                  {findSourceUrl("America First Policy Institute", citedSources) && (
+                                    <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                      <a 
+                                        href={findSourceUrl("America First Policy Institute", citedSources)!} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      >
+                                        Read the article →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div>
+                                  <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">AMAC ACTION</div>
+                                  <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    "...a bold and necessary step toward securing the financial future of both our nation and its seniors...a win for seniors, for taxpayers, and for the future of our country."
+                                  </blockquote>
+                                  {findSourceUrl("AMAC Action", citedSources) && (
+                                    <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                      <a 
+                                        href={findSourceUrl("AMAC Action", citedSources)!} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      >
+                                        Read the article →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
+
+                        {/* Democratic Opposition */}
+                        <Collapsible defaultOpen={false}>
+                          <CollapsibleTrigger className="w-full">
+                            <div className="bg-blue-600 text-white p-6 rounded-lg hover:bg-blue-700 transition-colors">
+                              <div className="flex items-center justify-between">
+                                <div className="text-left">
+                                  <h3 className="font-bold text-xl mb-2">A Gift to the Wealthy, a Blow to the Vulnerable</h3>
+                                  <p className="text-sm opacity-80">Sources: 3</p>
+                                </div>
+                                <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
+                              </div>
+                            </div>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <div className="p-6 space-y-6 bg-gray-100">
+                              <p className="text-gray-800 text-lg font-semibold">Bill slashes social safety net, benefits rich, harms poor/elderly, increases deficit.</p>
+                              <div className="w-full h-0.5 bg-black my-2"></div>
+
+                              <div className="space-y-6">
+                                <div>
+                                  <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">GOVERNOR WES MOORE (MARYLAND)</div>
+                                  <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    "This so-called 'Big Beautiful Bill' marks a direct and heartless assault on the American people...taking health care away from nearly 200,000 Marylanders, and hurting 684,000 Marylanders that rely on food assistance..."
+                                  </blockquote>
+                                  {findSourceUrl("Governor", citedSources) && (
+                                    <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                      <a 
+                                        href={findSourceUrl("Governor", citedSources)!} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      >
+                                        Read the article →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div>
+                                  <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">DEMOCRATIC MINORITY LEADER HAKEEM JEFFRIES (VIA AL JAZEERA)</div>
+                                  <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    "...harms everyday Americans while granting billionaires substantial tax benefits."
+                                  </blockquote>
+                                  {findSourceUrl("Al Jazeera", citedSources) && (
+                                    <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                      <a 
+                                        href={findSourceUrl("Al Jazeera", citedSources)!} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      >
+                                        Read the article →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div>
+                                  <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">ELON MUSK (VIA AL JAZEERA)</div>
+                                  <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    "...would inflate spending and exacerbate the nation's already unparalleled debt."
+                                  </blockquote>
+                                  {findSourceUrl("Al Jazeera", citedSources) && (
+                                    <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                      <a 
+                                        href={findSourceUrl("Al Jazeera", citedSources)!} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      >
+                                        Read the article →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
+
+                        {/* Public Opinion */}
+                        <Collapsible defaultOpen={false}>
+                          <CollapsibleTrigger className="w-full">
+                            <div className="bg-gray-600 text-white p-6 rounded-lg hover:bg-gray-700 transition-colors">
+                              <div className="flex items-center justify-between">
+                                <div className="text-left">
+                                  <h3 className="font-bold text-xl mb-2">Skeptical Public: Most Oppose, But Some Provisions Popular</h3>
+                                  <p className="text-sm opacity-80">Sources: 3</p>
+                                </div>
+                                <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
+                              </div>
+                            </div>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <div className="p-6 space-y-6 bg-gray-100">
+                              <p className="text-gray-800 text-lg font-semibold">Majority of Americans oppose bill overall; support for some tax cuts and Medicaid work requirements.</p>
+                              <div className="w-full h-0.5 bg-black my-2"></div>
+
+                              <div className="space-y-6">
+                                <div>
+                                  <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">PEW RESEARCH CENTER</div>
+                                  <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    "Far more Americans oppose the legislation than favor it. Nearly half (49%) oppose it, while 29% favor it. Another 21% are not sure."
+                                  </blockquote>
+                                  {findSourceUrl("Pew Research", citedSources) && (
+                                    <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                      <a 
+                                        href={findSourceUrl("Pew Research", citedSources)!} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      >
+                                        Read the article →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div>
+                                  <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">QUINNIPIAC UNIVERSITY POLL (VIA ABC NEWS)</div>
+                                  <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    "Fifty-five percent of voters said that they oppose the bill, while 29% said they support it and 16% were unsure."
+                                  </blockquote>
+                                  {findSourceUrl("ABC News", citedSources) && (
+                                    <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                      <a 
+                                        href={findSourceUrl("ABC News", citedSources)!} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      >
+                                        Read the article →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div>
+                                  <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">AXIOS</div>
+                                  <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    "Americans largely disapprove of the megabill but are more split on some of the specific provisions."
+                                  </blockquote>
+                                  {findSourceUrl("Axios", citedSources) && (
+                                    <div className="border border-blue-600 rounded-md p-2 inline-block">
+                                      <a 
+                                        href={findSourceUrl("Axios", citedSources)!} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      >
+                                        Read the article →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
+                        </>
+                      ) : (
+                        // Show message when no perspectives are available and dummy mode is off
+                        <div className="text-center py-8 text-gray-500">
+                          <p className="text-lg">No perspectives available for this article.</p>
+                          <p className="text-sm mt-2">Enable dummy mode in settings to see example content.</p>
                         </div>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <div className="p-6 space-y-6 bg-gray-100">
-                          <p className="text-gray-800 text-lg font-semibold">Bill is historic, pro-growth, fulfills campaign promises, benefits families and businesses.</p>
-                          <div className="w-full h-0.5 bg-black my-2"></div>
-
-                          <div className="space-y-6">
-                            <div>
-                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">WHITE HOUSE</div>
-                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
-                                "President Trump's One Big, Beautiful Bill delivers on the commonsense agenda that nearly 80 million Americans voted for – the largest middle-class tax cut in history, permanent border security, massive military funding, and restoring fiscal sanity."
-                              </blockquote>
-                              {findSourceUrl("White House", citedSources) && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                  <a 
-                                    href={findSourceUrl("White House", citedSources)!} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-
-                            <div>
-                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">AMERICA FIRST POLICY INSTITUTE</div>
-                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
-                                "The One, Big, Beautiful Bill cuts taxes for ALL Americans, secures the border, stands up to the woke mob by empowering parents and protecting women and children, and much more!"
-                              </blockquote>
-                              {findSourceUrl("America First Policy Institute", citedSources) && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                  <a 
-                                    href={findSourceUrl("America First Policy Institute", citedSources)!} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-
-                            <div>
-                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">AMAC ACTION</div>
-                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
-                                "...a bold and necessary step toward securing the financial future of both our nation and its seniors...a win for seniors, for taxpayers, and for the future of our country."
-                              </blockquote>
-                              {findSourceUrl("AMAC Action", citedSources) && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                  <a 
-                                    href={findSourceUrl("AMAC Action", citedSources)!} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </CollapsibleContent>
-                    </Collapsible>
-
-                    {/* Democratic Opposition */}
-                    <Collapsible defaultOpen={false}>
-                      <CollapsibleTrigger className="w-full">
-                        <div className="bg-blue-600 text-white p-6 rounded-lg hover:bg-blue-700 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <div className="text-left">
-                              <h3 className="font-bold text-xl mb-2">A Gift to the Wealthy, a Blow to the Vulnerable</h3>
-                              <p className="text-sm opacity-80">Sources: 3</p>
-                            </div>
-                            <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
-                          </div>
-                        </div>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <div className="p-6 space-y-6 bg-gray-100">
-                          <p className="text-gray-800 text-lg font-semibold">Bill slashes social safety net, benefits rich, harms poor/elderly, increases deficit.</p>
-                          <div className="w-full h-0.5 bg-black my-2"></div>
-
-                          <div className="space-y-6">
-                            <div>
-                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">GOVERNOR WES MOORE (MARYLAND)</div>
-                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
-                                "This so-called 'Big Beautiful Bill' marks a direct and heartless assault on the American people...taking health care away from nearly 200,000 Marylanders, and hurting 684,000 Marylanders that rely on food assistance..."
-                              </blockquote>
-                              {findSourceUrl("Governor", citedSources) && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                  <a 
-                                    href={findSourceUrl("Governor", citedSources)!} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-
-                            <div>
-                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">DEMOCRATIC MINORITY LEADER HAKEEM JEFFRIES (VIA AL JAZEERA)</div>
-                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
-                                "...harms everyday Americans while granting billionaires substantial tax benefits."
-                              </blockquote>
-                              {findSourceUrl("Al Jazeera", citedSources) && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                  <a 
-                                    href={findSourceUrl("Al Jazeera", citedSources)!} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-
-                            <div>
-                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">ELON MUSK (VIA AL JAZEERA)</div>
-                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
-                                "...would inflate spending and exacerbate the nation's already unparalleled debt."
-                              </blockquote>
-                              {findSourceUrl("Al Jazeera", citedSources) && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                  <a 
-                                    href={findSourceUrl("Al Jazeera", citedSources)!} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </CollapsibleContent>
-                    </Collapsible>
-
-                    {/* Public Opinion */}
-                    <Collapsible defaultOpen={false}>
-                      <CollapsibleTrigger className="w-full">
-                        <div className="bg-gray-600 text-white p-6 rounded-lg hover:bg-gray-700 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <div className="text-left">
-                              <h3 className="font-bold text-xl mb-2">Skeptical Public: Most Oppose, But Some Provisions Popular</h3>
-                              <p className="text-sm opacity-80">Sources: 3</p>
-                            </div>
-                            <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
-                          </div>
-                        </div>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <div className="p-6 space-y-6 bg-gray-100">
-                          <p className="text-gray-800 text-lg font-semibold">Majority of Americans oppose bill overall; support for some tax cuts and Medicaid work requirements.</p>
-                          <div className="w-full h-0.5 bg-black my-2"></div>
-
-                          <div className="space-y-6">
-                            <div>
-                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">PEW RESEARCH CENTER</div>
-                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
-                                "Far more Americans oppose the legislation than favor it. Nearly half (49%) oppose it, while 29% favor it. Another 21% are not sure."
-                              </blockquote>
-                              {findSourceUrl("Pew Research", citedSources) && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                  <a 
-                                    href={findSourceUrl("Pew Research", citedSources)!} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-
-                            <div>
-                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">QUINNIPIAC UNIVERSITY POLL (VIA ABC NEWS)</div>
-                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
-                                "Fifty-five percent of voters said that they oppose the bill, while 29% said they support it and 16% were unsure."
-                              </blockquote>
-                              {findSourceUrl("ABC News", citedSources) && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                  <a 
-                                    href={findSourceUrl("ABC News", citedSources)!} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-
-                            <div>
-                              <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">AXIOS</div>
-                              <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
-                                "Americans largely disapprove of the megabill but are more split on some of the specific provisions."
-                              </blockquote>
-                              {findSourceUrl("Axios", citedSources) && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                  <a 
-                                    href={findSourceUrl("Axios", citedSources)!} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </CollapsibleContent>
-                    </Collapsible>
-                      </>
+                      )
                     )}
                   </div>
                 }
@@ -872,65 +880,73 @@ export default function ArticlePage() {
                         ))}
                       </div>
                     ) : (
-                      // Show dummy data for the "Big Beautiful Bill" when no OpenAI data
-                      <div className="space-y-6">
-                        <div className="pl-4 pb-4 border-b-2 border-gray-200">
-                          <h4 className="font-semibold text-brand-dark mb-3 text-lg">Does the bill cut Medicaid?</h4>
-                          <div className="ml-4">
-                            <p className="text-gray-700 text-base mb-3">
-                              <strong>White House:</strong> "There will be no cuts to Medicaid…protects and strengthens Medicaid for those who rely on it."
-                            </p>
-                            <p className="text-gray-700 text-base mb-3">
-                              <strong>CBO, Governor Moore, hospital groups:</strong> Bill will cut Medicaid, millions will lose coverage
-                            </p>
+                      // Only show dummy data if dummy mode is enabled
+                      useDummyMode ? (
+                        <div className="space-y-6">
+                          <div className="pl-4 pb-4 border-b-2 border-gray-200">
+                            <h4 className="font-semibold text-brand-dark mb-3 text-lg">Does the bill cut Medicaid?</h4>
+                            <div className="ml-4">
+                              <p className="text-gray-700 text-base mb-3">
+                                <strong>White House:</strong> "There will be no cuts to Medicaid…protects and strengthens Medicaid for those who rely on it."
+                              </p>
+                              <p className="text-gray-700 text-base mb-3">
+                                <strong>CBO, Governor Moore, hospital groups:</strong> Bill will cut Medicaid, millions will lose coverage
+                              </p>
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              <span className="font-medium">[White House] vs [CBO, AHA, Governor Moore]</span>
+                            </div>
                           </div>
-                          <div className="text-sm text-gray-500">
-                            <span className="font-medium">[White House] vs [CBO, AHA, Governor Moore]</span>
+                          <div className="pl-4 pb-4 border-b-2 border-gray-200">
+                            <h4 className="font-semibold text-brand-dark mb-3 text-lg">Effect on Deficit</h4>
+                            <div className="ml-4">
+                              <p className="text-gray-700 text-base mb-3">
+                                <strong>White House:</strong> "Reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse."
+                              </p>
+                              <p className="text-gray-700 text-base mb-3">
+                                <strong>CBO:</strong> "Adds $3.4 trillion to federal deficits over the next 10 years."
+                              </p>
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              <span className="font-medium">[White House] vs [CBO]</span>
+                            </div>
+                          </div>
+                          <div className="pl-4 pb-4 border-b-2 border-gray-200">
+                            <h4 className="font-semibold text-brand-dark mb-3 text-lg">Impact on Vulnerable Americans</h4>
+                            <div className="ml-4">
+                              <p className="text-gray-700 text-base mb-3">
+                                <strong>White House:</strong> "Delivers largest middle-class tax cut…improves the lives of Americans on every rung of the economic ladder."
+                              </p>
+                              <p className="text-gray-700 text-base mb-3">
+                                <strong>Hospitals, state officials:</strong> "Irreparable harm to healthcare, millions lose coverage, food assistance gutted."
+                              </p>
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
+                            </div>
+                          </div>
+                          <div className="pl-4">
+                            <h4 className="font-semibold text-brand-dark mb-3 text-lg">Work Requirements and Safety Net</h4>
+                            <div className="ml-4">
+                              <p className="text-gray-700 text-base mb-3">
+                                <strong>White House:</strong> "Promotes work, responsibility, and restores SNAP to serve the truly needy."
+                              </p>
+                              <p className="text-gray-700 text-base mb-3">
+                                <strong>Critics:</strong> "Millions will lose benefits due to new work requirements."
+                              </p>
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
+                            </div>
                           </div>
                         </div>
-                        <div className="pl-4 pb-4 border-b-2 border-gray-200">
-                          <h4 className="font-semibold text-brand-dark mb-3 text-lg">Effect on Deficit</h4>
-                          <div className="ml-4">
-                            <p className="text-gray-700 text-base mb-3">
-                              <strong>White House:</strong> "Reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse."
-                            </p>
-                            <p className="text-gray-700 text-base mb-3">
-                              <strong>CBO:</strong> "Adds $3.4 trillion to federal deficits over the next 10 years."
-                            </p>
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            <span className="font-medium">[White House] vs [CBO]</span>
-                          </div>
+                      ) : (
+                        // Show message when no conflicting info is available and dummy mode is off
+                        <div className="text-center py-8 text-gray-500">
+                          <p className="text-lg">No conflicting information available for this article.</p>
+                          <p className="text-sm mt-2">Enable dummy mode in settings to see example content.</p>
                         </div>
-                        <div className="pl-4 pb-4 border-b-2 border-gray-200">
-                          <h4 className="font-semibold text-brand-dark mb-3 text-lg">Impact on Vulnerable Americans</h4>
-                          <div className="ml-4">
-                            <p className="text-gray-700 text-base mb-3">
-                              <strong>White House:</strong> "Delivers largest middle-class tax cut…improves the lives of Americans on every rung of the economic ladder."
-                            </p>
-                            <p className="text-gray-700 text-base mb-3">
-                              <strong>Hospitals, state officials:</strong> "Irreparable harm to healthcare, millions lose coverage, food assistance gutted."
-                            </p>
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
-                          </div>
-                        </div>
-                        <div className="pl-4">
-                          <h4 className="font-semibold text-brand-dark mb-3 text-lg">Work Requirements and Safety Net</h4>
-                          <div className="ml-4">
-                            <p className="text-gray-700 text-base mb-3">
-                              <strong>White House:</strong> "Promotes work, responsibility, and restores SNAP to serve the truly needy."
-                            </p>
-                            <p className="text-gray-700 text-base mb-3">
-                              <strong>Critics:</strong> "Millions will lose benefits due to new work requirements."
-                            </p>
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
-                          </div>
-                        </div>
-                      </div>
+                      )
                     )}
                   </div>
                 }
