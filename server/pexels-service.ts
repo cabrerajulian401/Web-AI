@@ -66,38 +66,56 @@ export class PexelsService {
       
       console.log(`Searching Pexels for: ${searchQuery} (index: ${imageIndex})`);
 
-      const response = await fetch(`${this.baseUrl}/search?query=${encodeURIComponent(searchQuery)}&per_page=20&orientation=landscape`, {
-        headers: {
-          'Authorization': this.apiKey,
-          'User-Agent': 'TIMIO News Research App'
+      // Try multiple search strategies for better results
+      const searchStrategies = [
+        searchQuery,
+        this.getBackupSearchQuery(query),
+        this.getGenericSearchQuery(query)
+      ];
+
+      for (let i = 0; i < searchStrategies.length; i++) {
+        const strategy = searchStrategies[i];
+        console.log(`Trying search strategy ${i + 1}: ${strategy}`);
+        
+        const response = await fetch(`${this.baseUrl}/search?query=${encodeURIComponent(strategy)}&per_page=20&orientation=landscape`, {
+          headers: {
+            'Authorization': this.apiKey,
+            'User-Agent': 'TIMIO News Research App'
+          }
+        });
+
+        if (!response.ok) {
+          console.error(`Pexels API error for strategy ${i + 1}: ${response.status} ${response.statusText}`);
+          continue;
         }
-      });
 
-      if (!response.ok) {
-        console.error(`Pexels API error: ${response.status} ${response.statusText}`);
-        const placeholderUrl = this.generatePlaceholderImage(query);
-        this.imageCache.set(cacheKey, placeholderUrl);
-        return placeholderUrl;
+        const data: PexelsResponse = await response.json();
+        
+        if (data.photos && data.photos.length > 0) {
+          // Filter and rank images for better relevance
+          const relevantPhotos = this.filterRelevantImages(data.photos, query);
+          
+          if (relevantPhotos.length > 0) {
+            // Success! Select image based on index
+            const selectedPhoto = relevantPhotos[imageIndex % relevantPhotos.length];
+            console.log(`Selected image ${imageIndex} from strategy ${i + 1}: ${selectedPhoto.alt} by ${selectedPhoto.photographer}`);
+            
+            // Cache the result
+            const imageUrl = selectedPhoto.src.large;
+            this.imageCache.set(cacheKey, imageUrl);
+            
+            return imageUrl;
+          }
+        }
       }
 
-      const data: PexelsResponse = await response.json();
-      
-      if (!data.photos || data.photos.length === 0) {
-        console.warn(`No images found for query: ${searchQuery}`);
-        const placeholderUrl = this.generatePlaceholderImage(query);
-        this.imageCache.set(cacheKey, placeholderUrl);
-        return placeholderUrl;
-      }
+      // If all strategies fail, use placeholder
+      console.warn(`No relevant images found for any strategy for query: ${query}`);
+      const placeholderUrl = this.generatePlaceholderImage(query);
+      this.imageCache.set(cacheKey, placeholderUrl);
+      return placeholderUrl;
 
-      // Select image based on index to ensure different images for different articles
-      const selectedPhoto = data.photos[imageIndex % data.photos.length];
-      console.log(`Selected image ${imageIndex}: ${selectedPhoto.alt} by ${selectedPhoto.photographer}`);
-      
-      // Cache the result
-      const imageUrl = selectedPhoto.src.large;
-      this.imageCache.set(cacheKey, imageUrl);
-      
-      return imageUrl;
+
 
     } catch (error) {
       console.error('Error fetching image from Pexels:', error);
@@ -265,6 +283,120 @@ export class PexelsService {
     ];
 
     return politicalKeywords.some(keyword => query.includes(keyword));
+  }
+
+  private filterRelevantImages(photos: PexelsPhoto[], originalQuery: string): PexelsPhoto[] {
+    const lowerQuery = originalQuery.toLowerCase();
+    
+    // Score images based on relevance
+    const scoredPhotos = photos.map(photo => {
+      let score = 0;
+      const alt = (photo.alt || '').toLowerCase();
+      
+      // Boost score for news-related keywords
+      const newsKeywords = ['news', 'journalism', 'media', 'press', 'newspaper', 'television', 'studio', 'office', 'building', 'government', 'politics', 'research', 'books', 'library'];
+      newsKeywords.forEach(keyword => {
+        if (alt.includes(keyword)) score += 10;
+      });
+      
+      // Boost score for query-specific terms
+      const queryTerms = lowerQuery.split(' ');
+      queryTerms.forEach(term => {
+        if (alt.includes(term)) score += 5;
+      });
+      
+      // Penalize irrelevant content
+      const irrelevantKeywords = ['fashion', 'beauty', 'food', 'travel', 'sports', 'music', 'art', 'nature', 'animal', 'sunset', 'beach', 'party', 'wedding'];
+      irrelevantKeywords.forEach(keyword => {
+        if (alt.includes(keyword)) score -= 5;
+      });
+      
+      // Boost professional/business imagery
+      const professionalKeywords = ['business', 'professional', 'corporate', 'meeting', 'conference', 'presentation', 'document', 'paper', 'work', 'desk'];
+      professionalKeywords.forEach(keyword => {
+        if (alt.includes(keyword)) score += 8;
+      });
+      
+      // Prefer landscape orientation for better display
+      if (photo.width > photo.height) score += 3;
+      
+      return { photo, score };
+    });
+    
+    // Sort by score (highest first) and return top photos
+    const relevantPhotos = scoredPhotos
+      .filter(item => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10)
+      .map(item => item.photo);
+    
+    // If no relevant photos found, return all photos as fallback
+    return relevantPhotos.length > 0 ? relevantPhotos : photos;
+  }
+
+  private getBackupSearchQuery(query: string): string {
+    const lowerQuery = query.toLowerCase();
+    
+    // News source backup terms
+    const newsSourceBackups: { [key: string]: string } = {
+      'reuters': 'news agency office journalism',
+      'ap news': 'news wire service journalism',
+      'cnn': 'television news studio',
+      'bbc': 'broadcasting news studio',
+      'nytimes': 'newspaper journalism office',
+      'wsj': 'business finance newspaper',
+      'washington post': 'newspaper office journalism',
+      'time': 'magazine journalism office',
+      'newsweek': 'magazine news office',
+      'wikipedia': 'encyclopedia books research',
+      'politico': 'politics news office',
+      'axios': 'news media office',
+      'bloomberg': 'finance business news'
+    };
+    
+    for (const [source, backup] of Object.entries(newsSourceBackups)) {
+      if (lowerQuery.includes(source)) {
+        return backup;
+      }
+    }
+    
+    // Topic-based backup terms
+    if (lowerQuery.includes('government')) return 'government building politics';
+    if (lowerQuery.includes('congress')) return 'capitol building government';
+    if (lowerQuery.includes('senate')) return 'senate chamber government';
+    if (lowerQuery.includes('court')) return 'court justice legal';
+    if (lowerQuery.includes('election')) return 'voting ballot democracy';
+    if (lowerQuery.includes('economy')) return 'business finance economics';
+    if (lowerQuery.includes('healthcare')) return 'hospital medical health';
+    if (lowerQuery.includes('education')) return 'school university learning';
+    if (lowerQuery.includes('technology')) return 'computer technology innovation';
+    if (lowerQuery.includes('environment')) return 'nature environment climate';
+    
+    return 'news media journalism office';
+  }
+
+  private getGenericSearchQuery(query: string): string {
+    const lowerQuery = query.toLowerCase();
+    
+    // Determine the most appropriate generic category
+    if (lowerQuery.includes('news') || lowerQuery.includes('media')) {
+      return 'news media journalism';
+    }
+    if (lowerQuery.includes('government') || lowerQuery.includes('politics')) {
+      return 'government building politics';
+    }
+    if (lowerQuery.includes('business') || lowerQuery.includes('finance')) {
+      return 'business finance office';
+    }
+    if (lowerQuery.includes('research') || lowerQuery.includes('study')) {
+      return 'research books library';
+    }
+    if (lowerQuery.includes('technology') || lowerQuery.includes('ai')) {
+      return 'technology computer innovation';
+    }
+    
+    // Default fallback
+    return 'professional business office';
   }
 
   private generatePlaceholderImage(query: string): string {
