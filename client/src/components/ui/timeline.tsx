@@ -24,7 +24,12 @@ export function Timeline({ items }: TimelineProps) {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm flex-wrap">
                 <span className="font-medium text-brand-dark">
-                  {new Date(item.date).toLocaleDateString()}
+                  {new Date(item.date).toLocaleDateString('en-US', { 
+                    timeZone: 'UTC',
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric'
+                  })}
                 </span>
                 <span className="text-muted">•</span>
                 <span className="text-muted">Source:</span>
