@@ -136,19 +136,78 @@ export class PexelsService {
       'technology': 'technology innovation computer',
       'artificial intelligence': 'technology computer ai',
       'ai': 'technology computer artificial intelligence',
-      'reuters': 'news media journalism',
-      'associated press': 'news media journalism', 
-      'cnn': 'news media journalism',
-      'fox news': 'news media journalism',
-      'bbc': 'news media journalism',
-      'npr': 'news media journalism',
-      'wikipedia': 'books library research',
-      'wall street journal': 'business finance newspaper',
-      'new york times': 'newspaper journalism media',
-      'washington post': 'newspaper politics journalism',
-      'serve source': 'community volunteers helping',
-      'ap news': 'news media journalism',
-      'usa today': 'newspaper journalism media'
+      // Major News Agencies & Wire Services
+      'reuters': 'reuters news agency building journalism office',
+      'associated press': 'associated press news wire journalism office',
+      'ap news': 'associated press news wire journalism office',
+      'agence france-presse': 'afp news wire journalism office',
+      'afp': 'afp news wire journalism office',
+      'bloomberg': 'bloomberg news finance business office',
+      'getty images': 'getty images photography news media',
+      
+      // Television News Networks
+      'cnn': 'cnn news network television studio journalism',
+      'fox news': 'fox news television studio journalism',
+      'msnbc': 'msnbc television news studio journalism',
+      'nbc news': 'nbc news television studio journalism',
+      'abc news': 'abc news television studio journalism',
+      'cbs news': 'cbs news television studio journalism',
+      'bbc': 'bbc news broadcasting television journalism',
+      'sky news': 'sky news television journalism',
+      'npr': 'npr radio news broadcasting journalism',
+      
+      // Major Newspapers
+      'wall street journal': 'wall street journal newspaper finance business',
+      'new york times': 'new york times newspaper journalism office',
+      'washington post': 'washington post newspaper journalism office',
+      'usa today': 'usa today newspaper journalism office',
+      'guardian': 'guardian newspaper journalism office',
+      'financial times': 'financial times newspaper finance business',
+      'los angeles times': 'los angeles times newspaper journalism',
+      'chicago tribune': 'chicago tribune newspaper journalism',
+      'boston globe': 'boston globe newspaper journalism',
+      
+      // Magazines
+      'time': 'time magazine cover journalism office',
+      'newsweek': 'newsweek magazine journalism office',
+      'economist': 'economist magazine finance business',
+      'atlantic': 'atlantic magazine journalism office',
+      'new yorker': 'new yorker magazine journalism office',
+      'forbes': 'forbes magazine business finance office',
+      'fortune': 'fortune magazine business finance office',
+      'rolling stone': 'rolling stone magazine journalism office',
+      
+      // Digital/Online News
+      'politico': 'politico news politics journalism office',
+      'huffpost': 'huffington post news journalism office',
+      'buzzfeed': 'buzzfeed news journalism office',
+      'vox': 'vox media news journalism office',
+      'slate': 'slate magazine journalism office',
+      'salon': 'salon news journalism office',
+      'daily beast': 'daily beast news journalism office',
+      'axios': 'axios news journalism office',
+      'the hill': 'the hill news politics journalism',
+      
+      // International News
+      'al jazeera': 'al jazeera news international journalism',
+      'france 24': 'france 24 news international journalism',
+      'deutsche welle': 'deutsche welle news international journalism',
+      'rt': 'rt news international journalism',
+      'xinhua': 'xinhua news international journalism',
+      'tass': 'tass news international journalism',
+      
+      // Reference & Knowledge
+      'wikipedia': 'wikipedia encyclopedia books knowledge research',
+      'britannica': 'encyclopedia britannica books knowledge',
+      
+      // Special Sources
+      'serve source': 'community volunteers helping people service',
+      'local news': 'local news television journalism',
+      'press release': 'press release news announcement',
+      'government': 'government building official news',
+      'white house': 'white house government news',
+      'pentagon': 'pentagon military defense news',
+      'supreme court': 'supreme court justice legal news'
     };
 
     const lowerQuery = (query || '').toLowerCase();
@@ -156,8 +215,36 @@ export class PexelsService {
     // Check for exact matches first
     for (const [key, value] of Object.entries(topicMappings)) {
       if (lowerQuery.includes(key)) {
+        console.log(`News source mapping found: ${key} -> ${value}`);
         return value;
       }
+    }
+
+    // Check if it's likely a news source based on common patterns
+    const newsPatterns = [
+      /news/i,
+      /times/i,
+      /post/i,
+      /journal/i,
+      /tribune/i,
+      /herald/i,
+      /gazette/i,
+      /press/i,
+      /media/i,
+      /broadcasting/i,
+      /network/i,
+      /magazine/i,
+      /weekly/i,
+      /daily/i,
+      /wire/i,
+      /agency/i,
+      /service/i
+    ];
+    
+    const isLikelyNewsSource = newsPatterns.some(pattern => pattern.test(lowerQuery));
+    if (isLikelyNewsSource) {
+      console.log(`Likely news source detected: ${query} -> using news imagery`);
+      return 'news media journalism office newspaper';
     }
 
     // If no specific mapping, add generic political/government terms
@@ -165,7 +252,9 @@ export class PexelsService {
       return `${query} government politics`;
     }
 
-    return query;
+    // Default fallback - treat unknown sources as news sources
+    console.log(`Unknown source: ${query} -> treating as news source`);
+    return 'news media journalism office';
   }
 
   private isPoliticalTopic(query: string): boolean {
