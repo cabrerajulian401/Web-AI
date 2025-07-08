@@ -225,10 +225,10 @@ Use web search to find real, current information about the topic. Then format fi
       "id": 1,
       "articleId": 1,
       "viewpoint": "Perspective title",
-      "author": "Source author",
-      "organization": "Source organization",
-      "stance": "pro/con/neutral",
+      "description": "Brief description of the perspective",
+      "source": "Source organization name",
       "quote": "Direct quote from source",
+      "color": "blue",
       "url": "https://real-url-from-search.com"
     }
   ]
@@ -492,9 +492,10 @@ CRITICAL: Return ONLY the JSON object. No text before or after. Use real URLs fr
           id: Date.now() + index,
           articleId: Date.now(),
           viewpoint: perspective.viewpoint,
-          description: perspective.description,
-          source: perspective.source,
+          description: perspective.description || perspective.viewpoint,
+          source: perspective.source || "Unknown Source",
           quote: perspective.quote,
+          color: perspective.color || "blue",
           url: perspective.url || null
         }))
       };

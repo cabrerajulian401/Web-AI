@@ -572,10 +572,10 @@ export default function ArticlePage() {
                                     <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
                                       "{perspective.quote}"
                                     </blockquote>
-                                    {(perspective.url || findSourceUrl(perspective.source, citedSources)) && (
+                                    {perspective.url && (
                                       <div className="border border-blue-600 rounded-md p-2 inline-block">
                                         <a 
-                                          href={perspective.url || findSourceUrl(perspective.source, citedSources)!} 
+                                          href={perspective.url} 
                                           target="_blank" 
                                           rel="noopener noreferrer"
                                           className="text-blue-600 hover:text-blue-800 text-sm font-medium"
@@ -871,6 +871,18 @@ export default function ArticlePage() {
                                 <blockquote className="text-gray-600 italic pl-4 border-l-2 border-gray-300 mb-3">
                                   "{perspective.quote}"
                                 </blockquote>
+                              )}
+                              {perspective.url && (
+                                <div className="border border-blue-600 rounded-md p-2 inline-block mb-3">
+                                  <a 
+                                    href={perspective.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                  >
+                                    Read the article →
+                                  </a>
+                                </div>
                               )}
                             </div>
                             <div className="text-sm text-gray-500">
