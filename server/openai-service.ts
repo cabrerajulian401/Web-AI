@@ -117,12 +117,22 @@ export class OpenAIResearchService {
       // Extract sources from timeline items
       if (reportData.timelineItems) {
         reportData.timelineItems.forEach((item: any) => {
-          if (item.source && !sourceMap.has(item.source)) {
-            sourceMap.set(item.source, {
-              name: item.source,
+          let sourceUrl = item.sourceUrl || item.url || null;
+          let sourceName = item.source;
+          
+          // Check if URL is embedded in description as markdown link
+          const urlMatch = item.description?.match(/\[([^\]]+)\]\(([^)]+)\)/);
+          if (urlMatch) {
+            sourceName = sourceName || urlMatch[1];
+            sourceUrl = sourceUrl || urlMatch[2];
+          }
+          
+          if (sourceName && !sourceMap.has(sourceName)) {
+            sourceMap.set(sourceName, {
+              name: sourceName,
               type: "Timeline Reference",
               description: `Source for timeline event: "${item.title}"`,
-              url: item.sourceUrl
+              url: sourceUrl
             });
           }
         });
@@ -501,16 +511,30 @@ CRITICAL: Return ONLY the JSON object. No text before or after. Use real URLs fr
           articleId: Date.now(),
           summary: reportData.executiveSummary.summary
         },
-        timelineItems: reportData.timelineItems.map((item: any, index: number) => ({
-          id: Date.now() + index,
-          articleId: Date.now(),
-          date: item.date,
-          title: item.title,
-          description: item.description,
-          type: "event",
-          sourceLabel: item.sourceLabel || "Source",
-          sourceUrl: item.sourceUrl || null
-        })),
+        timelineItems: reportData.timelineItems.map((item: any, index: number) => {
+          // Extract URL from description if present
+          let sourceUrl = item.sourceUrl || item.url || null;
+          let cleanDescription = item.description;
+          
+          // Check if URL is embedded in description as markdown link
+          const urlMatch = item.description?.match(/\[([^\]]+)\]\(([^)]+)\)/);
+          if (urlMatch && !sourceUrl) {
+            sourceUrl = urlMatch[2];
+            // Clean up the description by removing the markdown link
+            cleanDescription = item.description.replace(/\s*\(\[[^\]]+\]\([^)]+\)\)/, '');
+          }
+          
+          return {
+            id: Date.now() + index,
+            articleId: Date.now(),
+            date: item.date,
+            title: item.title,
+            description: cleanDescription,
+            type: "event",
+            sourceLabel: item.sourceLabel || "Source",
+            sourceUrl: sourceUrl
+          };
+        }),
         citedSources: await this.collectCitedSources({ ...reportData, query }),
         rawFacts: this.groupRawFactsByCategory(reportData.rawFacts),
         perspectives: reportData.perspectives.map((perspective: any, index: number) => ({
