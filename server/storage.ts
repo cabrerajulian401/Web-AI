@@ -222,7 +222,7 @@ export class MemStorage implements IStorage {
     // Add dummy "One Big Beautiful Bill" report
     const dummyArticle: Article = {
       id: 999,
-      title: "Trump Signs 'One Big Beautiful Bill' Into Law on July 4, 2025",
+      title: "Trump's 'One Big Beautiful Bill':Everything You Need to Know.",
       slug: "one-big-beautiful-bill-trump-2025",
       excerpt: "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2025, featuring permanent tax cuts, massive cuts to Medicaid and SNAP, and work requirements that could leave 12 million without health insurance by 2034.",
       content: `President Trump signed the "One Big Beautiful Bill" into law on July 4, 2025, marking what supporters call "the start of a new golden age for America" and critics denounce as "a direct and heartless assault on the American people."
@@ -246,9 +246,10 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       articleId: 999,
       points: [
         "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2025",
-        "Bill includes permanent tax cuts, especially benefiting businesses and high earners",
+        "Bill includes various tax cuts for both individuals and businesses",
         "Large reductions to Medicaid, SNAP, and ACA; millions may lose insurance",
         "Massive funding boost for border enforcement, ICE, and defense",
+        "Rolls back clean energy incentives, boosts fossil fuels",
         "Protests and political backlash began immediately after passage"
       ]
     };

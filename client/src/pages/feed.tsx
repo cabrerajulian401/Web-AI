@@ -188,7 +188,7 @@ export default function FeedPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowThemeController(!showThemeController)}
-                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4"
+                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4 min-h-[32px] sm:min-h-[36px] touch-manipulation"
               >
                 <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Theme</span>
@@ -212,22 +212,31 @@ export default function FeedPage() {
                 {/* Enhanced background with gradient */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl sm:rounded-2xl blur-sm opacity-20"></div>
                 <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-3xl transform hover:-translate-y-1">
-                  <Search className="absolute left-4 sm:left-6 top-1/2 transform -translate-y-1/2 h-5 w-5 sm:h-7 sm:w-7 text-blue-500" />
+                  <Search className="absolute left-3 sm:left-6 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-7 sm:w-7 text-blue-500" />
                   <Input
                     type="text"
                     placeholder="Enter a story to research..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    className="w-full pl-12 sm:pl-16 pr-4 sm:pr-6 py-4 sm:py-6 text-lg sm:text-xl bg-transparent border-0 focus:ring-0 focus:outline-none placeholder:text-gray-400"
+                    className="w-full pl-10 sm:pl-16 pr-20 sm:pr-32 py-3 sm:py-6 text-base sm:text-xl bg-transparent border-0 focus:ring-0 focus:outline-none placeholder:text-gray-400 touch-manipulation"
                   />
-                  <div className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2">
+                  <div className="absolute right-1 sm:right-4 top-1/2 transform -translate-y-1/2">
                     <Button 
                       onClick={handleSearch}
                       disabled={researchMutation.isPending}
-                      className="bg-blue-600 hover:bg-blue-700 px-3 sm:px-6 py-1.5 sm:py-2 text-white font-semibold rounded-lg shadow-md text-sm sm:text-base disabled:opacity-50"
+                      className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 px-2 sm:px-6 py-1.5 sm:py-2 text-white font-semibold rounded-lg shadow-md text-xs sm:text-base disabled:opacity-50 touch-manipulation min-h-[36px] sm:min-h-[40px]"
                     >
-                      {researchMutation.isPending ? "Researching..." : "Research"}
+                      {researchMutation.isPending ? (
+                        <span className="hidden sm:inline">Researching...</span>
+                      ) : (
+                        <span className="hidden sm:inline">Research</span>
+                      )}
+                      {researchMutation.isPending ? (
+                        <span className="sm:hidden">...</span>
+                      ) : (
+                        <span className="sm:hidden">Go</span>
+                      )}
                     </Button>
                   </div>
                 </div>

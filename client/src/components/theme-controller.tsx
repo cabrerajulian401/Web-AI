@@ -56,7 +56,8 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
 
   const handleMouseMove = (e: MouseEvent) => {
     if (isDragging) {
-      const newX = Math.max(0, Math.min(window.innerWidth - 400, e.clientX - dragStart.x));
+      const cardWidth = window.innerWidth < 768 ? window.innerWidth - 20 : 600;
+      const newX = Math.max(0, Math.min(window.innerWidth - cardWidth, e.clientX - dragStart.x));
       const newY = Math.max(0, Math.min(window.innerHeight - 400, e.clientY - dragStart.y));
       setPosition({ x: newX, y: newY });
     }
@@ -107,7 +108,7 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
   return (
     <Card 
       ref={cardRef}
-      className="w-[600px] shadow-xl bg-white max-h-[600px] overflow-hidden select-none"
+      className="w-[calc(100vw-20px)] md:w-[600px] shadow-xl bg-white max-h-[80vh] md:max-h-[600px] overflow-hidden select-none mx-2 md:mx-0"
       style={{
         position: 'fixed',
         left: `${position.x}px`,
@@ -117,36 +118,39 @@ export function ThemeController({ onClose }: ThemeControllerProps = {}) {
       }}
       onMouseDown={handleMouseDown}
     >
-      <CardHeader className="pb-3 drag-handle cursor-grab active:cursor-grabbing">
+      <CardHeader className="pb-3 drag-handle cursor-grab active:cursor-grabbing px-3 md:px-6">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xl flex items-center gap-2 pointer-events-none">
-            <Move className="h-5 w-5 text-gray-400" />
-            <Palette className="h-6 w-6" />
-            Custom Colors
+          <CardTitle className="text-lg md:text-xl flex items-center gap-1 md:gap-2 pointer-events-none">
+            <Move className="h-4 w-4 md:h-5 md:w-5 text-gray-400" />
+            <Palette className="h-5 w-5 md:h-6 md:w-6" />
+            <span className="hidden sm:inline">Custom Colors</span>
+            <span className="sm:hidden">Theme</span>
           </CardTitle>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={resetToDefault}
-            className="flex items-center gap-2 pointer-events-auto"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Reset
-          </Button>
-          {onClose && (
+          <div className="flex items-center gap-1 md:gap-2">
             <Button 
-              variant="ghost" 
+              variant="outline" 
               size="sm"
-              onClick={onClose}
-              className="pointer-events-auto"
+              onClick={resetToDefault}
+              className="flex items-center gap-1 md:gap-2 pointer-events-auto text-xs md:text-sm px-2 md:px-3"
             >
-              <X className="h-4 w-4" />
+              <RotateCcw className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Reset</span>
             </Button>
-          )}
+            {onClose && (
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={onClose}
+                className="pointer-events-auto p-1 md:p-2"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
-      <div className="max-h-[500px] overflow-y-auto">
-        <CardContent className="space-y-4">
+      <div className="max-h-[calc(80vh-120px)] md:max-h-[500px] overflow-y-auto">
+        <CardContent className="space-y-4 px-3 md:px-6">
         
         {/* Preset Themes */}
         <div className="space-y-3 pb-4 border-b border-gray-200">
