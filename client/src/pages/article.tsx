@@ -16,6 +16,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import type { Article, ExecutiveSummary, TimelineItem, CitedSource, RawFacts, Perspective } from "@shared/schema";
+import { TextFormatter } from "@/utils/text-formatter";
+import { ErrorBoundary, LoadingState, EmptyState, ErrorMessage } from "@/components/ui/error-boundary";
 import timioLogo from "@assets/App Icon_1751662407764.png";
 import execSummaryIcon from "@assets/hour clear_1751669332914.png";
 import conflictIcon from "@assets/image (4)_1751670771904.png";
@@ -439,15 +441,15 @@ export default function ArticlePage() {
                         executiveSummary.points.map((point, index) => (
                           <div key={index} className="flex items-start">
                             <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                            <span className="text-black">{point}</span>
+                            <span className="text-black leading-relaxed">{TextFormatter.cleanText(point)}</span>
                           </div>
                         ))
                         : 
                         // Handle AI-generated article format (string with bullet points)
-                        (executiveSummary && executiveSummary.summary ? executiveSummary.summary.split('\n').filter(line => line.trim()).map((point, index) => (
+                        (executiveSummary && executiveSummary.summary ? TextFormatter.formatExecutiveSummary(executiveSummary.summary).map((point, index) => (
                           <div key={index} className="flex items-start">
                             <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
-                            <span className="text-black">{point.replace(/^-\s*/, '')}</span>
+                            <span className="text-black leading-relaxed">{point}</span>
                           </div>
                         )) : [])
                       }
@@ -503,11 +505,11 @@ export default function ArticlePage() {
                       // Show OpenAI-generated raw facts
                       <>
                         {rawFacts && rawFacts.length > 0 ? (
-                          // Display facts by category
-                          rawFacts.map((factGroup, groupIndex) => (
+                          // Display facts by category with proper formatting
+                          TextFormatter.formatRawFacts(rawFacts).map((factGroup, groupIndex) => (
                             <div key={groupIndex}>
                               <h3 className="text-lg font-bold text-black mb-3">
-                                {factGroup.category}
+                                {TextFormatter.cleanText(factGroup.category)}
                               </h3>
                               <div className="w-full h-0.5 bg-black mb-6"></div>
                               <div className="space-y-3">
@@ -515,28 +517,24 @@ export default function ArticlePage() {
                                   <div key={index} className="flex items-start">
                                     <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                                     <div className="text-gray-900 leading-relaxed">
-                                      {typeof fact === 'string' ? (
-                                        <span>{fact}</span>
-                                      ) : (
-                                        <div className="space-y-2">
-                                          <span>{fact.text}</span>
-                                          {fact.source && (
-                                            <div className="text-sm text-gray-600">
-                                              Source: {fact.source}
-                                              {fact.url && (
-                                                <a 
-                                                  href={fact.url} 
-                                                  target="_blank" 
-                                                  rel="noopener noreferrer"
-                                                  className="ml-2 text-blue-600 hover:text-blue-800 underline"
-                                                >
-                                                  View Source
-                                                </a>
-                                              )}
-                                            </div>
-                                          )}
-                                        </div>
-                                      )}
+                                      <div className="space-y-2">
+                                        <span>{fact.text}</span>
+                                        {fact.source && (
+                                          <div className="text-sm text-gray-600">
+                                            Source: {fact.source}
+                                            {fact.url && TextFormatter.isValidUrl(fact.url) && (
+                                              <a 
+                                                href={fact.url} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="ml-2 text-blue-600 hover:text-blue-800 underline"
+                                              >
+                                                View Source
+                                              </a>
+                                            )}
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 ))}
@@ -561,8 +559,8 @@ export default function ArticlePage() {
                 content={
                   <div className="mt-4 space-y-4">
                     {perspectives && perspectives.length > 0 ? (
-                      // Show OpenAI-generated perspectives
-                      perspectives.map((perspective, index) => {
+                      // Show OpenAI-generated perspectives with proper formatting
+                      TextFormatter.formatPerspectives(perspectives).map((perspective, index) => {
                         // Use different colors for different viewpoints
                         const colors = [
                           'bg-red-600 hover:bg-red-700',
@@ -579,7 +577,7 @@ export default function ArticlePage() {
                               <div className={`${colorClass} text-white p-6 rounded-lg transition-colors`}>
                                 <div className="flex items-center justify-between">
                                   <div className="text-left">
-                                    <h3 className="font-bold text-xl mb-2">{perspective.viewpoint}</h3>
+                                    <h3 className="font-bold text-xl mb-2 leading-tight">{perspective.viewpoint}</h3>
                                     <p className="text-sm opacity-80">Source: {perspective.source}</p>
                                   </div>
                                   <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
@@ -588,16 +586,16 @@ export default function ArticlePage() {
                             </CollapsibleTrigger>
                             <CollapsibleContent>
                               <div className="p-6 space-y-6 bg-gray-100">
-                                <p className="text-gray-800 text-lg font-semibold">{perspective.description}</p>
+                                <p className="text-gray-800 text-lg font-semibold leading-relaxed">{perspective.description}</p>
                                 <div className="w-full h-0.5 bg-black my-2"></div>
                                 
                                 {perspective.quote && (
                                   <div>
                                     <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">{perspective.source}</div>
-                                    <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400">
+                                    <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400 leading-relaxed">
                                       "{perspective.quote}"
                                     </blockquote>
-                                    {perspective.url && (
+                                    {perspective.url && TextFormatter.isValidUrl(perspective.url) && (
                                       <div className="border border-blue-600 rounded-md p-2 inline-block">
                                         <a 
                                           href={perspective.url} 
@@ -993,9 +991,9 @@ export default function ArticlePage() {
 
           {/* Sidebar */}
           <div className="lg:col-span-4 space-y-8">
-            <Timeline items={timelineItems} />
+            <Timeline items={TextFormatter.formatTimelineItems(timelineItems)} />
             <div className="border-t-2 border-gray-300 my-6"></div>
-            <CitedSources sources={citedSources} />
+            <CitedSources sources={TextFormatter.formatCitedSources(citedSources)} />
             <div className="border-t-2 border-gray-300 my-6"></div>
           </div>
         </div>

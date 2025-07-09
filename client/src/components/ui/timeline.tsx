@@ -1,6 +1,7 @@
 import { Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { TextFormatter } from "@/utils/text-formatter";
 import type { TimelineItem } from "@shared/schema";
 
 interface TimelineProps {
@@ -48,8 +49,8 @@ export function Timeline({ items }: TimelineProps) {
                   </span>
                 )}
               </div>
-              <h4 className="font-medium text-brand-dark">{item.title}</h4>
-              <p className="text-sm text-gray-600">{item.description}</p>
+              <h4 className="font-medium text-brand-dark leading-relaxed">{TextFormatter.cleanText(item.title)}</h4>
+              <p className="text-sm text-gray-600 leading-relaxed">{TextFormatter.cleanText(item.description)}</p>
             </div>
           </div>
         ))}

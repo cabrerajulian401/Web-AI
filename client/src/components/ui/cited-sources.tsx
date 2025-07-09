@@ -1,6 +1,7 @@
 import type { CitedSource } from "@shared/schema";
 import { Card } from "./card";
 import { FileText } from "lucide-react";
+import { TextFormatter } from "@/utils/text-formatter";
 
 interface CitedSourcesProps {
   sources: CitedSource[];
@@ -50,14 +51,14 @@ export function CitedSources({ sources }: CitedSourcesProps) {
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-gray-500 mb-1">{source.type}</p>
-                  <h4 className={`font-semibold text-sm line-clamp-2 transition-colors duration-200 ${
+                  <h4 className={`font-semibold text-sm line-clamp-2 transition-colors duration-200 leading-relaxed ${
                     source.url 
                       ? 'text-black group-hover:text-brand-blue group-hover:underline' 
                       : 'text-black'
                   }`}>
-                    {source.name}
+                    {TextFormatter.cleanText(source.name)}
                   </h4>
-                  <p className="text-xs text-gray-500 mt-1 line-clamp-2">{source.description}</p>
+                  <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">{TextFormatter.cleanText(source.description)}</p>
                   {source.url && (
                     <p className="text-xs text-brand-blue mt-1 group-hover:underline">
                       Click to visit source →

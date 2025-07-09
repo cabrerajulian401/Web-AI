@@ -335,22 +335,8 @@ FORMATTING RULES:
         cleanContent = cleanContent.substring(jsonStart, jsonEnd + 1);
       }
 
-      // Clean up common JSON issues
-      cleanContent = cleanContent
-        .trim()
-        .replace(/,\s*}/g, '}')  // Remove trailing commas in objects
-        .replace(/,\s*]/g, ']')  // Remove trailing commas in arrays
-        .replace(/[\u0000-\u001f\u007f-\u009f]/g, '')  // Remove control characters
-        .replace(/\n/g, '\\n')  // Escape newlines properly
-        .replace(/\r/g, '\\r')  // Escape carriage returns
-        .replace(/\t/g, '\\t')  // Escape tabs
-        .replace(/"/g, '"')  // Fix smart quotes
-        .replace(/"/g, '"')  // Fix smart quotes
-        .replace(/'/g, "'")  // Fix smart quotes
-        .replace(/'/g, "'")  // Fix smart quotes
-        .replace(/…/g, '...')  // Fix ellipsis
-        .replace(/–/g, '-')  // Fix em dash
-        .replace(/—/g, '-');  // Fix en dash
+      // Clean up common JSON issues with comprehensive character handling
+      cleanContent = this.cleanJsonResponse(cleanContent);
       
       console.log('Cleaned JSON content length:', cleanContent.length);
       console.log('First 200 chars:', cleanContent.substring(0, 200));
@@ -641,6 +627,58 @@ FORMATTING RULES:
     };
     
     return JSON.stringify(basicStructure);
+  }
+
+  // Comprehensive JSON response cleaning
+  private cleanJsonResponse(content: string): string {
+    let cleaned = content.trim();
+    
+    // Fix smart quotes and special characters first
+    cleaned = cleaned
+      .replace(/"/g, '"')
+      .replace(/"/g, '"')
+      .replace(/'/g, "'")
+      .replace(/'/g, "'")
+      .replace(/…/g, '...')
+      .replace(/–/g, '-')
+      .replace(/—/g, '-')
+      // Remove control characters
+      .replace(/[\u0000-\u001f\u007f-\u009f]/g, '');
+    
+    // Fix malformed JSON structure patterns
+    cleaned = cleaned
+      // Fix stray commas at the beginning
+      .replace(/^\s*,/, '')
+      .replace(/{\s*,/g, '{')
+      .replace(/\[\s*,/g, '[')
+      // Fix duplicate commas
+      .replace(/,\s*,/g, ',')
+      // Fix trailing commas
+      .replace(/,\s*}/g, '}')
+      .replace(/,\s*]/g, ']')
+      // Fix missing commas between objects/arrays
+      .replace(/}\s*{/g, '},{')
+      .replace(/]\s*\[/g, '],[')
+      .replace(/"\s*"([^:])/g, '","$1')
+      // Fix property names and values
+      .replace(/([^,{\[])\s*"/g, '$1,"')
+      .replace(/([^,{\[])\s*\{/g, '$1,{')
+      .replace(/([^,{\[])\s*\[/g, '$1,[')
+      // Fix broken string concatenations
+      .replace(/(["}])\s*"([^:])/g, '$1,"$2')
+      .replace(/(["}])\s*\{/g, '$1,{')
+      .replace(/(["}])\s*\[/g, '$1,[')
+      .replace(/([}\]])\s*"([^:])/g, '$1,"$2')
+      .replace(/([}\]])\s*\{/g, '$1,{')
+      .replace(/([}\]])\s*\[/g, '$1,[');
+    
+    // Escape special characters properly
+    cleaned = cleaned
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '\\r')
+      .replace(/\t/g, '\\t');
+    
+    return cleaned;
   }
 
   private createSlug(title: string): string {
