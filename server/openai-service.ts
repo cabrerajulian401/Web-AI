@@ -335,7 +335,18 @@ FORMATTING RULES:
         cleanContent = cleanContent.substring(jsonStart, jsonEnd + 1);
       }
 
-      cleanContent = cleanContent.trim();
+      // Clean up common JSON issues
+      cleanContent = cleanContent
+        .trim()
+        .replace(/,\s*}/g, '}')  // Remove trailing commas in objects
+        .replace(/,\s*]/g, ']')  // Remove trailing commas in arrays
+        .replace(/[\u0000-\u001f\u007f-\u009f]/g, '')  // Remove control characters
+        .replace(/\n/g, '\\n')  // Escape newlines properly
+        .replace(/\r/g, '\\r')  // Escape carriage returns
+        .replace(/\t/g, '\\t');  // Escape tabs
+      
+      console.log('Cleaned JSON content length:', cleanContent.length);
+      console.log('First 200 chars:', cleanContent.substring(0, 200));
 
       let reportData;
       try {
@@ -369,18 +380,40 @@ FORMATTING RULES:
         }
       } catch (parseError) {
         console.error('JSON parse error:', parseError);
+        console.error('Error message:', parseError.message);
+        console.error('Error at position:', parseError.message.match(/position (\d+)/)?.[1]);
+        
+        // Show the problematic area
+        if (parseError.message.includes('position')) {
+          const pos = parseInt(parseError.message.match(/position (\d+)/)?.[1] || '0');
+          const start = Math.max(0, pos - 50);
+          const end = Math.min(cleanContent.length, pos + 50);
+          console.error('Context around error:', cleanContent.substring(start, end));
+        }
 
         // Try to fix JSON issues
         let fixedContent = cleanContent;
 
-        // Handle control characters
-        if (parseError.message.includes('Bad control character')) {
+        // Try multiple repair strategies
+        try {
+          // Strategy 1: Fix control characters
           fixedContent = this.fixControlCharacters(fixedContent);
+          
+          // Strategy 2: Fix common JSON issues
+          fixedContent = this.repairMalformedJson(fixedContent);
+          
+          reportData = JSON.parse(fixedContent);
+          console.log('Successfully parsed after JSON repair');
+        } catch (e) {
+          console.error('Failed after all repair attempts:', e);
+          
+          // Try extracting just the basic structure
           try {
-            reportData = JSON.parse(fixedContent);
-            console.log('Successfully parsed after control character repair');
-          } catch (e) {
-            console.error('Failed after control character repair');
+            const basicStructure = this.extractBasicStructure(cleanContent);
+            reportData = JSON.parse(basicStructure);
+            console.log('Successfully parsed basic structure');
+          } catch (e2) {
+            console.error('Failed to extract basic structure:', e2);
           }
         }
 
@@ -564,6 +597,43 @@ FORMATTING RULES:
       .replace(/\\/g, '\\\\') // Escape remaining backslashes
       .replace(/"/g, '\\"') // Escape quotes
       .replace(/\\\\"/g, '\\"'); // Fix over-escaped quotes
+  }
+
+  private repairMalformedJson(content: string): string {
+    let repaired = content;
+    
+    // Fix common JSON issues
+    repaired = repaired
+      .replace(/,\s*}/g, '}')  // Remove trailing commas in objects
+      .replace(/,\s*]/g, ']')  // Remove trailing commas in arrays
+      .replace(/([{,]\s*)"([^"]+)":\s*"([^"]*)"([^,}\]]*)/g, '$1"$2":"$3"')  // Fix unescaped quotes in strings
+      .replace(/\\n/g, '\\\\n')  // Fix newlines
+      .replace(/\\r/g, '\\\\r')  // Fix carriage returns
+      .replace(/\\t/g, '\\\\t');  // Fix tabs
+    
+    return repaired;
+  }
+
+  private extractBasicStructure(content: string): string {
+    // Extract just the basic JSON structure with minimal content
+    const basicStructure = {
+      article: {
+        title: "Research Report",
+        executiveSummary: "Unable to parse full report due to technical issues.",
+        content: "Partial data retrieved.",
+        category: "Research",
+        publishedAt: new Date().toISOString(),
+        readTime: 1,
+        sourceCount: 0
+      },
+      rawFacts: [],
+      timelineItems: [],
+      perspectiveGroups: [],
+      conflictingClaims: [],
+      citedSources: []
+    };
+    
+    return JSON.stringify(basicStructure);
   }
 
   private createSlug(title: string): string {
