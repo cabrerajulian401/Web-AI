@@ -929,11 +929,11 @@ export default function ArticlePage() {
                             
                             <div className="bg-blue-50 p-4 rounded-lg mb-4">
                               <div className="flex items-center justify-between mb-2">
-                                <span className="text-blue-700 font-semibold text-sm uppercase">White House</span>
+                                <span className="text-blue-700 font-semibold text-sm uppercase">White House/Treasury</span>
                                 <span className="text-xs text-blue-600">Position A</span>
                               </div>
                               <blockquote className="text-gray-800 italic">
-                                "The largest percentage tax reduction goes to low-income and working-class Americans, putting over $10,000 a year back in the pockets of typical hardworking families."
+                                "According to the Joint Committee on Taxation, the tax bill will most benefit workers and families making less than $50,000 per year"
                               </blockquote>
                             </div>
                             
@@ -943,23 +943,23 @@ export default function ArticlePage() {
                             
                             <div className="bg-red-50 p-4 rounded-lg mb-4">
                               <div className="flex items-center justify-between mb-2">
-                                <span className="text-red-700 font-semibold text-sm uppercase">Al Jazeera, Rolling Stone, KFF</span>
+                                <span className="text-red-700 font-semibold text-sm uppercase">CBO, Pew, KFF, Democratic leaders</span>
                                 <span className="text-xs text-red-600">Position B</span>
                               </div>
                               <blockquote className="text-gray-800 italic">
-                                "Critics and independent analysts argue the bill's tax cuts disproportionately benefit the wealthy, and that the middle class and poor see far smaller gains, especially when factoring in cuts to Medicaid and social programs."
+                                "A 55% majority says the bill would help high-income people... 59% say it would hurt lower-income people"
                               </blockquote>
                             </div>
                             
                             <div className="text-center mt-4">
                               <span className="text-sm text-gray-600">
-                                [White House vs Al Jazeera, Rolling Stone, KFF]
+                                [White House/Treasury vs CBO, Pew, KFF, Democratic leaders]
                               </span>
                             </div>
                           </div>
                           
                           <div className="border-b-2 border-gray-200 pb-6">
-                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Impact on Medicaid and Health Coverage</h4>
+                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Impact on Healthcare and Medicaid</h4>
                             
                             <div className="bg-blue-50 p-4 rounded-lg mb-4">
                               <div className="flex items-center justify-between mb-2">
@@ -967,7 +967,7 @@ export default function ArticlePage() {
                                 <span className="text-xs text-blue-600">Position A</span>
                               </div>
                               <blockquote className="text-gray-800 italic">
-                                "There will be no cuts to Medicaid and the bill protects and strengthens Medicaid for those who rely on it."
+                                "Strengthening Medicaid by eliminating waste, fraud, and abuse and blocking illegal immigrants from receiving Medicaid"
                               </blockquote>
                             </div>
                             
@@ -977,65 +977,31 @@ export default function ArticlePage() {
                             
                             <div className="bg-red-50 p-4 rounded-lg mb-4">
                               <div className="flex items-center justify-between mb-2">
-                                <span className="text-red-700 font-semibold text-sm uppercase">H.R.1 bill text, KFF, Rolling Stone</span>
+                                <span className="text-red-700 font-semibold text-sm uppercase">CBO/KFF</span>
                                 <span className="text-xs text-red-600">Position B</span>
                               </div>
                               <blockquote className="text-gray-800 italic">
-                                "The bill text and independent estimates show a 12% cut to Medicaid, with the Congressional Budget Office projecting over 10 million Americans will lose health insurance."
+                                "reduce federal spending on Medicaid by almost $800 billion... increase the number of adults without health insurance by more than 10 million"
                               </blockquote>
                             </div>
                             
                             <div className="text-center mt-4">
                               <span className="text-sm text-gray-600">
-                                [White House vs H.R.1 bill text, KFF, Rolling Stone]
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <div className="border-b-2 border-gray-200 pb-6">
-                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Economic Impact and Deficit</h4>
-                            
-                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-blue-700 font-semibold text-sm uppercase">Treasury Department, White House</span>
-                                <span className="text-xs text-blue-600">Position A</span>
-                              </div>
-                              <blockquote className="text-gray-800 italic">
-                                "The bill delivers historic levels of mandatory savings and reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse."
-                              </blockquote>
-                            </div>
-                            
-                            <div className="text-center my-4">
-                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
-                            </div>
-                            
-                            <div className="bg-red-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-red-700 font-semibold text-sm uppercase">Al Jazeera, CBO via KFF</span>
-                                <span className="text-xs text-red-600">Position B</span>
-                              </div>
-                              <blockquote className="text-gray-800 italic">
-                                "Multiple analyses, including the CBO, estimate the bill will increase the deficit by $2.8 to $3 trillion over the next decade."
-                              </blockquote>
-                            </div>
-                            
-                            <div className="text-center mt-4">
-                              <span className="text-sm text-gray-600">
-                                [Treasury Department, White House vs Al Jazeera, CBO via KFF]
+                                [White House vs CBO/KFF]
                               </span>
                             </div>
                           </div>
                           
                           <div className="pb-6">
-                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Immigration Enforcement Funding</h4>
+                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Fiscal Responsibility vs. Deficit Increase</h4>
                             
                             <div className="bg-blue-50 p-4 rounded-lg mb-4">
                               <div className="flex items-center justify-between mb-2">
-                                <span className="text-blue-700 font-semibold text-sm uppercase">ICE, White House</span>
+                                <span className="text-blue-700 font-semibold text-sm uppercase">White House</span>
                                 <span className="text-xs text-blue-600">Position A</span>
                               </div>
                               <blockquote className="text-gray-800 italic">
-                                "Unprecedented funding for border enforcement is essential for national security and protecting American communities."
+                                "Restoring fiscal sanity by cutting $1.5 trillion in spending"
                               </blockquote>
                             </div>
                             
@@ -1045,18 +1011,29 @@ export default function ArticlePage() {
                             
                             <div className="bg-red-50 p-4 rounded-lg mb-4">
                               <div className="flex items-center justify-between mb-2">
-                                <span className="text-red-700 font-semibold text-sm uppercase">CBS News, Governor Wes Moore</span>
+                                <span className="text-red-700 font-semibold text-sm uppercase">CBO, Al Jazeera, PBS</span>
                                 <span className="text-xs text-red-600">Position B</span>
                               </div>
                               <blockquote className="text-gray-800 italic">
-                                "Critics warn the funding enables mass deportations and could lead to inhumane conditions at detention facilities."
+                                "increase federal deficits over the next 10 years by nearly $3.3 trillion"
                               </blockquote>
                             </div>
                             
                             <div className="text-center mt-4">
                               <span className="text-sm text-gray-600">
-                                [ICE, White House vs CBS News, Governor Wes Moore]
+                                [White House vs CBO, Al Jazeera, PBS]
                               </span>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-6 pt-4 border-t-2 border-gray-300">
+                            <div className="text-center">
+                              <span className="text-sm font-semibold text-gray-700">Summary of Sides:</span>
+                              <div className="mt-2">
+                                <span className="text-sm text-gray-600">
+                                  [White House, Treasury] vs [CBO, Pew, KFF, House Democratic Leader, Al Jazeera, PBS]
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
