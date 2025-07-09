@@ -318,20 +318,35 @@ FORMATTING RULES:
         cleanContent = cleanContent.substring(jsonStart, jsonEnd + 1);
       }
 
-      // Try the two-stage approach with dedicated JSON formatter
+      // Apply direct fix for the specific newline issue
+      console.log('=== ATTEMPTING DIRECT JSON REPAIR ===');
+      console.log('Before repair, first 50 chars:', cleanContent.substring(0, 50));
+      
+      // Handle the specific case where JSON starts with "{\n"
+      if (cleanContent.startsWith('{\n')) {
+        cleanContent = cleanContent.replace(/^{\n/, '{');
+        console.log('✓ Fixed opening brace newline issue');
+      }
+      
+      // Apply comprehensive newline fixes
+      cleanContent = this.fixJsonNewlines(cleanContent);
+      console.log('After repair, first 50 chars:', cleanContent.substring(0, 50));
+      
+      // Test if the repaired content can be parsed
       try {
-        console.log('=== ATTEMPTING FAST JSON REPAIR ===');
-        cleanContent = this.fastJsonRepair(cleanContent);
-        console.log('✓ Fast JSON repair successful');
-      } catch (repairError) {
-        console.log('✗ Fast repair failed, trying JSON formatter service');
+        JSON.parse(cleanContent);
+        console.log('✓ Direct repair produced valid JSON');
+      } catch (testError) {
+        console.log('✗ Direct repair failed, trying JSON formatter service');
+        console.log('Parse error:', testError.message);
+        console.log('Error at position:', testError.message.match(/position (\d+)/)?.[1]);
         
         try {
           cleanContent = await jsonFormatterService.formatToValidJSON(cleanContent);
           console.log('✓ JSON formatter service successful');
         } catch (formatterError) {
-          console.log('✗ JSON formatter service failed, using basic cleanup');
-          cleanContent = this.cleanJsonResponse(cleanContent);
+          console.log('✗ JSON formatter service failed, using aggressive repair');
+          cleanContent = this.aggressiveJsonRepair(cleanContent);
         }
       }
 
@@ -718,21 +733,57 @@ FORMATTING RULES:
     return `{ ${pairs.join(', ')} }`;
   }
 
-  // Fast JSON repair for performance optimization
-  private fastJsonRepair(content: string): string {
-    return content
-      // Fix smart quotes quickly
+  // Direct JSON newline fixes
+  private fixJsonNewlines(content: string): string {
+    // Step 1: Remove all newlines that are not within string values
+    let fixed = '';
+    let inString = false;
+    let escaped = false;
+    
+    for (let i = 0; i < content.length; i++) {
+      const char = content[i];
+      
+      if (escaped) {
+        fixed += char;
+        escaped = false;
+        continue;
+      }
+      
+      if (char === '\\' && inString) {
+        escaped = true;
+        fixed += char;
+        continue;
+      }
+      
+      if (char === '"') {
+        inString = !inString;
+        fixed += char;
+        continue;
+      }
+      
+      if (char === '\n' && !inString) {
+        // Skip newlines outside of strings
+        continue;
+      }
+      
+      if (char === '\n' && inString) {
+        // Escape newlines inside strings
+        fixed += '\\n';
+        continue;
+      }
+      
+      fixed += char;
+    }
+    
+    // Step 2: Apply additional fixes
+    return fixed
       .replace(/[""]/g, '"')
       .replace(/['']/g, "'")
-      // Fix common structural issues
-      .replace(/^[\s,]+/, '')
-      .replace(/,[\s,]+/g, ',')
-      .replace(/,(\s*[}\]])/g, '$1')
-      .replace(/([{\[])\s*,/g, '$1')
-      // Basic cleanup
-      .replace(/\n/g, '\\n')
-      .replace(/\r/g, '\\r')
-      .replace(/\t/g, '\\t');
+      .replace(/\r/g, '')
+      .replace(/\t/g, '\\t')
+      .replace(/,\s*}/g, '}')
+      .replace(/,\s*]/g, ']')
+      .replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3');
   }
 
   private createSlug(title: string): string {
