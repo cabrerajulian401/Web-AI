@@ -394,32 +394,50 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 999,
         articleId: 999,
-        viewpoint: "A Golden Age for America",
-        description: "Trump Delivers on Promises",
-        source: "America First Policy Institute",
-        quote: "This legislation represents the largest middle-class tax cut in American history and puts America First by unleashing economic growth while restoring fiscal sanity to Washington.",
+        viewpoint: "Who Benefits Most from the Bill?",
+        description: "White House vs Critics",
+        source: "White House",
+        quote: "The largest percentage tax reduction goes to low-income and working-class Americans, putting over $10,000 a year back in the pockets of typical hardworking families.",
         color: "red",
-        url: "https://americafirstpolicy.com"
+        url: "https://whitehouse.gov",
+        conflictSource: "Al Jazeera, Rolling Stone, KFF",
+        conflictQuote: "Critics and independent analysts argue the bill's tax cuts disproportionately benefit the wealthy, and that the middle class and poor see far smaller gains, especially when factoring in cuts to Medicaid and social programs."
       },
       {
         id: 1000,
         articleId: 999,
-        viewpoint: "A Gift to the Wealthy",
-        description: "Democratic Opposition",
-        source: "House Democratic Leadership",
-        quote: "This bill is nothing more than a massive tax giveaway to billionaires and corporations, paid for by stripping healthcare and food assistance from millions of working families.",
+        viewpoint: "Impact on Medicaid and Health Coverage",
+        description: "Administration vs Independent Analysis",
+        source: "White House",
+        quote: "There will be no cuts to Medicaid and the bill protects and strengthens Medicaid for those who rely on it.",
         color: "blue",
-        url: "https://democrats.house.gov"
+        url: "https://whitehouse.gov",
+        conflictSource: "H.R.1 bill text, KFF, Rolling Stone",
+        conflictQuote: "The bill text and independent estimates show a 12% cut to Medicaid, with the Congressional Budget Office projecting over 10 million Americans will lose health insurance."
       },
       {
         id: 1001,
         articleId: 999,
-        viewpoint: "Skeptical Public",
-        description: "Polling Data Shows Concerns",
-        source: "Penn Wharton Budget Model",
-        quote: "Our analysis shows that while the bill provides short-term benefits, it creates long-term fiscal challenges that will burden future generations with debt.",
-        color: "gray",
-        url: "https://budgetmodel.wharton.upenn.edu"
+        viewpoint: "Economic Impact and Deficit",
+        description: "Treasury vs Budget Analysts",
+        source: "Treasury Department, White House",
+        quote: "The bill delivers historic levels of mandatory savings and reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse.",
+        color: "green",
+        url: "https://treasury.gov",
+        conflictSource: "Al Jazeera, CBO via KFF",
+        conflictQuote: "Multiple analyses, including the CBO, estimate the bill will increase the deficit by $2.8 to $3 trillion over the next decade."
+      },
+      {
+        id: 1002,
+        articleId: 999,
+        viewpoint: "Immigration Enforcement Funding",
+        description: "ICE vs Human Rights Groups",
+        source: "ICE, White House",
+        quote: "Unprecedented funding for border enforcement is essential for national security and protecting American communities.",
+        color: "orange",
+        url: "https://ice.gov",
+        conflictSource: "CBS News, Governor Wes Moore",
+        conflictQuote: "Critics warn the funding enables mass deportations and could lead to inhumane conditions at detention facilities."
       }
     ];
 

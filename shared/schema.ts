@@ -60,6 +60,8 @@ export const perspectives = pgTable("perspectives", {
   quote: text("quote"),
   color: text("color").notNull(), // 'green', 'yellow', 'blue', etc.
   url: text("url"),
+  conflictSource: text("conflict_source"), // The opposing source
+  conflictQuote: text("conflict_quote"), // The opposing quote
 });
 
 export const insertArticleSchema = createInsertSchema(articles).omit({

@@ -918,60 +918,139 @@ export default function ArticlePage() {
                       // Only show dummy data if dummy mode is enabled
                       useDummyMode ? (
                         <div className="space-y-6">
-                          <div className="pl-4 pb-4 border-b-2 border-gray-200">
-                            <h4 className="font-semibold text-brand-dark mb-3 text-lg">Does the bill cut Medicaid?</h4>
-                            <div className="ml-4">
-                              <p className="text-gray-700 text-base mb-3">
-                                <strong>White House:</strong> "There will be no cuts to Medicaid…protects and strengthens Medicaid for those who rely on it."
-                              </p>
-                              <p className="text-gray-700 text-base mb-3">
-                                <strong>CBO, Governor Moore, hospital groups:</strong> Bill will cut Medicaid, millions will lose coverage
-                              </p>
+                          <div className="border-b-2 border-gray-200 pb-6">
+                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Who Benefits Most from the Bill?</h4>
+                            
+                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-blue-700 font-semibold text-sm uppercase">White House</span>
+                                <span className="text-xs text-blue-600">Position A</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "The largest percentage tax reduction goes to low-income and working-class Americans, putting over $10,000 a year back in the pockets of typical hardworking families."
+                              </blockquote>
                             </div>
-                            <div className="text-sm text-gray-500">
-                              <span className="font-medium">[White House] vs [CBO, AHA, Governor Moore]</span>
+                            
+                            <div className="text-center my-4">
+                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
                             </div>
-                          </div>
-                          <div className="pl-4 pb-4 border-b-2 border-gray-200">
-                            <h4 className="font-semibold text-brand-dark mb-3 text-lg">Effect on Deficit</h4>
-                            <div className="ml-4">
-                              <p className="text-gray-700 text-base mb-3">
-                                <strong>White House:</strong> "Reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse."
-                              </p>
-                              <p className="text-gray-700 text-base mb-3">
-                                <strong>CBO:</strong> "Adds $3.4 trillion to federal deficits over the next 10 years."
-                              </p>
+                            
+                            <div className="bg-red-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-red-700 font-semibold text-sm uppercase">Al Jazeera, Rolling Stone, KFF</span>
+                                <span className="text-xs text-red-600">Position B</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "Critics and independent analysts argue the bill's tax cuts disproportionately benefit the wealthy, and that the middle class and poor see far smaller gains, especially when factoring in cuts to Medicaid and social programs."
+                              </blockquote>
                             </div>
-                            <div className="text-sm text-gray-500">
-                              <span className="font-medium">[White House] vs [CBO]</span>
-                            </div>
-                          </div>
-                          <div className="pl-4 pb-4 border-b-2 border-gray-200">
-                            <h4 className="font-semibold text-brand-dark mb-3 text-lg">Impact on Vulnerable Americans</h4>
-                            <div className="ml-4">
-                              <p className="text-gray-700 text-base mb-3">
-                                <strong>White House:</strong> "Delivers largest middle-class tax cut…improves the lives of Americans on every rung of the economic ladder."
-                              </p>
-                              <p className="text-gray-700 text-base mb-3">
-                                <strong>Hospitals, state officials:</strong> "Irreparable harm to healthcare, millions lose coverage, food assistance gutted."
-                              </p>
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
+                            
+                            <div className="text-center mt-4">
+                              <span className="text-sm text-gray-600">
+                                [White House vs Al Jazeera, Rolling Stone, KFF]
+                              </span>
                             </div>
                           </div>
-                          <div className="pl-4">
-                            <h4 className="font-semibold text-brand-dark mb-3 text-lg">Work Requirements and Safety Net</h4>
-                            <div className="ml-4">
-                              <p className="text-gray-700 text-base mb-3">
-                                <strong>White House:</strong> "Promotes work, responsibility, and restores SNAP to serve the truly needy."
-                              </p>
-                              <p className="text-gray-700 text-base mb-3">
-                                <strong>Critics:</strong> "Millions will lose benefits due to new work requirements."
-                              </p>
+                          
+                          <div className="border-b-2 border-gray-200 pb-6">
+                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Impact on Medicaid and Health Coverage</h4>
+                            
+                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-blue-700 font-semibold text-sm uppercase">White House</span>
+                                <span className="text-xs text-blue-600">Position A</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "There will be no cuts to Medicaid and the bill protects and strengthens Medicaid for those who rely on it."
+                              </blockquote>
                             </div>
-                            <div className="text-sm text-gray-500">
-                              <span className="font-medium">[White House] vs [AHA, Governor Moore]</span>
+                            
+                            <div className="text-center my-4">
+                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
+                            </div>
+                            
+                            <div className="bg-red-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-red-700 font-semibold text-sm uppercase">H.R.1 bill text, KFF, Rolling Stone</span>
+                                <span className="text-xs text-red-600">Position B</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "The bill text and independent estimates show a 12% cut to Medicaid, with the Congressional Budget Office projecting over 10 million Americans will lose health insurance."
+                              </blockquote>
+                            </div>
+                            
+                            <div className="text-center mt-4">
+                              <span className="text-sm text-gray-600">
+                                [White House vs H.R.1 bill text, KFF, Rolling Stone]
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="border-b-2 border-gray-200 pb-6">
+                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Economic Impact and Deficit</h4>
+                            
+                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-blue-700 font-semibold text-sm uppercase">Treasury Department, White House</span>
+                                <span className="text-xs text-blue-600">Position A</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "The bill delivers historic levels of mandatory savings and reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse."
+                              </blockquote>
+                            </div>
+                            
+                            <div className="text-center my-4">
+                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
+                            </div>
+                            
+                            <div className="bg-red-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-red-700 font-semibold text-sm uppercase">Al Jazeera, CBO via KFF</span>
+                                <span className="text-xs text-red-600">Position B</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "Multiple analyses, including the CBO, estimate the bill will increase the deficit by $2.8 to $3 trillion over the next decade."
+                              </blockquote>
+                            </div>
+                            
+                            <div className="text-center mt-4">
+                              <span className="text-sm text-gray-600">
+                                [Treasury Department, White House vs Al Jazeera, CBO via KFF]
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="pb-6">
+                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Immigration Enforcement Funding</h4>
+                            
+                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-blue-700 font-semibold text-sm uppercase">ICE, White House</span>
+                                <span className="text-xs text-blue-600">Position A</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "Unprecedented funding for border enforcement is essential for national security and protecting American communities."
+                              </blockquote>
+                            </div>
+                            
+                            <div className="text-center my-4">
+                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
+                            </div>
+                            
+                            <div className="bg-red-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-red-700 font-semibold text-sm uppercase">CBS News, Governor Wes Moore</span>
+                                <span className="text-xs text-red-600">Position B</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "Critics warn the funding enables mass deportations and could lead to inhumane conditions at detention facilities."
+                              </blockquote>
+                            </div>
+                            
+                            <div className="text-center mt-4">
+                              <span className="text-sm text-gray-600">
+                                [ICE, White House vs CBS News, Governor Wes Moore]
+                              </span>
                             </div>
                           </div>
                         </div>
