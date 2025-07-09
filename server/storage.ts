@@ -360,34 +360,32 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 999,
         articleId: 999,
-        category: "Legislative",
+        category: "From the Bill Text (H.R.1, 119th Congress)",
         facts: [
-          "Permanent extension of 2017 Tax Cuts and Jobs Act (TCJA) tax brackets and doubled standard deduction",
-          "No tax on tips or overtime; increased senior deduction; enhanced child tax credit", 
-          "Increased small business expensing threshold and permanent Small Business Deduction",
-          "Raised death tax exemption, expanded 199A deduction to 23% for pass-through business income",
-          "Imposes work requirements of at least 80 hours/month for Medicaid eligibility"
+          "Permanently extends individual tax rates from the 2017 Tax Cuts and Jobs Act",
+          "Raises cap on state and local tax (SALT) deduction to $40,000 for incomes under $500,000 (reverts after 5 years)",
+          "Creates temporary tax deductions for tips, overtime, auto loans; expires in 2028",
+          "Permanent $200 increase in child tax credit",
+          "Imposes 1% tax on remittances, increases tax on investment income from college endowments",
+          "Phases out clean energy tax credits from the Inflation Reduction Act",
+          "Increases fossil fuel incentives; opens federal land/water for oil and gas drilling",
+          "Raises debt ceiling by $5 trillion",
+          "Cuts Medicaid and Medicare spending",
+          "Expands work requirements for SNAP; shifts some costs to states",
+          "$150 billion new defense spending; $150 billion for border enforcement",
+          "ICE funding increased from $10 billion to over $100 billion by 2029"
         ]
       },
       {
         id: 1000,
         articleId: 999,
-        category: "Financial Impact",
+        category: "Congressional Budget Office (CBO)",
         facts: [
-          "Cuts SNAP funding by nearly $300 billion; Medicaid, ACA, CHIP by about $930 billion",
-          "Raises national debt limit by $5 trillion", 
-          "Adds $3.3 trillion to the deficit over 10 years (CBO)",
-          "Nearly $1.7 trillion in mandatory savings claimed by White House"
-        ]
-      },
-      {
-        id: 1001,
-        articleId: 999,
-        category: "Voting Record",
-        facts: [
-          "Passed Senate 51-50 (VP JD Vance tie-breaker), House 218-214",
-          "Only two House Republicans voted against the bill",
-          "Bill passed on strict party lines with massive lobbying campaigns"
+          "Estimated the bill will increase the deficit by $2.8 trillion by 2034",
+          "10.9 million Americans projected to lose health insurance coverage",
+          "Largest cuts to Medicaid in history",
+          "Disproportionate impact on low-income and rural Americans",
+          "Cuts to Medicaid and CHIP would reduce enrollment by 10.5 million by 2034"
         ]
       }
     ];
