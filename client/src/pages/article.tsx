@@ -553,65 +553,51 @@ export default function ArticlePage() {
               />
 
               <ExpandableSection
-                title="Different Perspectives"
+                title="Conflicting Info"
                 icon="pivot"
                 customIcon={pivotIcon}
                 content={
-                  <div className="mt-4 space-y-4">
+                  <div className="mt-4 space-y-6">
                     {perspectives && perspectives.length > 0 ? (
                       // Show OpenAI-generated perspectives with proper formatting
                       TextFormatter.formatPerspectives(perspectives).map((perspective, index) => {
-                        // Use different colors for different viewpoints
-                        const colors = [
-                          'bg-red-600 hover:bg-red-700',
-                          'bg-blue-600 hover:bg-blue-700', 
-                          'bg-gray-600 hover:bg-gray-700',
-                          'bg-green-600 hover:bg-green-700',
-                          'bg-purple-600 hover:bg-purple-700'
-                        ];
-                        const colorClass = colors[index % colors.length];
-                        
                         return (
-                          <Collapsible key={index} defaultOpen={false}>
-                            <CollapsibleTrigger className="w-full">
-                              <div className={`${colorClass} text-white p-6 rounded-lg transition-colors`}>
-                                <div className="flex items-center justify-between">
-                                  <div className="text-left">
-                                    <h3 className="font-bold text-xl mb-2 leading-tight">{perspective.viewpoint}</h3>
-                                    <p className="text-sm opacity-80">Source: {perspective.source}</p>
-                                  </div>
-                                  <ChevronDown className="h-6 w-6 ml-4 flex-shrink-0" />
+                          <div key={index} className="border rounded-lg p-6 bg-white">
+                            <div className="space-y-4">
+                              {/* Claim */}
+                              <div>
+                                <div className="flex items-center space-x-2 mb-3">
+                                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                  <h4 className="font-bold text-lg text-gray-900">Claim</h4>
+                                </div>
+                                <p className="text-gray-800 mb-2">{perspective.viewpoint}</p>
+                                <div className="text-sm text-gray-600">
+                                  <span className="font-medium">Source:</span> {perspective.source}
                                 </div>
                               </div>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent>
-                              <div className="p-6 space-y-6 bg-gray-100">
-                                <p className="text-gray-800 text-lg font-semibold leading-relaxed">{perspective.description}</p>
-                                <div className="w-full h-0.5 bg-black my-2"></div>
-                                
-                                {perspective.quote && (
-                                  <div>
-                                    <div className="text-blue-600 text-sm font-semibold mb-2 uppercase">{perspective.source}</div>
-                                    <blockquote className="text-black italic mb-3 pl-4 border-l-4 border-blue-400 leading-relaxed">
-                                      "{perspective.quote}"
-                                    </blockquote>
-                                    {perspective.url && TextFormatter.isValidUrl(perspective.url) && (
-                                      <div className="border border-blue-600 rounded-md p-2 inline-block">
-                                        <a 
-                                          href={perspective.url} 
-                                          target="_blank" 
-                                          rel="noopener noreferrer"
-                                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                        >
-                                          Read the article →
-                                        </a>
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
+                              
+                              {/* VS divider */}
+                              <div className="text-center">
+                                <div className="flex items-center justify-center space-x-2">
+                                  <div className="h-0.5 bg-gray-300 flex-1"></div>
+                                  <span className="text-gray-500 font-bold px-2">VS</span>
+                                  <div className="h-0.5 bg-gray-300 flex-1"></div>
+                                </div>
                               </div>
-                            </CollapsibleContent>
-                          </Collapsible>
+                              
+                              {/* Counterclaim */}
+                              <div>
+                                <div className="flex items-center space-x-2 mb-3">
+                                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                                  <h4 className="font-bold text-lg text-gray-900">Counterclaim</h4>
+                                </div>
+                                <p className="text-gray-800 mb-2">{perspective.conflictingClaim || "No conflicting claim available"}</p>
+                                <div className="text-sm text-gray-600">
+                                  <span className="font-medium">Sources:</span> {perspective.conflictingSources || "Not specified"}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         );
                       })
                     ) : (

@@ -394,32 +394,50 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 999,
         articleId: 999,
-        viewpoint: "A Golden Age for America",
-        description: "Trump Delivers on Promises",
-        source: "America First Policy Institute",
-        quote: "This legislation represents the largest middle-class tax cut in American history and puts America First by unleashing economic growth while restoring fiscal sanity to Washington.",
+        viewpoint: "Bill is 'the most pro-family, pro-worker legislation ever'",
+        description: "White House vs KFF, Al Jazeera, Rolling Stone",
+        source: "White House",
+        quote: "This is the most pro-family, pro-worker legislation ever passed by Congress.",
         color: "red",
-        url: "https://americafirstpolicy.com"
+        url: "https://whitehouse.gov",
+        conflictingClaim: "Bill increases uninsured by 10 million, cuts Medicaid, and primarily benefits wealthy",
+        conflictingSources: "KFF, Al Jazeera, Rolling Stone"
       },
       {
         id: 1000,
         articleId: 999,
-        viewpoint: "A Gift to the Wealthy",
-        description: "Democratic Opposition",
-        source: "House Democratic Leadership",
-        quote: "This bill is nothing more than a massive tax giveaway to billionaires and corporations, paid for by stripping healthcare and food assistance from millions of working families.",
+        viewpoint: "Bill 'reduces deficits by over $2 trillion'",
+        description: "White House vs CBO, Al Jazeera, CRFB",
+        source: "White House",
+        quote: "This bill reduces deficits by over $2 trillion through responsible spending reforms.",
         color: "blue",
-        url: "https://democrats.house.gov"
+        url: "https://whitehouse.gov",
+        conflictingClaim: "CBO and independent analysts estimate it will increase deficit by $2.4–$3 trillion",
+        conflictingSources: "CBO via KFF, Al Jazeera, CRFB"
       },
       {
         id: 1001,
         articleId: 999,
-        viewpoint: "Skeptical Public",
-        description: "Polling Data Shows Concerns",
-        source: "Penn Wharton Budget Model",
-        quote: "Our analysis shows that while the bill provides short-term benefits, it creates long-term fiscal challenges that will burden future generations with debt.",
-        color: "gray",
-        url: "https://budgetmodel.wharton.upenn.edu"
+        viewpoint: "Bill 'protects and strengthens Medicaid and SNAP'",
+        description: "White House vs Bill Text, Rolling Stone",
+        source: "White House",
+        quote: "This legislation protects and strengthens Medicaid and SNAP for American families.",
+        color: "green",
+        url: "https://whitehouse.gov",
+        conflictingClaim: "Bill cuts Medicaid by 12%, expands SNAP work requirements, and reduces federal funding",
+        conflictingSources: "Bill Text, Rolling Stone"
+      },
+      {
+        id: 1002,
+        articleId: 999,
+        viewpoint: "ICE funding is necessary for public safety",
+        description: "ICE Statement vs FWD.US, Al Jazeera",
+        source: "ICE Statement",
+        quote: "Expanded ICE funding is necessary for public safety and border security.",
+        color: "orange",
+        url: "https://ice.gov",
+        conflictingClaim: "Critics say expanded ICE funding will lead to 'inhumane' conditions and mass deportations",
+        conflictingSources: "FWD.US via CBS, Al Jazeera"
       }
     ];
 
