@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import type { Article, TimelineItem, CitedSource, RawFacts, Perspective } from "@shared/schema";
+import type { Article, TimelineItem, CitedSource, RawFacts, Perspective, ExecutiveSummary } from "@shared/schema";
 import { pexelsService } from "./pexels-service";
 import { RSSService } from "./rss-service";
 
@@ -8,6 +8,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export interface ResearchReport {
   article: Article;
+  executiveSummary: ExecutiveSummary;
   timelineItems: TimelineItem[];
   citedSources: CitedSource[];
   rawFacts: RawFacts[];
@@ -352,7 +353,8 @@ FORMATTING RULES:
               category: "Research",
               publishedAt: new Date().toISOString(),
               readTime: 1,
-              sourceCount: 0
+              sourceCount: 0,
+              executiveSummary: "Live browsing failed. No executive summary available."
             },
             rawFacts: [],
             timelineItems: [],
@@ -392,7 +394,8 @@ FORMATTING RULES:
               category: "Research",
               publishedAt: new Date().toISOString(),
               readTime: 1,
-              sourceCount: 0
+              sourceCount: 0,
+              executiveSummary: "Unable to generate executive summary due to technical issues."
             },
             rawFacts: [],
             timelineItems: [],
@@ -434,6 +437,11 @@ FORMATTING RULES:
           sourceCount: reportData.article.sourceCount || reportData.citedSources?.length || 0,
           authorName: "TIMIO Research Team",
           authorTitle: "AI Research Analyst"
+        },
+        executiveSummary: {
+          id: Date.now(),
+          articleId: Date.now(),
+          summary: reportData.article.executiveSummary || "No executive summary available."
         },
         timelineItems: (reportData.timelineItems || []).map((item: any, index: number) => ({
           id: Date.now() + index,

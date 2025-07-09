@@ -434,7 +434,7 @@ export default function ArticlePage() {
                   defaultOpen={true}
                   content={
                     <div className="space-y-3">
-                      {executiveSummary.points ? 
+                      {executiveSummary && executiveSummary.points ? 
                         // Handle dummy article format (array of points)
                         executiveSummary.points.map((point, index) => (
                           <div key={index} className="flex items-start">
@@ -444,13 +444,18 @@ export default function ArticlePage() {
                         ))
                         : 
                         // Handle AI-generated article format (string with bullet points)
-                        (executiveSummary.summary ? executiveSummary.summary.split('\n').filter(line => line.trim()).map((point, index) => (
+                        (executiveSummary && executiveSummary.summary ? executiveSummary.summary.split('\n').filter(line => line.trim()).map((point, index) => (
                           <div key={index} className="flex items-start">
                             <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                             <span className="text-black">{point.replace(/^-\s*/, '')}</span>
                           </div>
                         )) : [])
                       }
+                      {(!executiveSummary || (!executiveSummary.points && !executiveSummary.summary)) && (
+                        <div className="text-gray-600 italic">
+                          No executive summary available for this report.
+                        </div>
+                      )}
                     </div>
                   }
                 />
