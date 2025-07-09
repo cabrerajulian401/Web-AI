@@ -877,39 +877,45 @@ export default function ArticlePage() {
                 content={
                   <div className="mt-6 space-y-6">
                     {/* Check if we have conflicting information to display */}
-                    {perspectives && perspectives.length > 1 ? (
-                      // Create conflicting info from different perspectives
+                    {perspectives && perspectives.length > 0 ? (
+                      // Create conflicting info from perspectives with conflictSource and conflictQuote
                       <div className="space-y-6">
-                        <div className="text-gray-700 text-base mb-4">
-                          <strong>Key Conflicting Claims:</strong> Different sources provide contradictory information about this topic.
-                        </div>
-                        {perspectives.map((perspective, index) => (
-                          <div key={index} className="pl-4 pb-4 border-b-2 border-gray-200">
-                            <h4 className="font-semibold text-brand-dark mb-3 text-lg">{perspective.viewpoint}</h4>
-                            <div className="ml-4">
-                              <p className="text-gray-700 text-base mb-3">
-                                <strong>{perspective.source}:</strong> {perspective.description}
-                              </p>
-                              {perspective.quote && (
-                                <blockquote className="text-gray-600 italic pl-4 border-l-2 border-gray-300 mb-3">
-                                  "{perspective.quote}"
-                                </blockquote>
-                              )}
-                              {perspective.url && (
-                                <div className="border border-blue-600 rounded-md p-2 inline-block mb-3">
-                                  <a 
-                                    href={perspective.url} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                  >
-                                    Read the article →
-                                  </a>
-                                </div>
-                              )}
+                        {perspectives.filter(p => p.conflictSource && p.conflictQuote).map((perspective, index) => (
+                          <div key={index} className="border-b-2 border-gray-200 pb-6">
+                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: {perspective.viewpoint}</h4>
+                            
+                            {/* First Position */}
+                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-blue-700 font-semibold text-sm uppercase">{perspective.source}</span>
+                                <span className="text-xs text-blue-600">Position A</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "{perspective.quote}"
+                              </blockquote>
                             </div>
-                            <div className="text-sm text-gray-500">
-                              <span className="font-medium">Source: {perspective.source}</span>
+                            
+                            {/* VS Divider */}
+                            <div className="text-center my-4">
+                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
+                            </div>
+                            
+                            {/* Second Position */}
+                            <div className="bg-red-50 p-4 rounded-lg mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-red-700 font-semibold text-sm uppercase">{perspective.conflictSource}</span>
+                                <span className="text-xs text-red-600">Position B</span>
+                              </div>
+                              <blockquote className="text-gray-800 italic">
+                                "{perspective.conflictQuote}"
+                              </blockquote>
+                            </div>
+                            
+                            {/* Sources */}
+                            <div className="text-center mt-4">
+                              <span className="text-sm text-gray-600">
+                                [{perspective.source} vs {perspective.conflictSource}]
+                              </span>
                             </div>
                           </div>
                         ))}
