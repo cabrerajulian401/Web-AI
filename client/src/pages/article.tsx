@@ -879,43 +879,42 @@ export default function ArticlePage() {
                     {/* Check if we have conflicting information to display */}
                     {perspectives && perspectives.length > 0 ? (
                       // Create conflicting info from perspectives with conflictSource and conflictQuote
-                      <div className="space-y-6">
+                      <div className="space-y-8">
                         {perspectives.filter(p => p.conflictSource && p.conflictQuote).map((perspective, index) => (
-                          <div key={index} className="border-b-2 border-gray-200 pb-6">
-                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: {perspective.viewpoint}</h4>
+                          <div key={index} className="border-b border-gray-200 pb-8">
+                            <h3 className="font-semibold text-black mb-6 text-xl">{perspective.viewpoint}</h3>
                             
-                            {/* First Position */}
-                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-blue-700 font-semibold text-sm uppercase">{perspective.source}</span>
-                                <span className="text-xs text-blue-600">Position A</span>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                              {/* Position A */}
+                              <div className="space-y-4">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">A</div>
+                                  <span className="font-semibold text-black text-sm uppercase tracking-wide">{perspective.source}</span>
+                                </div>
+                                <div className="border-l-4 border-gray-400 pl-4">
+                                  <blockquote className="text-gray-800 italic text-base leading-relaxed">
+                                    "{perspective.quote}"
+                                  </blockquote>
+                                </div>
                               </div>
-                              <blockquote className="text-gray-800 italic">
-                                "{perspective.quote}"
-                              </blockquote>
-                            </div>
-                            
-                            {/* VS Divider */}
-                            <div className="text-center my-4">
-                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
-                            </div>
-                            
-                            {/* Second Position */}
-                            <div className="bg-red-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-red-700 font-semibold text-sm uppercase">{perspective.conflictSource}</span>
-                                <span className="text-xs text-red-600">Position B</span>
+                              
+                              {/* VS Separator */}
+                              <div className="flex items-center justify-center lg:justify-start">
+                                <span className="text-gray-400 text-2xl font-bold">VS</span>
                               </div>
-                              <blockquote className="text-gray-800 italic">
-                                "{perspective.conflictQuote}"
-                              </blockquote>
-                            </div>
-                            
-                            {/* Sources */}
-                            <div className="text-center mt-4">
-                              <span className="text-sm text-gray-600">
-                                [{perspective.source} vs {perspective.conflictSource}]
-                              </span>
+                              
+                              {/* Position B */}
+                              <div className="space-y-4 lg:col-start-2 lg:row-start-1">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">B</div>
+                                  <span className="font-semibold text-black text-sm uppercase tracking-wide">{perspective.conflictSource}</span>
+                                </div>
+                                <div className="border-l-4 border-gray-400 pl-4">
+                                  <blockquote className="text-gray-800 italic text-base leading-relaxed">
+                                    "{perspective.conflictQuote}"
+                                  </blockquote>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -923,110 +922,137 @@ export default function ArticlePage() {
                     ) : (
                       // Only show dummy data if dummy mode is enabled
                       useDummyMode ? (
-                        <div className="space-y-6">
-                          <div className="border-b-2 border-gray-200 pb-6">
-                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Who Benefits Most from the Bill?</h4>
+                        <div className="space-y-8">
+                          <div className="border-b border-gray-200 pb-8">
+                            <h3 className="font-semibold text-black mb-6 text-xl">Who Benefits Most from the Bill?</h3>
                             
-                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-blue-700 font-semibold text-sm uppercase">White House/Treasury</span>
-                                <span className="text-xs text-blue-600">Position A</span>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                              {/* Position A */}
+                              <div className="space-y-4">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">A</div>
+                                  <span className="font-semibold text-black text-sm uppercase tracking-wide">WHITE HOUSE/TREASURY</span>
+                                </div>
+                                <div className="text-gray-700 text-base">
+                                  → Bill "most benefits workers and families making less than $50,000 per year"
+                                </div>
+                                <div className="border-l-4 border-gray-400 pl-4">
+                                  <blockquote className="text-gray-800 italic text-base leading-relaxed">
+                                    "According to the Joint Committee on Taxation, the tax bill will most benefit workers and families making less than $50,000 per year"
+                                  </blockquote>
+                                </div>
                               </div>
-                              <blockquote className="text-gray-800 italic">
-                                "According to the Joint Committee on Taxation, the tax bill will most benefit workers and families making less than $50,000 per year"
-                              </blockquote>
-                            </div>
-                            
-                            <div className="text-center my-4">
-                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
-                            </div>
-                            
-                            <div className="bg-red-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-red-700 font-semibold text-sm uppercase">CBO, Pew, KFF, Democratic leaders</span>
-                                <span className="text-xs text-red-600">Position B</span>
+                              
+                              {/* VS Separator */}
+                              <div className="flex items-center justify-center lg:justify-start">
+                                <span className="text-gray-400 text-2xl font-bold">VS</span>
                               </div>
-                              <blockquote className="text-gray-800 italic">
-                                "A 55% majority says the bill would help high-income people... 59% say it would hurt lower-income people"
-                              </blockquote>
-                            </div>
-                            
-                            <div className="text-center mt-4">
-                              <span className="text-sm text-gray-600">
-                                [White House/Treasury vs CBO, Pew, KFF, Democratic leaders]
-                              </span>
+                              
+                              {/* Position B */}
+                              <div className="space-y-4 lg:col-start-2 lg:row-start-1">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">B</div>
+                                  <span className="font-semibold text-black text-sm uppercase tracking-wide">CBO, PEW, KFF, DEMOCRATIC LEADERS</span>
+                                </div>
+                                <div className="text-gray-700 text-base">
+                                  → Bill "would help high-income people" and "hurt lower-income people"
+                                </div>
+                                <div className="border-l-4 border-gray-400 pl-4">
+                                  <blockquote className="text-gray-800 italic text-base leading-relaxed">
+                                    "A 55% majority says the bill would help high-income people... 59% say it would hurt lower-income people"
+                                  </blockquote>
+                                </div>
+                              </div>
                             </div>
                           </div>
                           
-                          <div className="border-b-2 border-gray-200 pb-6">
-                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Impact on Healthcare and Medicaid</h4>
+                          <div className="border-b border-gray-200 pb-8">
+                            <h3 className="font-semibold text-black mb-6 text-xl">Impact on Healthcare and Medicaid</h3>
                             
-                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-blue-700 font-semibold text-sm uppercase">White House</span>
-                                <span className="text-xs text-blue-600">Position A</span>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                              {/* Position A */}
+                              <div className="space-y-4">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">A</div>
+                                  <span className="font-semibold text-black text-sm uppercase tracking-wide">WHITE HOUSE</span>
+                                </div>
+                                <div className="text-gray-700 text-base">
+                                  → "Strengthening Medicaid by eliminating waste, fraud, and abuse"
+                                </div>
+                                <div className="border-l-4 border-gray-400 pl-4">
+                                  <blockquote className="text-gray-800 italic text-base leading-relaxed">
+                                    "Strengthening Medicaid by eliminating waste, fraud, and abuse and blocking illegal immigrants from receiving Medicaid"
+                                  </blockquote>
+                                </div>
                               </div>
-                              <blockquote className="text-gray-800 italic">
-                                "Strengthening Medicaid by eliminating waste, fraud, and abuse and blocking illegal immigrants from receiving Medicaid"
-                              </blockquote>
-                            </div>
-                            
-                            <div className="text-center my-4">
-                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
-                            </div>
-                            
-                            <div className="bg-red-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-red-700 font-semibold text-sm uppercase">CBO/KFF</span>
-                                <span className="text-xs text-red-600">Position B</span>
+                              
+                              {/* VS Separator */}
+                              <div className="flex items-center justify-center lg:justify-start">
+                                <span className="text-gray-400 text-2xl font-bold">VS</span>
                               </div>
-                              <blockquote className="text-gray-800 italic">
-                                "reduce federal spending on Medicaid by almost $800 billion... increase the number of adults without health insurance by more than 10 million"
-                              </blockquote>
-                            </div>
-                            
-                            <div className="text-center mt-4">
-                              <span className="text-sm text-gray-600">
-                                [White House vs CBO/KFF]
-                              </span>
+                              
+                              {/* Position B */}
+                              <div className="space-y-4 lg:col-start-2 lg:row-start-1">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">B</div>
+                                  <span className="font-semibold text-black text-sm uppercase tracking-wide">CBO/KFF</span>
+                                </div>
+                                <div className="text-gray-700 text-base">
+                                  → Bill cuts Medicaid by $800 billion, increases uninsured by 10.9 million
+                                </div>
+                                <div className="border-l-4 border-gray-400 pl-4">
+                                  <blockquote className="text-gray-800 italic text-base leading-relaxed">
+                                    "reduce federal spending on Medicaid by almost $800 billion... increase the number of adults without health insurance by more than 10 million"
+                                  </blockquote>
+                                </div>
+                              </div>
                             </div>
                           </div>
                           
-                          <div className="pb-6">
-                            <h4 className="font-semibold text-brand-dark mb-4 text-lg">Conflict: Fiscal Responsibility vs. Deficit Increase</h4>
+                          <div className="pb-8">
+                            <h3 className="font-semibold text-black mb-6 text-xl">Fiscal Responsibility vs. Deficit Increase</h3>
                             
-                            <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-blue-700 font-semibold text-sm uppercase">White House</span>
-                                <span className="text-xs text-blue-600">Position A</span>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                              {/* Position A */}
+                              <div className="space-y-4">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">A</div>
+                                  <span className="font-semibold text-black text-sm uppercase tracking-wide">WHITE HOUSE</span>
+                                </div>
+                                <div className="text-gray-700 text-base">
+                                  → "Restoring fiscal sanity by cutting $1.5 trillion in spending"
+                                </div>
+                                <div className="border-l-4 border-gray-400 pl-4">
+                                  <blockquote className="text-gray-800 italic text-base leading-relaxed">
+                                    "Restoring fiscal sanity by cutting $1.5 trillion in spending"
+                                  </blockquote>
+                                </div>
                               </div>
-                              <blockquote className="text-gray-800 italic">
-                                "Restoring fiscal sanity by cutting $1.5 trillion in spending"
-                              </blockquote>
-                            </div>
-                            
-                            <div className="text-center my-4">
-                              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">VS</span>
-                            </div>
-                            
-                            <div className="bg-red-50 p-4 rounded-lg mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-red-700 font-semibold text-sm uppercase">CBO, Al Jazeera, PBS</span>
-                                <span className="text-xs text-red-600">Position B</span>
+                              
+                              {/* VS Separator */}
+                              <div className="flex items-center justify-center lg:justify-start">
+                                <span className="text-gray-400 text-2xl font-bold">VS</span>
                               </div>
-                              <blockquote className="text-gray-800 italic">
-                                "increase federal deficits over the next 10 years by nearly $3.3 trillion"
-                              </blockquote>
-                            </div>
-                            
-                            <div className="text-center mt-4">
-                              <span className="text-sm text-gray-600">
-                                [White House vs CBO, Al Jazeera, PBS]
-                              </span>
+                              
+                              {/* Position B */}
+                              <div className="space-y-4 lg:col-start-2 lg:row-start-1">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">B</div>
+                                  <span className="font-semibold text-black text-sm uppercase tracking-wide">CBO, AL JAZEERA, PBS</span>
+                                </div>
+                                <div className="text-gray-700 text-base">
+                                  → Bill increases deficit by $2.8–$3.4 trillion over 10 years
+                                </div>
+                                <div className="border-l-4 border-gray-400 pl-4">
+                                  <blockquote className="text-gray-800 italic text-base leading-relaxed">
+                                    "increase federal deficits over the next 10 years by nearly $3.3 trillion"
+                                  </blockquote>
+                                </div>
+                              </div>
                             </div>
                           </div>
                           
-                          <div className="mt-6 pt-4 border-t-2 border-gray-300">
+                          <div className="mt-8 pt-6 border-t border-gray-300">
                             <div className="text-center">
                               <span className="text-sm font-semibold text-gray-700">Summary of Sides:</span>
                               <div className="mt-2">
