@@ -343,7 +343,14 @@ FORMATTING RULES:
         .replace(/[\u0000-\u001f\u007f-\u009f]/g, '')  // Remove control characters
         .replace(/\n/g, '\\n')  // Escape newlines properly
         .replace(/\r/g, '\\r')  // Escape carriage returns
-        .replace(/\t/g, '\\t');  // Escape tabs
+        .replace(/\t/g, '\\t')  // Escape tabs
+        .replace(/"/g, '"')  // Fix smart quotes
+        .replace(/"/g, '"')  // Fix smart quotes
+        .replace(/'/g, "'")  // Fix smart quotes
+        .replace(/'/g, "'")  // Fix smart quotes
+        .replace(/…/g, '...')  // Fix ellipsis
+        .replace(/–/g, '-')  // Fix em dash
+        .replace(/—/g, '-');  // Fix en dash
       
       console.log('Cleaned JSON content length:', cleanContent.length);
       console.log('First 200 chars:', cleanContent.substring(0, 200));
