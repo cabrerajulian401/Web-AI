@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import type { Article, TimelineItem, CitedSource, RawFacts, Perspective, ExecutiveSummary } from "@shared/schema";
 import { pexelsService } from "./pexels-service";
 import { RSSService } from "./rss-service";
+import { jsonFormatterService } from "./json-formatter-service";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -335,11 +336,20 @@ FORMATTING RULES:
         cleanContent = cleanContent.substring(jsonStart, jsonEnd + 1);
       }
 
-      // Clean up common JSON issues with comprehensive character handling
-      cleanContent = this.cleanJsonResponse(cleanContent);
-      
-      console.log('Cleaned JSON content length:', cleanContent.length);
-      console.log('First 200 chars:', cleanContent.substring(0, 200));
+      // Try the two-stage approach with dedicated JSON formatter
+      try {
+        console.log('=== ATTEMPTING JSON FORMATTER SERVICE ===');
+        cleanContent = await jsonFormatterService.formatToValidJSON(cleanContent);
+        console.log('✓ JSON formatter service successful');
+      } catch (formatterError) {
+        console.log('✗ JSON formatter service failed, trying manual cleaning');
+        console.log('Formatter error:', formatterError.message);
+        
+        // Fallback to manual cleaning if JSON formatter fails
+        cleanContent = this.cleanJsonResponse(cleanContent);
+        console.log('Cleaned JSON content length:', cleanContent.length);
+        console.log('First 200 chars:', cleanContent.substring(0, 200));
+      }
 
       let reportData;
       try {
@@ -679,6 +689,49 @@ FORMATTING RULES:
       .replace(/\t/g, '\\t');
     
     return cleaned;
+  }
+
+  // Aggressive JSON repair for severe malformation
+  private aggressiveJsonRepair(content: string): string {
+    // Remove all problematic characters first
+    let repaired = content
+      .replace(/[""]/g, '"')
+      .replace(/['']/g, "'")
+      .replace(/[…]/g, '...')
+      .replace(/[–—]/g, '-')
+      // Remove all stray commas
+      .replace(/,+/g, ',')
+      .replace(/^,|,$/g, '')
+      .replace(/,(\s*[}\]])/g, '$1')
+      .replace(/([{\[])\s*,/g, '$1')
+      // Fix property syntax
+      .replace(/([{,]\s*),/g, '$1')
+      .replace(/,(\s*[,}\]])/g, '$1');
+    
+    // Reconstruct basic structure
+    if (repaired.startsWith('{ ,')) {
+      repaired = repaired.replace(/^{ ,/, '{');
+    }
+    
+    return repaired;
+  }
+
+  // Reconstruct JSON from fragments
+  private reconstructFromFragments(content: string): string {
+    // Extract key-value pairs using regex
+    const pairs = [];
+    const keyValuePattern = /"([^"]+)"\s*:\s*("[^"]*"|[^,}]+)/g;
+    let match;
+    
+    while ((match = keyValuePattern.exec(content)) !== null) {
+      pairs.push(`"${match[1]}": ${match[2]}`);
+    }
+    
+    if (pairs.length === 0) {
+      throw new Error('No valid key-value pairs found');
+    }
+    
+    return `{ ${pairs.join(', ')} }`;
   }
 
   private createSlug(title: string): string {
