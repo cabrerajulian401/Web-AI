@@ -394,50 +394,50 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       {
         id: 999,
         articleId: 999,
-        viewpoint: "Bill is 'the most pro-family, pro-worker legislation ever'",
-        description: "White House vs KFF, Al Jazeera, Rolling Stone",
+        viewpoint: "The largest percentage tax reduction goes to low-income and working-class Americans, putting \"over $10,000 a year back in the pockets of typical hardworking families.\"",
+        description: "White House vs Al Jazeera, Rolling Stone, KFF",
         source: "White House",
-        quote: "This is the most pro-family, pro-worker legislation ever passed by Congress.",
+        quote: "The largest percentage tax reduction goes to low-income and working-class Americans, putting over $10,000 a year back in the pockets of typical hardworking families.",
         color: "red",
         url: "https://whitehouse.gov",
-        conflictingClaim: "Bill increases uninsured by 10 million, cuts Medicaid, and primarily benefits wealthy",
-        conflictingSources: "KFF, Al Jazeera, Rolling Stone"
+        conflictingClaim: "The bill's tax cuts disproportionately benefit the wealthy, and the middle class and poor see far smaller gains, especially when factoring in cuts to Medicaid and social programs.",
+        conflictingSources: "Al Jazeera, Rolling Stone, KFF"
       },
       {
         id: 1000,
         articleId: 999,
-        viewpoint: "Bill 'reduces deficits by over $2 trillion'",
-        description: "White House vs CBO, Al Jazeera, CRFB",
+        viewpoint: "\"There will be no cuts to Medicaid\" and the bill \"protects and strengthens Medicaid for those who rely on it.\"",
+        description: "White House vs H.R.1 bill text, KFF, Rolling Stone",
         source: "White House",
-        quote: "This bill reduces deficits by over $2 trillion through responsible spending reforms.",
+        quote: "There will be no cuts to Medicaid and the bill protects and strengthens Medicaid for those who rely on it.",
         color: "blue",
         url: "https://whitehouse.gov",
-        conflictingClaim: "CBO and independent analysts estimate it will increase deficit by $2.4–$3 trillion",
-        conflictingSources: "CBO via KFF, Al Jazeera, CRFB"
+        conflictingClaim: "The bill text and independent estimates show a 12% cut to Medicaid, with the Congressional Budget Office projecting over 10 million Americans will lose health insurance.",
+        conflictingSources: "H.R.1 bill text, KFF, Rolling Stone"
       },
       {
         id: 1001,
         articleId: 999,
-        viewpoint: "Bill 'protects and strengthens Medicaid and SNAP'",
-        description: "White House vs Bill Text, Rolling Stone",
-        source: "White House",
-        quote: "This legislation protects and strengthens Medicaid and SNAP for American families.",
+        viewpoint: "Bill \"delivers historic levels of mandatory savings\" and \"reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse.\"",
+        description: "Treasury Department, White House vs Al Jazeera, CBO via KFF",
+        source: "Treasury Department, White House",
+        quote: "The bill delivers historic levels of mandatory savings and reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse.",
         color: "green",
-        url: "https://whitehouse.gov",
-        conflictingClaim: "Bill cuts Medicaid by 12%, expands SNAP work requirements, and reduces federal funding",
-        conflictingSources: "Bill Text, Rolling Stone"
+        url: "https://treasury.gov",
+        conflictingClaim: "Multiple analyses, including the CBO, estimate the bill will increase the deficit by $2.8 to $3 trillion over the next decade.",
+        conflictingSources: "Al Jazeera, CBO via KFF"
       },
       {
         id: 1002,
         articleId: 999,
-        viewpoint: "ICE funding is necessary for public safety",
-        description: "ICE Statement vs FWD.US, Al Jazeera",
-        source: "ICE Statement",
-        quote: "Expanded ICE funding is necessary for public safety and border security.",
+        viewpoint: "Unprecedented funding for border enforcement is essential for national security.",
+        description: "ICE, White House vs CBS News, Governor Wes Moore",
+        source: "ICE, White House",
+        quote: "Unprecedented funding for border enforcement is essential for national security and protecting American communities.",
         color: "orange",
         url: "https://ice.gov",
-        conflictingClaim: "Critics say expanded ICE funding will lead to 'inhumane' conditions and mass deportations",
-        conflictingSources: "FWD.US via CBS, Al Jazeera"
+        conflictingClaim: "The funding enables \"mass deportations\" and could lead to \"inhumane\" conditions at detention facilities.",
+        conflictingSources: "CBS News, Governor Wes Moore"
       }
     ];
 
