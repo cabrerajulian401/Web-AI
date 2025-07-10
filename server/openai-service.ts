@@ -4,7 +4,6 @@ import { pexelsService } from "./pexels-service";
 import { RSSService } from "./rss-service";
 import { jsonFormatterService } from "./json-formatter-service";
 
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export interface ResearchReport {
@@ -191,112 +190,132 @@ export class OpenAIResearchService {
       console.log('Generating comprehensive report with cited sources...');
 
     
-      const systemPrompt = `You are a fast, efficient research assistant that creates comprehensive reports. Generate realistic, well-structured content based on the query.
 
-TASK: Create a research report about: ${query}
+            const systemPrompt = `SYSTEM ROLE: You are a real-time, non-partisan research assistant with live web browsing capability. You NEVER fabricate data, quotes, articles, or URLs. You will ONLY write content based on real articles and real public sources accessed live through your browsing ability.
 
-Return ONLY valid JSON with this exact structure:
+      TASK: Create a real-time research report on the broader news story behind: ${query}
 
-{
-  "article": {
-    "title": "Clear, factual title based on search results",
-    "executiveSummary": "• Short summary of what happened in bullet points\n• Plain English, easy to understand\n•Each bullet point on a sepperate line,
-    "content": "Comprehensive article with all research findings",
-    "category": "Research",
-    "publishedAt": "${new Date().toISOString()}",
-    "readTime": 8,
-    "sourceCount": [actual number of unique sources used]
-  },
-  "rawFacts": [
-    {
-      "category": "Primary Sources",
-      "fact": "From [Source Name]: [exact quote or fact as found]",
-      "source": "White House Press Release",
-      "url": "https://exact-url-from-search.com"
-    }
-  ],
-  "timelineItems": [
-    {
-      "date": "YYYY-MM-DD",
-      "title": "Event title",
-      "description": "Event details - bullet point format",
-      "source": "Source name",
-      "url": "https://real-url-from-search.com"
-    }
-  ],
-  "perspectiveGroups": [
-    {
-      "viewpointHeadline": "Pro-Policy Supporters",
-      "tone": "supportive",
-      "articles": [
-        {
-          "stance": "1-line summary of stance",
-          "publisher": "Publisher name",
-          "quote": "Short exact quote from article",
-          "url": "https://real-article-url.com"
-        }
-      ]
-    },
-    {
-      "viewpointHeadline": "Critics and Opposition",
-      "tone": "critical",
-      "articles": [
-        {
-          "stance": "1-line summary of stance",
-          "publisher": "Publisher name",
-          "quote": "Short exact quote from article",
-          "url": "https://real-article-url.com"
-        }
-      ]
-    }
-  ],
-  "conflictingClaims": [
-    {
-      "topic": "Number of casualties",
-      "conflict": "[Source A URL] claims 50 vs [Source B URL] claims 75",
-      "sourceA": {
-        "claim": "50 casualties reported",
-        "url": "https://source-a-url.com"
-      },
-      "sourceB": {
-        "claim": "75 casualties reported",
-        "url": "https://source-b-url.com"
+      ✅ REQUIRED FIRST STEP: Use your browsing capability to search "${query}". Do not proceed until you've located at least 3 credible live sources that can be quoted or linked.
+
+      ⛔ If you cannot access live data or URLs, STOP. Return this exact error structure:
+      {
+        "error": true,
+        "message": "ERROR: Live browsing failed. No report generated."
       }
-    }
-  ],
-  "citedSources": [
-    {
-      "name": "Source organization name",
-      "type": "Primary Source",
-      "description": "Government document on...",
-      "url": "https://real-url.com"
-    }
-  ]
-}
 
-FORMATTING RULES:
-- Keep content concise but informative
-- Use realistic news organization URLs (reuters.com, apnews.com, cnn.com, etc.)
-- Include 2-3 timeline items, 2-3 fact categories, 2 perspectives
-- Make quotes and sources realistic and relevant
-- Focus on current events and recent developments`;
+      You must return ONLY valid JSON with this exact structure:
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-
-        messages: [
+      {
+        "article": {
+          "title": "Clear, factual title based on search results",
+          "executiveSummary": "• Short summary of what happened in bullet points\n• Plain English, easy to understand\n•Each bullet point on a sepperate line,
+          "content": "Comprehensive article with all research findings",
+          "category": "Research",
+          "publishedAt": "${new Date().toISOString()}",
+          "readTime": 8,
+          "sourceCount": [actual number of unique sources used]
+        },
+        "rawFacts": [
           {
-            role: "system",
-            content: systemPrompt
-          },
-          {
-            role: "user",
-            content: `Create a comprehensive but concise research report about: ${query}. Focus on current events and recent developments. Include realistic sources and quotes.`
+            "category": "Primary Sources",
+            "fact": "From [Source Name]: [exact quote or fact as found]",
+            "source": "White House Press Release",
+            "url": "https://exact-url-from-search.com"
           }
         ],
-        max_tokens: 2500,
-        temperature: 0.3
-      });
+        "timelineItems": [
+          {
+            "date": "YYYY-MM-DD",
+            "title": "Event title",
+            "description": "Event details - bullet point format",
+            "source": "Source name",
+            "url": "https://real-url-from-search.com"
+          }
+        ],
+        "perspectiveGroups": [
+          {
+            "viewpointHeadline": "Pro-Policy Supporters",
+            "tone": "supportive",
+            "articles": [
+              {
+                "stance": "1-line summary of stance",
+                "publisher": "Publisher name",
+                "quote": "Short exact quote from article",
+                "url": "https://real-article-url.com"
+              }
+            ]
+          },
+          {
+            "viewpointHeadline": "Critics and Opposition",
+            "tone": "critical",
+            "articles": [
+              {
+                "stance": "1-line summary of stance",
+                "publisher": "Publisher name",
+                "quote": "Short exact quote from article",
+                "url": "https://real-article-url.com"
+              }
+            ]
+          }
+        ],
+        "conflictingClaims": [
+          {
+            "topic": "Number of casualties",
+            "conflict": "[Source A URL] claims 50 vs [Source B URL] claims 75",
+            "sourceA": {
+              "claim": "50 casualties reported",
+              "url": "https://source-a-url.com"
+            },
+            "sourceB": {
+              "claim": "75 casualties reported",
+              "url": "https://source-b-url.com"
+            }
+          }
+        ],
+        "citedSources": [
+          {
+            "name": "Source organization name",
+            "type": "Primary Source",
+            "description": "Government document on...",
+            "url": "https://real-url.com"
+          }
+        ]
+      }
+
+      FORMATTING RULES:
+      - Raw facts MUST start with "From [Source]: " format
+      - Use only PRIMARY SOURCES: government docs, direct quotes, press releases, official bills
+      - No secondhand citations (no Wikipedia, no summaries)
+      - If quoting legislation, include name of bill and section
+      - Group perspectives by viewpoint, not individual articles
+      - 🚫 NEVER invent article titles, outlets, quotes, or URLs
+      - If you cannot find real sources for a section, use empty array []`;
+
+            const response = await openai.chat.completions.create({
+              model: "gpt-4o-search-preview",
+              web_search_options: {
+                user_location: {
+                  type: "approximate",
+                  approximate: {
+                    country: "US",
+                    city: "Dallas",
+                    region: "Texas",
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                  }
+                }
+              },
+              messages: [
+                {
+                  role: "system",
+                  content: systemPrompt
+                },
+                {
+                  role: "user",
+                  content: `Research and create a comprehensive report about: ${query}`
+                }
+              ],
+              max_tokens: 4000
+            });
 
       // Extract response
       const { message } = response.choices[0];
