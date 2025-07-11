@@ -34,6 +34,14 @@ router.post('/research', async (req, res) => {
 
     console.log(`Research report generated in ${endTime - startTime}ms`);
     console.log(`Report title: ${report.article.title}`);
+    console.log(`=== ROUTE HANDLER EXECUTIVE SUMMARY CHECK ===`);
+    console.log(`Executive summary object:`, report.executiveSummary);
+    console.log(`Executive summary points:`, report.executiveSummary.points);
+    console.log(`Executive summary points length:`, report.executiveSummary.points.length);
+    console.log(`Has non-default executive summary:`, 
+      report.executiveSummary.points.length > 0 && 
+      !report.executiveSummary.points.includes("No executive summary available.")
+    );
     console.log(`Timeline items: ${report.timelineItems.length}`);
     console.log(`Cited sources: ${report.citedSources.length}`);
     console.log(`Raw facts categories: ${report.rawFacts.length}`);
@@ -41,8 +49,14 @@ router.post('/research', async (req, res) => {
 
     // Store the report
     const slug = report.article.slug;
-    await storage.storeArticle(report);
+    await storage.storeResearchReport(slug, report as any); // Type cast to match storage interface
     console.log(`Stored research report with slug: ${slug}`);
+
+    // Verify what was actually stored
+    const storedArticle = await storage.getArticleBySlug(slug);
+    console.log(`=== STORAGE VERIFICATION ===`);
+    console.log(`Stored executive summary:`, storedArticle?.executiveSummary);
+    console.log(`Stored executive summary points:`, storedArticle?.executiveSummary?.points);
 
     // Log storage statistics
     const allArticles = await storage.getAllArticles();
@@ -53,6 +67,7 @@ router.post('/research', async (req, res) => {
       slug,
       title: report.article.title,
       hasExecutiveSummary: report.executiveSummary.points.length > 0,
+      executiveSummaryPreview: report.executiveSummary.points.slice(0, 2), // Show first 2 points for debugging
       timelineItemsCount: report.timelineItems.length,
       citedSourcesCount: report.citedSources.length,
       rawFactsCount: report.rawFacts.length,

@@ -173,6 +173,7 @@ REQUIRED JSON STRUCTURE:
   "article": {
     "title": "Clear, factual title based on search results",
     "excerpt": "Brief summary of the research findings",
+    "executiveSummary": "• Key finding 1\n• Key finding 2\n• Key finding 3",
     "content": "Comprehensive article with all research findings",
     "category": "Research",
     "publishedAt": "${new Date().toISOString()}",
@@ -240,6 +241,7 @@ REQUIRED JSON STRUCTURE:
 }
 
 FORMATTING RULES:
+- Executive summary should be 3-5 key bullet points starting with • and separated by newlines
 - Raw facts MUST start with "From [Source]: " format and use EXACT QUOTES from scraped content
 - Use only PRIMARY SOURCES: government docs, direct quotes, press releases, official bills
 - Use the EXACT QUOTES from the scraped content when available - these are real quotes from the web pages
@@ -280,12 +282,22 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
 
       // Parse JSON response with comprehensive error handling
       let reportData = await this.parseAndValidateJSON(message.content || '{}', query);
+      
+      console.log('=== EXECUTIVE SUMMARY PROCESSING ===');
+      console.log('Report data executive summary:', reportData.article?.executiveSummary || 'MISSING');
+      console.log('Executive summary type:', typeof reportData.article?.executiveSummary);
+      console.log('Executive summary length:', reportData.article?.executiveSummary?.length || 0);
 
       // Create slug from title
       const slug = this.createSlug(reportData.article.title);
 
       // Get hero image
       const heroImageFromPexels = heroImageUrl || await pexelsService.searchImageByTopic(reportData.article.title, 0);
+
+      // Process executive summary with detailed logging
+      const executiveSummaryPoints = this.parseExecutiveSummary(reportData.article.executiveSummary);
+      console.log('Executive summary points after processing:', executiveSummaryPoints);
+      console.log('Number of executive summary points:', executiveSummaryPoints.length);
 
       // Format the response
       const report: ResearchReport = {
@@ -295,7 +307,7 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
           title: reportData.article.title,
           content: reportData.article.content,
           category: reportData.article.category || "Research",
-          excerpt: reportData.article.excerpt,
+          excerpt: reportData.article.excerpt || reportData.article.title,
           heroImageUrl: heroImageFromPexels,
           publishedAt: reportData.article.publishedAt || new Date().toISOString(),
           readTime: reportData.article.readTime || 8,
@@ -306,9 +318,7 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
         executiveSummary: {
           id: Date.now(),
           articleId: Date.now(),
-          points: reportData.article.executiveSummary ? 
-            reportData.article.executiveSummary.split(/[•\-\n]/).map((p: string) => p.trim()).filter((p: string) => p.length > 0) : 
-            ["No executive summary available."]
+          points: executiveSummaryPoints
         },
         timelineItems: (reportData.timelineItems || []).map((item: any, index: number) => ({
           id: Date.now() + index,
@@ -334,6 +344,9 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
         rawFacts: this.groupRawFactsByCategory(reportData.rawFacts || []),
         perspectives: this.formatPerspectives(reportData.perspectives || [], reportData.conflictingClaims || [])
       };
+
+      console.log('Final executive summary in report:', report.executiveSummary);
+      console.log('Has executive summary points:', report.executiveSummary.points.length > 0);
 
       const endTime = Date.now();
       console.log(`Tavily research report generated in ${endTime - startTime}ms`);
@@ -617,6 +630,35 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
       rawFacts: [],
       perspectives: []
     };
+  }
+
+  // Add a new method to handle executive summary parsing with logging
+  private parseExecutiveSummary(summary: string): string[] {
+    console.log('=== PARSING EXECUTIVE SUMMARY (TAVILY) ===');
+    console.log('Input summary:', summary);
+    console.log('Input summary type:', typeof summary);
+    console.log('Input summary length:', summary?.length || 0);
+    
+    if (!summary) {
+      console.log('No summary provided, returning default');
+      return ["No executive summary available."];
+    }
+    
+    // Split by bullet points or newlines - using the existing logic but with logging
+    console.log('Splitting summary by regex [•\\-\\n]...');
+    const rawPoints = summary.split(/[•\-\n]/);
+    console.log('Raw points after split:', rawPoints);
+    
+    const trimmedPoints = rawPoints.map((p: string) => p.trim());
+    console.log('Points after trimming:', trimmedPoints);
+    
+    const filteredPoints = trimmedPoints.filter((p: string) => p.length > 0);
+    console.log('Points after filtering empty:', filteredPoints);
+    
+    const result = filteredPoints.length > 0 ? filteredPoints : ["No executive summary available."];
+    console.log('Final parsed points:', result);
+    
+    return result;
   }
 }
 

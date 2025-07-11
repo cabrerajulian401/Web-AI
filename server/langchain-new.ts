@@ -309,10 +309,13 @@ Focus on factual, verifiable information from the sources.
     try {
       console.log('Parsing structured response...');
       console.log('Response length:', output.length);
+      console.log('Raw output preview:', output.substring(0, 500) + '...');
+      
       // Try to parse with structured output parser first
       try {
         const parsed = await this.outputParser.parse(output);
         console.log('✓ Successfully parsed with structured output parser');
+        console.log('Executive summary in parsed data:', parsed.article?.executiveSummary || 'MISSING');
         return parsed;
       } catch (parseError: unknown) {
         console.log('Structured parser failed, trying JSON extraction...');
@@ -325,11 +328,14 @@ Focus on factual, verifiable information from the sources.
         if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
           jsonContent = jsonContent.substring(jsonStart, jsonEnd + 1);
         }
+        console.log('Extracted JSON preview:', jsonContent.substring(0, 500) + '...');
+        
         const parsed = JSON.parse(jsonContent);
         if (!parsed.article || !parsed.article.title) {
           throw new Error("Invalid report structure: missing article title");
         }
         console.log('✓ Successfully parsed with JSON extraction');
+        console.log('Executive summary in extracted data:', parsed.article?.executiveSummary || 'MISSING');
         return parsed;
       }
     } catch (error: unknown) {
@@ -340,10 +346,21 @@ Focus on factual, verifiable information from the sources.
   }
 
   private async formatResearchReport(reportData: any, query: string, heroImageUrl?: string): Promise<ResearchReport> {
+    console.log('=== FORMATTING RESEARCH REPORT ===');
+    console.log('Raw executive summary before formatting:', reportData.article?.executiveSummary || 'MISSING');
+    console.log('Executive summary type:', typeof reportData.article?.executiveSummary);
+    console.log('Executive summary length:', reportData.article?.executiveSummary?.length || 0);
+    
     // Create slug from title
     const slug = this.createSlug(reportData.article.title);
     // Get hero image
     const heroImageFromPexels = heroImageUrl || await pexelsService.searchImageByTopic(reportData.article.title, 0);
+    
+    // Parse executive summary with detailed logging
+    const executiveSummaryPoints = this.parseExecutiveSummary(reportData.article.executiveSummary);
+    console.log('Executive summary points after parsing:', executiveSummaryPoints);
+    console.log('Number of executive summary points:', executiveSummaryPoints.length);
+    
     // Format the response
     const report: ResearchReport = {
       article: {
@@ -363,7 +380,7 @@ Focus on factual, verifiable information from the sources.
       executiveSummary: {
         id: Date.now(),
         articleId: Date.now(),
-        points: this.parseExecutiveSummary(reportData.article.executiveSummary)
+        points: executiveSummaryPoints
       },
       timelineItems: (reportData.timelineItems || []).map((item: any, index: number) => ({
         id: Date.now() + index,
@@ -379,19 +396,39 @@ Focus on factual, verifiable information from the sources.
       rawFacts: this.groupRawFactsByCategory(reportData.rawFacts || []),
       perspectives: this.extractPerspectivesFromGroups(reportData.perspectiveGroups || [])
     };
+    
+    console.log('Final executive summary in report:', report.executiveSummary);
+    console.log('Has executive summary points:', report.executiveSummary.points.length > 0);
+    
     return report;
   }
 
   private parseExecutiveSummary(summary: string): string[] {
-    if (!summary) return ["No executive summary available."];
+    console.log('=== PARSING EXECUTIVE SUMMARY ===');
+    console.log('Input summary:', summary);
+    console.log('Input summary type:', typeof summary);
+    console.log('Input summary length:', summary?.length || 0);
+    
+    if (!summary) {
+      console.log('No summary provided, returning default');
+      return ["No executive summary available."];
+    }
     
     // Split by bullet points or newlines
-    const points = summary
-      .split(/[•\-\n]/)
-      .map((p: string) => p.trim())
-      .filter((p: string) => p.length > 0);
+    console.log('Splitting summary by regex...');
+    const rawPoints = summary.split(/[•\-\n]/);
+    console.log('Raw points after split:', rawPoints);
     
-    return points.length > 0 ? points : [summary];
+    const trimmedPoints = rawPoints.map((p: string) => p.trim());
+    console.log('Points after trimming:', trimmedPoints);
+    
+    const filteredPoints = trimmedPoints.filter((p: string) => p.length > 0);
+    console.log('Points after filtering empty:', filteredPoints);
+    
+    const result = filteredPoints.length > 0 ? filteredPoints : [summary];
+    console.log('Final parsed points:', result);
+    
+    return result;
   }
 
   private async formatCitedSources(sources: any[]): Promise<CitedSource[]> {
