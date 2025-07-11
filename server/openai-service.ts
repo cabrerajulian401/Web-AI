@@ -70,7 +70,6 @@ export class OpenAIResearchService {
         console.log(`Generated ${citedSourcesWithImages.length} cited sources with URLs from OpenAI`);
         return citedSourcesWithImages;
       }
-
       // Comprehensive source extraction from all sections
       const sourceMap = new Map<string, {name: string, type: string, description: string, url?: string}>();
 
