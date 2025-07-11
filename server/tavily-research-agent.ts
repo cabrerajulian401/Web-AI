@@ -47,7 +47,7 @@ export class TavilyResearchAgent {
     // Initialize Tavily search tool with minimal configuration
     this.tavilySearch = new TavilySearchResults({
       apiKey: process.env.TAVILY_API_KEY,
-      maxResults: 5, // Reduced to avoid rate limits
+      maxResults: 15, // Increased to ensure we have enough results for 10 articles
       searchDepth: "basic"
     });
   }
@@ -78,13 +78,13 @@ export class TavilyResearchAgent {
         return this.createFallbackReport(query, 'No search results found');
       }
 
-      // Step 2: Parallel web scraping (limit to 3 URLs for speed)
-      const validUrls = searchResults.slice(0, 3).map((result: any) => result.url).filter(Boolean);
+      // Step 2: Parallel web scraping (limit to 10 URLs for testing)
+      const validUrls = searchResults.slice(0, 10).map((result: any) => result.url).filter(Boolean);
       console.log(`Step 2: Starting parallel scraping of ${validUrls.length} URLs...`);
       
       const [scrapedContent, sourceImages] = await Promise.all([
         this.parallelWebScraping(validUrls),
-        this.parallelImageFetching(searchResults.slice(0, 4)) // Fetch images in parallel
+        this.parallelImageFetching(searchResults.slice(0, 10)) // Fetch images in parallel for 10 sources
       ]);
 
       // Step 3: Generate optimized report with truncated content
@@ -539,6 +539,18 @@ export class TavilyResearchAgent {
     }
 
     console.log(`✅ Parallel scraping completed: ${successfulScrapes.length}/${urls.length} successful`);
+    
+    // Log quote extraction details
+    const totalQuotes = successfulScrapes.reduce((sum, content) => sum + content.quotes.length, 0);
+    console.log(`📝 EXTRACTED QUOTES SUMMARY:`);
+    console.log(`Total quotes extracted: ${totalQuotes}`);
+    successfulScrapes.forEach((content, index) => {
+      console.log(`${index + 1}. ${content.source}: ${content.quotes.length} quotes`);
+      content.quotes.forEach((quote, qIndex) => {
+        console.log(`   Quote ${qIndex + 1}: "${quote.substring(0, 50)}${quote.length > 50 ? '...' : ''}"`);
+      });
+    });
+    
     return successfulScrapes;
   }
 
@@ -567,48 +579,129 @@ export class TavilyResearchAgent {
     scrapedContent: ScrapedContent[], 
     validUrls: string[]
   ): Promise<any> {
-    // Truncate content for faster processing
+    // Truncate content for faster processing but preserve quotes
     const truncatedScrapedContent = scrapedContent.map(content => ({
       ...content,
       content: content.content.substring(0, 500), // Limit to 500 chars per source
-      quotes: content.quotes.slice(0, 2) // Max 2 quotes per source
+      quotes: content.quotes // Keep ALL quotes, don't truncate
     }));
 
-    const systemPrompt = `SYSTEM ROLE: You are a fast, efficient research assistant. Create a comprehensive research report quickly based on the provided search results and content.
+    // Create detailed source information for quote attribution
+    const sourceQuotesInfo = truncatedScrapedContent.map((content, index) => {
+      return `
+SOURCE ${index + 1}: ${content.source}
+URL: ${content.url}
+AVAILABLE QUOTES FROM THIS SOURCE:
+${content.quotes.map((quote, qIndex) => `${qIndex + 1}. "${quote}"`).join('\n')}
+CONTENT SUMMARY: ${content.content}
+`;
+    }).join('\n');
+
+    const systemPrompt = `SYSTEM ROLE: You are a fast, efficient research assistant. Create a comprehensive research report based ONLY on the provided search results and scraped content.
+
+🚫 CRITICAL QUOTE REQUIREMENTS:
+- You MUST ONLY use quotes that are explicitly provided in the "AVAILABLE QUOTES FROM THIS SOURCE" sections below
+- You MUST NEVER generate, create, or fabricate any quotes
+- Every quote MUST be copied EXACTLY as provided from the scraped content
+- You MUST attribute each quote to its exact source name and URL
+- If no suitable quotes are available for a perspective, then do not include that perspective.
 
 TASK: Create a detailed research report on: ${query}
 
 SEARCH RESULTS (${searchResults.length} sources):
-${searchResults.slice(0, 3).map((result: any, index: number) => 
+${searchResults.slice(0, 10).map((result: any, index: number) => 
   `${index + 1}. ${result.title || 'No title'} - ${result.url || 'No URL'}`
 ).join('\n')}
 
-CONTENT SUMMARY:
-${truncatedScrapedContent.map((content, index) => `
-${index + 1}. ${content.source}: ${content.content}
-Key quotes: ${content.quotes.join('; ')}
-`).join('\n')}
+${sourceQuotesInfo}
+
+STRICT QUOTE USAGE RULES:
+1. Only use quotes from the "AVAILABLE QUOTES FROM THIS SOURCE" sections above
+2. Copy quotes EXACTLY as they appear - no modifications or paraphrasing
+3. Always attribute quotes to the exact source name and URL provided
+4. Never combine quotes from different sources
+5. If you need a quote but none are available, write "No direct quotes available from this source"
+6. Use varying quotes. Do not use the same quote more than once.
 
 SPEED REQUIREMENTS:
 - Generate report efficiently with available data
-- Focus on key insights and conflicts
+- Focus on key insights and conflicts using ONLY real quotes
 - Provide factual, well-structured content
 - Use concise but comprehensive analysis
+- Incorporate multiple and various sources
 
 ${this.getOptimizedJSONStructure(validUrls.length)}`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Use faster model for speed
+      model: "gpt-4.1", // Use faster model for speed
       messages: [
         { role: "system", content: systemPrompt },
-        { role: "user", content: `Create an optimized research report about: ${query}` }
+        { role: "user", content: `Create an optimized research report about: ${query}. Remember: Use ONLY the exact quotes provided in the source sections above. Do not generate any quotes.` }
       ],
       max_tokens: 2500, // Reduced for speed
       response_format: { type: "json_object" },
       temperature: 0.1
     });
 
-    return await this.parseAndValidateJSON(response.choices[0].message.content || '{}', query);
+    const reportData = await this.parseAndValidateJSON(response.choices[0].message.content || '{}', query);
+    
+    // Validate that all quotes are from scraped content
+    this.validateQuoteUsage(reportData, scrapedContent);
+    
+    return reportData;
+  }
+
+  // Validate that all quotes in the report are from scraped content
+  private validateQuoteUsage(reportData: any, scrapedContent: ScrapedContent[]): void {
+    console.log('🔍 VALIDATING QUOTE USAGE...');
+    
+    // Collect all available quotes from scraped content
+    const allAvailableQuotes = scrapedContent.flatMap(content => content.quotes);
+    console.log(`Available quotes from scraped content: ${allAvailableQuotes.length}`);
+    
+    // Check perspectives quotes
+    const perspectiveQuotes = reportData.perspectives?.map((p: any) => p.quote).filter(Boolean) || [];
+    console.log(`Quotes used in perspectives: ${perspectiveQuotes.length}`);
+    
+    perspectiveQuotes.forEach((quote: string, index: number) => {
+      if (quote !== "No direct quotes available from this source" && quote !== "No direct quotes available") {
+        const isValidQuote = allAvailableQuotes.some(availableQuote => 
+          quote.trim() === availableQuote.trim() || 
+          quote.includes(availableQuote.trim()) ||
+          availableQuote.includes(quote.trim())
+        );
+        
+        if (!isValidQuote) {
+          console.warn(`⚠️ POTENTIAL GENERATED QUOTE DETECTED in perspective ${index + 1}: "${quote}"`);
+        } else {
+          console.log(`✅ Valid quote found in perspective ${index + 1}`);
+        }
+      }
+    });
+    
+    // Check conflicting claims quotes
+    const conflictingQuotes = reportData.conflictingClaims?.flatMap((claim: any) => [
+      claim.sourceA?.claim,
+      claim.sourceB?.claim
+    ]).filter(Boolean) || [];
+    
+    console.log(`Quotes used in conflicting claims: ${conflictingQuotes.length}`);
+    
+    conflictingQuotes.forEach((quote: string, index: number) => {
+      const isValidQuote = allAvailableQuotes.some(availableQuote => 
+        quote.trim() === availableQuote.trim() || 
+        quote.includes(availableQuote.trim()) ||
+        availableQuote.includes(quote.trim())
+      );
+      
+      if (!isValidQuote) {
+        console.warn(`⚠️ POTENTIAL GENERATED QUOTE DETECTED in conflicting claim ${index + 1}: "${quote}"`);
+      } else {
+        console.log(`✅ Valid quote found in conflicting claim ${index + 1}`);
+      }
+    });
+    
+    console.log('🔍 Quote validation completed');
   }
 
   private getOptimizedJSONStructure(sourceCount: number): string {
@@ -628,54 +721,56 @@ REQUIRED JSON STRUCTURE (optimized):
   "rawFacts": [
     {
       "category": "Key Facts",
-      "fact": "From [Source]: [fact]",
-      "source": "Source Name",
-      "url": "https://url.com"
+      "fact": "From [Source Name]: [exact fact from scraped content]",
+      "source": "Source Name (exactly as provided)",
+      "url": "https://exact-url-from-scraped-content.com"
     }
   ],
   "timelineItems": [
     {
       "date": "YYYY-MM-DD",
-      "title": "Event",
-      "description": "Description",
-      "source": "Source",
-      "url": "https://url.com"
+      "title": "Event title from source",
+      "description": "Event details from scraped content",
+      "source": "Source Name (exactly as provided)",
+      "url": "https://exact-url-from-scraped-content.com"
     }
   ],
   "perspectives": [
     {
-      "viewpoint": "Supportive View",
-      "description": "Analysis",
-      "source": "Source",
-      "quote": "Quote",
-      "url": "https://url.com",
+      "viewpoint": "Perspective viewpoint",
+      "description": "Analysis based on scraped content",
+      "source": "Source Name (exactly as provided)",
+      "quote": "EXACT quote from AVAILABLE QUOTES section - DO NOT GENERATE",
+      "url": "https://exact-url-from-scraped-content.com",
       "color": "green"
     }
   ],
   "conflictingClaims": [
     {
-      "topic": "Issue",
+      "topic": "Conflicting issue from sources",
       "sourceA": {
-        "claim": "Claim A",
-        "source": "Source A",
-        "url": "https://url-a.com"
+        "claim": "EXACT quote from Source A's AVAILABLE QUOTES",
+        "source": "Source A Name (exactly as provided)",
+        "url": "https://exact-source-a-url.com"
       },
       "sourceB": {
-        "claim": "Claim B",
-        "source": "Source B", 
-        "url": "https://url-b.com"
+        "claim": "EXACT quote from Source B's AVAILABLE QUOTES",
+        "source": "Source B Name (exactly as provided)", 
+        "url": "https://exact-source-b-url.com"
       }
     }
   ],
   "citedSources": [
     {
-      "name": "Source name",
-      "type": "Type",
-      "description": "Description",
-      "url": "https://url.com"
+      "name": "Source name (exactly as provided)",
+      "type": "Article/News/Report",
+      "description": "Description based on scraped content",
+      "url": "https://exact-url-from-scraped-content.com"
     }
   ]
-}`;
+}
+
+⚠️ QUOTE REMINDER: Every "quote" field MUST be copied exactly from the AVAILABLE QUOTES sections above. If no suitable quote exists, use "No direct quotes available from this source" instead.`;
   }
 
   private async buildFinalReport(
