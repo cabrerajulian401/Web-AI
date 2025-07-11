@@ -18,7 +18,7 @@ interface ArticleAPI {
   authorTitle: string;
 }
 import { pexelsService } from "./pexels-service";
-import { webScraperService, type ScrapedContent } from "./web-scraper-service";
+import { webScraperService, type ScrapedContent, type ScrapingResult } from "./web-scraper-service";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -33,6 +33,8 @@ export interface ResearchReport {
 
 export class TavilyResearchAgent {
   private tavilySearch: TavilySearchResults;
+  private cache: Map<string, any> = new Map(); // Simple in-memory cache
+  private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   constructor() {
     // Check if Tavily API key is available
@@ -52,357 +54,56 @@ export class TavilyResearchAgent {
 
   async generateResearchReport(query: string, heroImageUrl?: string): Promise<ResearchReport> {
     const startTime = Date.now();
+    console.log('\n=== TAVILY RESEARCH AGENT: GENERATING REPORT (OPTIMIZED) ===');
+    console.log('Query:', query);
+
+    // Check cache first
+    const cacheKey = `report_${query.toLowerCase().replace(/\s+/g, '_')}`;
+    const cached = this.getCachedResult(cacheKey);
+    if (cached) {
+      console.log('✓ Returning cached result');
+      return cached;
+    }
+
     try {
-      console.log('\n=== TAVILY RESEARCH AGENT: GENERATING REPORT ===');
-      console.log('Query:', query);
+      // Step 1: Parallel initialization of hero image and web search
+      console.log('Step 1: Starting parallel search and image fetch...');
+      const [searchResults, initialHeroImage] = await Promise.all([
+        this.performOptimizedSearch(query),
+        heroImageUrl ? Promise.resolve(heroImageUrl) : pexelsService.searchImageByTopic(query, 0)
+      ]);
 
-      // Step 1: Perform web search using Tavily with diverse sources
-      console.log('Performing web search with Tavily...');
-      console.log('API Key (first 10 chars):', process.env.TAVILY_API_KEY?.substring(0, 10) + '...');
+      if (!searchResults || searchResults.length === 0) {
+        console.log('No search results found, creating fallback report...');
+        return this.createFallbackReport(query, 'No search results found');
+      }
+
+      // Step 2: Parallel web scraping (limit to 3 URLs for speed)
+      const validUrls = searchResults.slice(0, 3).map((result: any) => result.url).filter(Boolean);
+      console.log(`Step 2: Starting parallel scraping of ${validUrls.length} URLs...`);
       
-      let searchResults: any;
-      try {
-        // Create diverse search queries to get different perspectives
-        const baseQuery = query.length > 50 ? query.substring(0, 50) + '...' : query;
-        const searchQueries = [
-          baseQuery,
-          `${baseQuery} news analysis`,
-          `${baseQuery} criticism concerns`,
-          `${baseQuery} expert opinion`,
-          `${baseQuery} government official`
-        ];
-        
-        console.log('Searching with diverse queries for different perspectives...');
-        
-        // Use the first query as primary, but the system will look for diverse sources
-        searchResults = await this.tavilySearch.invoke(baseQuery);
-        // Parse if string
-        if (typeof searchResults === 'string') {
-          try {
-            searchResults = JSON.parse(searchResults);
-            console.log('Parsed Tavily results as JSON array or object.');
-          } catch (parseError) {
-            console.error('Failed to parse Tavily results as JSON:', parseError);
-            return this.createFallbackReport(query, 'Tavily returned invalid JSON');
-          }
-        }
-        // Log the structure
-        console.log('Tavily searchResults type:', typeof searchResults);
-        if (Array.isArray(searchResults)) {
-          console.log('Tavily searchResults is an array, length:', searchResults.length);
-        } else if (searchResults && typeof searchResults === 'object') {
-          console.log('Tavily searchResults keys:', Object.keys(searchResults));
-          // Try to use a property that is an array
-          const arrayProp = Object.keys(searchResults).find(key => Array.isArray(searchResults[key]));
-          if (arrayProp) {
-            console.log('Using property as array:', arrayProp);
-            searchResults = searchResults[arrayProp];
-          } else {
-            console.error('No array property found in Tavily searchResults.');
-            return this.createFallbackReport(query, 'Tavily did not return an array of results');
-          }
-        }
-        console.log(`Found ${searchResults.length} search results`);
-        
-        if (!Array.isArray(searchResults) || searchResults.length === 0) {
-          console.log('No search results found, creating fallback report...');
-          return this.createFallbackReport(query, 'No search results found');
-        }
-      } catch (searchError) {
-        console.error('Tavily search error:', searchError);
-        console.error('Error details:', searchError instanceof Error ? searchError.message : 'Unknown error');
-        console.error('Full error object:', JSON.stringify(searchError, null, 2));
-        
-        // If Tavily fails, create a fallback report
-        console.log('Creating fallback report due to Tavily search failure...');
-        return this.createFallbackReport(query, `Tavily search failed: ${searchError instanceof Error ? searchError.message : 'Unknown error'}`);
-      }
+      const [scrapedContent, sourceImages] = await Promise.all([
+        this.parallelWebScraping(validUrls),
+        this.parallelImageFetching(searchResults.slice(0, 4)) // Fetch images in parallel
+      ]);
 
-      // Step 2: Extract and validate URLs from search results, categorize for diversity
-      const validResults = (searchResults as any[])
-        .filter((result: any) => result.url && this.isValidUrl(result.url));
-      
-      // Categorize sources for perspective diversity
-      const categorizedSources = this.categorizeSourcesForPerspectives(validResults);
-      
-      const validUrls = validResults.map((result: any) => result.url);
-      console.log(`Valid URLs found: ${validUrls.length}`);
-      console.log(`Source categories: ${Object.keys(categorizedSources).join(', ')}`);
+      // Step 3: Generate optimized report with truncated content
+      console.log('Step 3: Generating optimized AI report...');
+      const reportData = await this.generateOptimizedAIReport(query, searchResults, scrapedContent, validUrls);
 
-      // Step 3: Scrape content from the most relevant URLs
-      let scrapedContent: ScrapedContent[] = [];
-      if (validUrls.length > 0) {
-        console.log('Starting web scraping for detailed content...');
-        
-        // Take the first 5 URLs to scrape (to avoid overwhelming the system)
-        const urlsToScrape = validUrls.slice(0, 5);
-        const sourceNames = urlsToScrape.map((url, index) => {
-          const domain = new URL(url).hostname;
-          return `Source ${index + 1} (${domain})`;
-        });
-        
-        scrapedContent = await webScraperService.scrapeMultipleUrls(urlsToScrape, sourceNames);
-        console.log(`Successfully scraped ${scrapedContent.length} pages with detailed content`);
-      }
+      // Step 4: Build final report with pre-fetched images
+      console.log('Step 4: Building final report...');
+      const report = await this.buildFinalReport(reportData, query, initialHeroImage, sourceImages);
 
-      // Step 4: Generate comprehensive research report using OpenAI with structured output
-      const systemPrompt = `SYSTEM ROLE: You are a real-time, non-partisan research assistant with access to live web search results and detailed scraped content. You will create a comprehensive research report based on the provided search results, URLs, and detailed content from web scraping.
-
-TASK: Create a detailed research report on: ${query}
-
-AVAILABLE SEARCH RESULTS:
-${searchResults.map((result: any, index: number) => 
-  `${index + 1}. ${result.title || 'No title'}
-   URL: ${result.url || 'No URL'}
-   Content: ${result.content || 'No content'}
-   Published: ${result.published_date || 'Unknown date'}`
-).join('\n\n')}
-
-VALID URLS FOR CITATION:
-${validUrls.join('\n')}
-
-DETAILED SCRAPED CONTENT:
-${scrapedContent.map((content, index) => `
-SOURCE ${index + 1}: ${content.source}
-URL: ${content.url}
-TITLE: ${content.title}
-AUTHOR: ${content.author || 'Unknown'}
-PUBLISHED: ${content.publishedDate || 'Unknown'}
-CONTENT: ${content.content.substring(0, 1000)}...
-QUOTES:
-${content.quotes.map(quote => `• "${quote}"`).join('\n')}
-`).join('\n\n')}
-
-CRITICAL REQUIREMENTS:
-1. You MUST return ONLY valid JSON with the exact structure specified below
-2. Use response_format: { type: "json_object" } to ensure proper JSON formatting
-3. All URLs must be from the valid URLs list provided
-4. Use exact quotes from the scraped content when available
-5. Do not invent or fabricate any information
-6. If you cannot find real sources for a section, use empty array []
-
-REQUIRED JSON STRUCTURE:
-{
-  "article": {
-    "title": "Clear, factual title based on search results",
-    "executiveSummary": "• Short summary of what happened in bullet points\n• Plain English, easy to understand\n• Each bullet point on a separate line",
-    "excerpt": "Brief summary of the research findings",
-    "content": "Comprehensive article with all research findings",
-    "category": "Research",
-    "publishedAt": "${new Date().toISOString()}",
-    "readTime": 8,
-    "sourceCount": ${validUrls.length}
-  },
-  "rawFacts": [
-    {
-      "category": "Primary Sources",
-      "fact": "From [Source Name]: [exact quote or fact as found]",
-      "source": "Source Name",
-      "url": "https://exact-url-from-search.com"
-    }
-  ],
-  "timelineItems": [
-    {
-      "date": "YYYY-MM-DD",
-      "title": "Event title",
-      "description": "Event details - bullet point format",
-      "source": "Source name",
-      "url": "https://real-url-from-search.com"
-    }
-  ],
-  "perspectives": [
-    {
-      "viewpoint": "Supportive/Positive Viewpoint",
-      "description": "Detailed analysis of supportive stance with specific reasoning and context",
-      "source": "Source name (must be different from other perspectives)",
-      "quote": "Exact quote from the source that supports this viewpoint",
-      "url": "https://real-article-url.com",
-      "color": "green",
-      "reasoning": "Detailed explanation of why this source takes this position",
-      "evidence": "Specific evidence or arguments presented by this source"
-    },
-    {
-      "viewpoint": "Critical/Negative Viewpoint", 
-      "description": "Detailed analysis of critical stance with specific reasoning and context",
-      "source": "Source name (must be different from other perspectives)",
-      "quote": "Exact quote from the source that supports this viewpoint",
-      "url": "https://real-article-url.com",
-      "color": "red",
-      "reasoning": "Detailed explanation of why this source takes this position",
-      "evidence": "Specific evidence or arguments presented by this source"
-    },
-    {
-      "viewpoint": "Neutral/Analytical Viewpoint",
-      "description": "Balanced analysis presenting both sides with objective assessment",
-      "source": "Source name (must be different from other perspectives)",
-      "quote": "Exact quote from the source that demonstrates balanced analysis",
-      "url": "https://real-article-url.com",
-      "color": "blue",
-      "reasoning": "Detailed explanation of the balanced approach taken",
-      "evidence": "Specific evidence or arguments presented by this source"
-    }
-  ],
-  "conflictingClaims": [
-    {
-      "topic": "Key issue being debated",
-      "sourceA": {
-        "claim": "First claim from source A",
-        "source": "Source A name",
-        "url": "https://source-a-url.com"
-      },
-      "sourceB": {
-        "claim": "Opposing claim from source B", 
-        "source": "Source B name",
-        "url": "https://source-b-url.com"
-      }
-    }
-  ],
-  "citedSources": [
-    {
-      "name": "Source organization name",
-      "type": "Primary Source",
-      "description": "Description of the source",
-      "url": "https://real-url.com"
-    }
-  ]
-}
-
-PERSPECTIVE ANALYSIS REQUIREMENTS:
-- Each perspective MUST come from a DIFFERENT source/URL
-- Provide DEEP analysis with specific reasoning, not just surface-level opinions
-- Include detailed explanations of WHY each source takes their position
-- Use specific evidence and arguments from the scraped content
-- Ensure perspectives are genuinely different viewpoints, not just slight variations
-- Look for sources that represent different stakeholder groups (government, business, media, experts, etc.)
-- Include context about the source's background or expertise if available
-- Make sure each perspective has substantial content and reasoning
-
-PERSPECTIVE TYPES TO SEEK:
-1. SUPPORTIVE/POSITIVE: Sources that generally support or praise the subject/topic
-2. CRITICAL/NEGATIVE: Sources that raise concerns, criticisms, or opposition
-3. NEUTRAL/ANALYTICAL: Sources that present balanced, objective analysis
-4. EXPERT/SPECIALIST: Sources from domain experts or specialists
-5. STAKEHOLDER: Sources representing affected parties or stakeholders
-
-FORMATTING RULES:
-- Raw facts MUST start with "From [Source]: " format and use EXACT QUOTES from scraped content
-- Use only PRIMARY SOURCES: government docs, direct quotes, press releases, official bills
-- Use the EXACT QUOTES from the scraped content when available - these are real quotes from the web pages
-- No secondhand citations (no Wikipedia, no summaries)
-- If quoting legislation, include name of bill and section
-- Executive summary must be a list of bullet points, with each point on a new line.
-- For perspectives, use the exact quotes from scraped content to show different viewpoints
-- For conflicting claims, identify opposing viewpoints from the scraped content
-- 🚫 NEVER invent article titles, outlets, quotes, or URLs
-- If you cannot find real sources for a section, use empty array []
-- Use only URLs from the provided search results
-- Ensure all URLs in the response are from the valid URLs list
-- Use the detailed scraped content to provide accurate quotes and facts
-- IMPORTANT: Use the quotes from the DETAILED SCRAPED CONTENT section above
-- PERSPECTIVES MUST BE FROM DIFFERENT SOURCES - check that each perspective uses a different URL
-
-REMEMBER: Return ONLY the JSON object, no additional text, explanations, or markdown formatting.`;
-
-      // Use structured output to ensure valid JSON
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "system",
-            content: systemPrompt
-          },
-          {
-            role: "user",
-            content: `Research and create a comprehensive report about: ${query}`
-          }
-        ],
-        max_tokens: 4000,
-        response_format: { type: "json_object" },
-        temperature: 0.1 // Lower temperature for more consistent formatting
-      });
-
-      // Extract response
-      const { message } = response.choices[0];
-      console.log('Raw response length:', message.content?.length);
-
-      // Parse JSON response with comprehensive error handling
-      let reportData = await this.parseAndValidateJSON(message.content || '{}', query);
-
-      // Log the conflicting claims for debugging
-      console.log('--- Conflicting Claims from AI ---');
-      console.log(JSON.stringify(reportData.conflictingClaims, null, 2));
-      console.log('------------------------------------');
-
-      // Process conflicting claims if present
-      const conflictingClaimsText = reportData.conflictingClaims?.map((conflict: any) => 
-        `<br /><br /><h3>Conflicting Claims - ${conflict.topic}</h3><ul><li><strong>Claim A:</strong> ${conflict.sourceA.claim} (Source: ${conflict.sourceA.source})</li><li><strong>Claim B:</strong> ${conflict.sourceB.claim} (Source: ${conflict.sourceB.source})</li></ul>`
-      ).join('') || '';
-
-      // Add conflicting claims to article content if present
-      if (conflictingClaimsText) {
-        reportData.article.content += conflictingClaimsText;
-      }
-
-      // Create slug from title
-      const slug = this.createSlug(reportData.article.title);
-
-      // Get hero image
-      const heroImageFromPexels = heroImageUrl || await pexelsService.searchImageByTopic(reportData.article.title, 0);
-
-      // Format the response
-      const report: ResearchReport = {
-        article: {
-          id: Date.now(),
-          slug,
-          title: reportData.article.title,
-          content: reportData.article.content,
-          category: reportData.article.category || "Research",
-          excerpt: reportData.article.excerpt,
-          heroImageUrl: heroImageFromPexels,
-          publishedAt: reportData.article.publishedAt || new Date().toISOString(),
-          readTime: reportData.article.readTime || 8,
-          sourceCount: reportData.article.sourceCount || reportData.citedSources?.length || 0,
-          authorName: "TIMIO Research Team",
-          authorTitle: "AI Research Analyst"
-        },
-        executiveSummary: {
-          id: Date.now(),
-          articleId: Date.now(),
-          points: reportData.article.executiveSummary ? 
-            reportData.article.executiveSummary.split(/[•\-\n]/).map((p: string) => p.trim()).filter((p: string) => p.length > 0) : 
-            ["No executive summary available."]
-        },
-        timelineItems: (reportData.timelineItems || []).map((item: any, index: number) => ({
-          id: Date.now() + index,
-          articleId: Date.now(),
-          date: item.date,
-          title: item.title,
-          description: item.description,
-          type: "event",
-          sourceLabel: item.source || "Source",
-          sourceUrl: item.url
-        })),
-        citedSources: await Promise.all(
-          (reportData.citedSources || []).map(async (source: any, index: number) => ({
-            id: Date.now() + index,
-            articleId: Date.now(),
-            name: source.name,
-            type: source.type,
-            description: source.description,
-            url: source.url,
-            imageUrl: await pexelsService.searchImageByTopic(source.name, index + 10)
-          }))
-        ),
-        rawFacts: this.groupRawFactsByCategory(reportData.rawFacts || []),
-        perspectives: this.formatPerspectives(reportData.perspectives || [], reportData.conflictingClaims || [])
-      };
+      // Cache the result
+      this.setCachedResult(cacheKey, report);
 
       const endTime = Date.now();
-      console.log(`Tavily research report generated in ${endTime - startTime}ms`);
+      console.log(`✅ OPTIMIZED research report generated in ${endTime - startTime}ms (vs ~26s typical)`);
       
       return report;
     } catch (error) {
-      console.error('Tavily Research Agent Error:', error);
+      console.error('Optimized Tavily Research Agent Error:', error);
       throw new Error('Failed to generate research report');
     }
   }
@@ -812,6 +513,259 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
       rawFacts: [],
       perspectives: []
     };
+  }
+
+  // Parallel web scraping with concurrent requests
+  private async parallelWebScraping(urls: string[]): Promise<ScrapedContent[]> {
+    console.log(`🚀 Starting parallel scraping of ${urls.length} URLs...`);
+    const scrapingPromises = urls.map(async (url, index) => {
+      try {
+        const domain = new URL(url).hostname;
+        const sourceName = `Source ${index + 1} (${domain})`;
+        return await webScraperService.scrapeUrl(url, sourceName);
+      } catch (error) {
+        console.warn(`Failed to scrape ${url}:`, error);
+        return { success: false, error: error instanceof Error ? error.message : 'Unknown error' } as ScrapingResult;
+      }
+    });
+
+    const results = await Promise.allSettled(scrapingPromises);
+    const successfulScrapes: ScrapedContent[] = [];
+    
+    for (const result of results) {
+      if (result.status === 'fulfilled' && result.value.success && result.value.data) {
+        successfulScrapes.push(result.value.data);
+      }
+    }
+
+    console.log(`✅ Parallel scraping completed: ${successfulScrapes.length}/${urls.length} successful`);
+    return successfulScrapes;
+  }
+
+  // Parallel image fetching for sources
+  private async parallelImageFetching(sources: any[]): Promise<string[]> {
+    console.log(`🖼️ Starting parallel image fetching for ${sources.length} sources...`);
+    const imagePromises = sources.map(async (source, index) => {
+      try {
+        const searchTerm = source.title || source.url || `source ${index}`;
+        return await pexelsService.searchImageByTopic(searchTerm, index + 10);
+      } catch (error) {
+        console.warn(`Failed to get image for source ${index}:`, error);
+        return 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=300&h=200&fit=crop'; // Fallback
+      }
+    });
+
+    const images = await Promise.all(imagePromises);
+    console.log(`✅ Parallel image fetching completed: ${images.length} images retrieved`);
+    return images;
+  }
+
+  // Optimized AI report generation with truncated content
+  private async generateOptimizedAIReport(
+    query: string, 
+    searchResults: any[], 
+    scrapedContent: ScrapedContent[], 
+    validUrls: string[]
+  ): Promise<any> {
+    // Truncate content for faster processing
+    const truncatedScrapedContent = scrapedContent.map(content => ({
+      ...content,
+      content: content.content.substring(0, 500), // Limit to 500 chars per source
+      quotes: content.quotes.slice(0, 2) // Max 2 quotes per source
+    }));
+
+    const systemPrompt = `SYSTEM ROLE: You are a fast, efficient research assistant. Create a comprehensive research report quickly based on the provided search results and content.
+
+TASK: Create a detailed research report on: ${query}
+
+SEARCH RESULTS (${searchResults.length} sources):
+${searchResults.slice(0, 3).map((result: any, index: number) => 
+  `${index + 1}. ${result.title || 'No title'} - ${result.url || 'No URL'}`
+).join('\n')}
+
+CONTENT SUMMARY:
+${truncatedScrapedContent.map((content, index) => `
+${index + 1}. ${content.source}: ${content.content}
+Key quotes: ${content.quotes.join('; ')}
+`).join('\n')}
+
+SPEED REQUIREMENTS:
+- Generate report efficiently with available data
+- Focus on key insights and conflicts
+- Provide factual, well-structured content
+- Use concise but comprehensive analysis
+
+${this.getOptimizedJSONStructure(validUrls.length)}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini", // Use faster model for speed
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: `Create an optimized research report about: ${query}` }
+      ],
+      max_tokens: 2500, // Reduced for speed
+      response_format: { type: "json_object" },
+      temperature: 0.1
+    });
+
+    return await this.parseAndValidateJSON(response.choices[0].message.content || '{}', query);
+  }
+
+  private getOptimizedJSONStructure(sourceCount: number): string {
+    return `
+REQUIRED JSON STRUCTURE (optimized):
+{
+  "article": {
+    "title": "Clear title based on search results",
+    "executiveSummary": "• Key point 1\\n• Key point 2\\n• Key point 3",
+    "excerpt": "Brief summary",
+    "content": "Concise article content",
+    "category": "Research",
+    "publishedAt": "${new Date().toISOString()}",
+    "readTime": 5,
+    "sourceCount": ${sourceCount}
+  },
+  "rawFacts": [
+    {
+      "category": "Key Facts",
+      "fact": "From [Source]: [fact]",
+      "source": "Source Name",
+      "url": "https://url.com"
+    }
+  ],
+  "timelineItems": [
+    {
+      "date": "YYYY-MM-DD",
+      "title": "Event",
+      "description": "Description",
+      "source": "Source",
+      "url": "https://url.com"
+    }
+  ],
+  "perspectives": [
+    {
+      "viewpoint": "Supportive View",
+      "description": "Analysis",
+      "source": "Source",
+      "quote": "Quote",
+      "url": "https://url.com",
+      "color": "green"
+    }
+  ],
+  "conflictingClaims": [
+    {
+      "topic": "Issue",
+      "sourceA": {
+        "claim": "Claim A",
+        "source": "Source A",
+        "url": "https://url-a.com"
+      },
+      "sourceB": {
+        "claim": "Claim B",
+        "source": "Source B", 
+        "url": "https://url-b.com"
+      }
+    }
+  ],
+  "citedSources": [
+    {
+      "name": "Source name",
+      "type": "Type",
+      "description": "Description",
+      "url": "https://url.com"
+    }
+  ]
+}`;
+  }
+
+  private async buildFinalReport(
+    reportData: any, 
+    query: string, 
+    heroImageUrl: string, 
+    sourceImages: string[]
+  ): Promise<ResearchReport> {
+    const slug = this.createSlug(reportData.article.title);
+
+    const report: ResearchReport = {
+      article: {
+        id: Date.now(),
+        slug,
+        title: reportData.article.title,
+        content: reportData.article.content,
+        category: reportData.article.category || "Research",
+        excerpt: reportData.article.excerpt,
+        heroImageUrl: heroImageUrl,
+        publishedAt: reportData.article.publishedAt || new Date().toISOString(),
+        readTime: reportData.article.readTime || 5,
+        sourceCount: reportData.article.sourceCount || reportData.citedSources?.length || 0,
+        authorName: "TIMIO Research Team",
+        authorTitle: "AI Research Analyst"
+      },
+      executiveSummary: {
+        id: Date.now(),
+        articleId: Date.now(),
+        points: reportData.article.executiveSummary ? 
+          reportData.article.executiveSummary.split(/[•\-\n]/).map((p: string) => p.trim()).filter((p: string) => p.length > 0) : 
+          ["No executive summary available."]
+      },
+      timelineItems: (reportData.timelineItems || []).map((item: any, index: number) => ({
+        id: Date.now() + index,
+        articleId: Date.now(),
+        date: item.date,
+        title: item.title,
+        description: item.description,
+        type: "event",
+        sourceLabel: item.source || "Source",
+        sourceUrl: item.url
+      })),
+      citedSources: (reportData.citedSources || []).map((source: any, index: number) => ({
+        id: Date.now() + index,
+        articleId: Date.now(),
+        name: source.name,
+        type: source.type,
+        description: source.description,
+        url: source.url,
+        imageUrl: sourceImages[index] || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=300&h=200&fit=crop'
+      })),
+      rawFacts: this.groupRawFactsByCategory(reportData.rawFacts || []),
+      perspectives: this.formatPerspectives(reportData.perspectives || [], reportData.conflictingClaims || [])
+    };
+
+    return report;
+  }
+
+  private async performOptimizedSearch(query: string): Promise<any[]> {
+    try {
+      const baseQuery = query.length > 50 ? query.substring(0, 50) + '...' : query;
+      const searchResults = await this.tavilySearch.invoke(baseQuery);
+      
+      let results = typeof searchResults === 'string' ? JSON.parse(searchResults) : searchResults;
+      
+      if (results && typeof results === 'object' && !Array.isArray(results)) {
+        const arrayProp = Object.keys(results).find(key => Array.isArray(results[key]));
+        if (arrayProp) {
+          results = results[arrayProp];
+        }
+      }
+      
+      return Array.isArray(results) ? results.filter((result: any) => result.url && this.isValidUrl(result.url)) : [];
+    } catch (error) {
+      console.error('Optimized search error:', error);
+      return [];
+    }
+  }
+
+  // Simple caching system
+  private getCachedResult(key: string): ResearchReport | null {
+    const cached = this.cache.get(key);
+    if (cached && Date.now() - cached.timestamp < this.CACHE_TTL) {
+      return cached.data;
+    }
+    return null;
+  }
+
+  private setCachedResult(key: string, data: ResearchReport): void {
+    this.cache.set(key, { data, timestamp: Date.now() });
   }
 }
 
