@@ -185,6 +185,7 @@ REQUIRED JSON STRUCTURE:
 {
   "article": {
     "title": "Clear, factual title based on search results",
+    "executiveSummary": "• Short summary of what happened in bullet points\n• Plain English, easy to understand\n• Each bullet point on a separate line",
     "excerpt": "Brief summary of the research findings",
     "content": "Comprehensive article with all research findings",
     "category": "Research",
@@ -289,6 +290,7 @@ FORMATTING RULES:
 - Use the EXACT QUOTES from the scraped content when available - these are real quotes from the web pages
 - No secondhand citations (no Wikipedia, no summaries)
 - If quoting legislation, include name of bill and section
+- Executive summary must be a list of bullet points, with each point on a new line.
 - For perspectives, use the exact quotes from scraped content to show different viewpoints
 - For conflicting claims, identify opposing viewpoints from the scraped content
 - 🚫 NEVER invent article titles, outlets, quotes, or URLs
@@ -325,6 +327,21 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
 
       // Parse JSON response with comprehensive error handling
       let reportData = await this.parseAndValidateJSON(message.content || '{}', query);
+
+      // Log the conflicting claims for debugging
+      console.log('--- Conflicting Claims from AI ---');
+      console.log(JSON.stringify(reportData.conflictingClaims, null, 2));
+      console.log('------------------------------------');
+
+      // Process conflicting claims if present
+      const conflictingClaimsText = reportData.conflictingClaims?.map((conflict: any) => 
+        `<br /><br /><h3>Conflicting Claims - ${conflict.topic}</h3><ul><li><strong>Claim A:</strong> ${conflict.sourceA.claim} (Source: ${conflict.sourceA.source})</li><li><strong>Claim B:</strong> ${conflict.sourceB.claim} (Source: ${conflict.sourceB.source})</li></ul>`
+      ).join('') || '';
+
+      // Add conflicting claims to article content if present
+      if (conflictingClaimsText) {
+        reportData.article.content += conflictingClaimsText;
+      }
 
       // Create slug from title
       const slug = this.createSlug(reportData.article.title);
@@ -548,6 +565,10 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
     let index = 0;
     const usedSources = new Set<string>();
 
+    console.log(`=== FORMATTING PERSPECTIVES ===`);
+    console.log(`Input perspectives: ${perspectives.length}`);
+    console.log(`Input conflicting claims: ${conflictingClaims.length}`);
+
     // Format regular perspectives with enhanced depth
     perspectives.forEach((perspective: any) => {
       // Skip if we've already used this source to ensure diversity
@@ -568,30 +589,78 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
         color: perspective.color || 'blue',
         url: perspective.url,
         reasoning: perspective.reasoning || `Analysis from ${perspective.source}`,
-        evidence: perspective.evidence || perspective.quote
+        evidence: perspective.evidence || perspective.quote,
+        conflictSource: null, // Will be populated if there's a conflicting claim
+        conflictQuote: null   // Will be populated if there's a conflicting claim
       });
     });
 
-    // Add conflicting claims as perspectives with conflict data (only if source is unique)
-    conflictingClaims.forEach((conflict: any) => {
-      // Only add if the source hasn't been used yet
-      if (!usedSources.has(conflict.sourceA.source)) {
-        usedSources.add(conflict.sourceA.source);
-        
-        formattedPerspectives.push({
+    // Process conflicting claims and merge them into perspectives
+    conflictingClaims.forEach((conflict: any, conflictIndex: number) => {
+      console.log(`Processing conflicting claim ${conflictIndex + 1}: ${conflict.topic}`);
+      
+      // Find or create a perspective for source A
+      let perspectiveA = formattedPerspectives.find(p => 
+        p.source === conflict.sourceA.source || 
+        p.source.toLowerCase().includes(conflict.sourceA.source.toLowerCase()) ||
+        conflict.sourceA.source.toLowerCase().includes(p.source.toLowerCase())
+      );
+      
+      if (!perspectiveA) {
+        // Create new perspective for source A
+        perspectiveA = {
           id: Date.now() + index++,
           articleId: Date.now(),
-          viewpoint: conflict.topic,
-          description: conflict.sourceA.claim,
+          viewpoint: `${conflict.topic} - Supporting View`,
+          description: `Analysis of ${conflict.topic} from ${conflict.sourceA.source}`,
           source: conflict.sourceA.source,
           quote: conflict.sourceA.claim,
-          color: 'red',
+          color: 'green',
           url: conflict.sourceA.url,
-          reasoning: `Contrasting viewpoint on ${conflict.topic}`,
+          reasoning: `Position from ${conflict.sourceA.source}`,
           evidence: conflict.sourceA.claim,
           conflictSource: conflict.sourceB.source,
           conflictQuote: conflict.sourceB.claim
-        });
+        };
+        formattedPerspectives.push(perspectiveA);
+        console.log(`Created new perspective A for: ${conflict.sourceA.source}`);
+      } else {
+        // Update existing perspective with conflict information
+        perspectiveA.conflictSource = conflict.sourceB.source;
+        perspectiveA.conflictQuote = conflict.sourceB.claim;
+        console.log(`Updated existing perspective A for: ${conflict.sourceA.source}`);
+      }
+      
+      // Find or create a perspective for source B
+      let perspectiveB = formattedPerspectives.find(p => 
+        p.source === conflict.sourceB.source || 
+        p.source.toLowerCase().includes(conflict.sourceB.source.toLowerCase()) ||
+        conflict.sourceB.source.toLowerCase().includes(p.source.toLowerCase())
+      );
+      
+      if (!perspectiveB) {
+        // Create new perspective for source B
+        perspectiveB = {
+          id: Date.now() + index++,
+          articleId: Date.now(),
+          viewpoint: `${conflict.topic} - Opposing View`,
+          description: `Analysis of ${conflict.topic} from ${conflict.sourceB.source}`,
+          source: conflict.sourceB.source,
+          quote: conflict.sourceB.claim,
+          color: 'red',
+          url: conflict.sourceB.url,
+          reasoning: `Position from ${conflict.sourceB.source}`,
+          evidence: conflict.sourceB.claim,
+          conflictSource: conflict.sourceA.source,
+          conflictQuote: conflict.sourceA.claim
+        };
+        formattedPerspectives.push(perspectiveB);
+        console.log(`Created new perspective B for: ${conflict.sourceB.source}`);
+      } else {
+        // Update existing perspective with conflict information
+        perspectiveB.conflictSource = conflict.sourceA.source;
+        perspectiveB.conflictQuote = conflict.sourceA.claim;
+        console.log(`Updated existing perspective B for: ${conflict.sourceB.source}`);
       }
     });
 
@@ -608,11 +677,17 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
         color: 'purple',
         url: null,
         reasoning: 'Comprehensive research analysis',
-        evidence: 'Based on available research data and analysis'
+        evidence: 'Based on available research data and analysis',
+        conflictSource: null,
+        conflictQuote: null
       });
     }
 
+    const perspectivesWithConflicts = formattedPerspectives.filter(p => p.conflictSource && p.conflictQuote);
     console.log(`Formatted ${formattedPerspectives.length} perspectives from ${usedSources.size} unique sources`);
+    console.log(`${perspectivesWithConflicts.length} perspectives have conflicting information`);
+    console.log(`Perspectives with conflicts:`, perspectivesWithConflicts.map(p => `${p.source} vs ${p.conflictSource}`));
+    
     return formattedPerspectives;
   }
 
@@ -740,4 +815,4 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
   }
 }
 
-export const tavilyResearchAgent = new TavilyResearchAgent(); 
+export const tavilyResearchAgent = new TavilyResearchAgent();

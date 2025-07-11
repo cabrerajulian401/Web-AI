@@ -192,21 +192,36 @@ export class MemStorage implements IStorage {
         articleId: 1,
         viewpoint: "Industry Experts",
         description: "Praise the advancement in AI reasoning capabilities and potential applications",
-        color: "green"
+        color: "green",
+        url: null,
+        source: null,
+        quote: null,
+        conflictSource: null,
+        conflictQuote: null
       },
       {
         id: 2,
         articleId: 1,
         viewpoint: "AI Safety Researchers",
         description: "Emphasize the need for robust safety measures and ethical considerations",
-        color: "yellow"
+        color: "yellow",
+        url: null,
+        source: null,
+        quote: null,
+        conflictSource: null,
+        conflictQuote: null
       },
       {
         id: 3,
         articleId: 1,
         viewpoint: "Tech Analysts",
         description: "Analyze potential market impact and competitive positioning",
-        color: "blue"
+        color: "blue",
+        url: null,
+        source: null,
+        quote: null,
+        conflictSource: null,
+        conflictQuote: null
       }
     ];
 
@@ -743,16 +758,22 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
 
   async storeResearchReport(slug: string, report: ArticleData): Promise<void> {
     console.log(`Storing research report with slug: ${slug}`);
-    console.log(`Report data:`, JSON.stringify({
-      title: report.article?.title,
+
+    if (this.articles.has(slug)) {
+      console.log(`Overwriting existing article with slug: ${slug}`);
+    }
+
+    // Simplified representation of the report data for logging
+    const reportData = {
+      title: report.article.title,
       hasExecutiveSummary: !!report.executiveSummary,
-      timelineItemsCount: report.timelineItems?.length || 0,
-      citedSourcesCount: report.citedSources?.length || 0
-    }));
-    
+      timelineItemsCount: report.timelineItems.length,
+      citedSourcesCount: report.citedSources.length,
+    };
+    console.log(`Report data: ${JSON.stringify(reportData)}`);
     this.articles.set(slug, report);
     console.log(`Stored research report: ${slug}`);
-    console.log(`Total articles in storage:`, this.articles.size);
+    console.log(`Total articles in storage: ${this.articles.size}`);
     console.log(`All stored slugs:`, Array.from(this.articles.keys()));
   }
 }

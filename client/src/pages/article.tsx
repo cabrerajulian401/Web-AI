@@ -118,8 +118,8 @@ export default function ArticlePage() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  const { data: articleData, isLoading } = useQuery<ArticleData>({
-    queryKey: ["/api/article", slug, useDummyMode],
+  const { data: articleData, error, isLoading } = useQuery({
+    queryKey: [`/api/article/${slug}`],
     queryFn: async () => {
       // If dummy mode is enabled, always return the original dummy article
       if (useDummyMode) {
@@ -129,7 +129,33 @@ export default function ArticlePage() {
       // Otherwise use the actual slug
       return fetch(`/api/article/${slug}`).then(res => res.json());
     },
+    enabled: !!slug,
   });
+
+  // Debug logging for conflicting claims
+  useEffect(() => {
+    if (articleData) {
+      console.log('=== FRONTEND DEBUGGING ===');
+      console.log('Article data received:', articleData);
+      console.log('Perspectives:', articleData.perspectives);
+      
+      const perspectivesWithConflicts = articleData.perspectives?.filter(
+        (p: any) => p.conflictSource && p.conflictQuote
+      );
+      console.log('Perspectives with conflicts:', perspectivesWithConflicts);
+      console.log('Number of perspectives with conflicts:', perspectivesWithConflicts?.length || 0);
+      
+      perspectivesWithConflicts?.forEach((p: any, index: number) => {
+        console.log(`Conflict ${index + 1}:`, {
+          source: p.source,
+          quote: p.quote,
+          conflictSource: p.conflictSource,
+          conflictQuote: p.conflictQuote,
+          viewpoint: p.viewpoint
+        });
+      });
+    }
+  }, [articleData]);
 
   const handleShare = async () => {
     try {
@@ -438,7 +464,7 @@ export default function ArticlePage() {
                     <div className="space-y-3">
                       {executiveSummary && executiveSummary.points ? 
                         // Handle dummy article format (array of points)
-                        executiveSummary.points.map((point, index) => (
+                        executiveSummary.points.map((point: string, index: number) => (
                           <div key={index} className="flex items-start">
                             <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                             <span className="text-black leading-relaxed">{TextFormatter.cleanText(point)}</span>
@@ -446,7 +472,7 @@ export default function ArticlePage() {
                         ))
                         : 
                         // Handle AI-generated article format (string with bullet points)
-                        (executiveSummary && executiveSummary.summary ? TextFormatter.formatExecutiveSummary(executiveSummary.summary).map((point, index) => (
+                        (executiveSummary && executiveSummary.summary ? TextFormatter.formatExecutiveSummary(executiveSummary.summary).map((point: string, index: number) => (
                           <div key={index} className="flex items-start">
                             <div className="h-2 w-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                             <span className="text-black leading-relaxed">{point}</span>
@@ -477,14 +503,14 @@ export default function ArticlePage() {
                       <>
                         {/* Use the actual rawFacts data from storage */}
                         {rawFacts && rawFacts.length > 0 ? (
-                          rawFacts.map((factGroup, groupIndex) => (
+                          rawFacts.map((factGroup: any, groupIndex: number) => (
                             <div key={groupIndex} className="mb-8">
                               <h3 className="text-lg font-bold text-black mb-3">
                                 {factGroup.category}
                               </h3>
                               <div className="w-full h-0.5 bg-black mb-6"></div>
                               <div className="space-y-3">
-                                {factGroup.facts.map((fact, index) => (
+                                {factGroup.facts.map((fact: any, index: number) => (
                                   <div key={index} className="flex items-start">
                                     <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                                     <span className="text-gray-900 leading-relaxed">
@@ -506,14 +532,14 @@ export default function ArticlePage() {
                       <>
                         {rawFacts && rawFacts.length > 0 ? (
                           // Display facts by category with proper formatting
-                          TextFormatter.formatRawFacts(rawFacts).map((factGroup, groupIndex) => (
+                          TextFormatter.formatRawFacts(rawFacts).map((factGroup: any, groupIndex: number) => (
                             <div key={groupIndex}>
                               <h3 className="text-lg font-bold text-black mb-3">
                                 {TextFormatter.cleanText(factGroup.category)}
                               </h3>
                               <div className="w-full h-0.5 bg-black mb-6"></div>
                               <div className="space-y-3">
-                                {factGroup.facts.map((fact, index) => (
+                                {factGroup.facts.map((fact: any, index: number) => (
                                   <div key={index} className="flex items-start">
                                     <div className="h-1.5 w-1.5 bg-black rounded-full mt-2 mr-3 flex-shrink-0" />
                                     <div className="text-gray-900 leading-relaxed">
@@ -560,7 +586,7 @@ export default function ArticlePage() {
                   <div className="mt-4 space-y-4">
                     {perspectives && perspectives.length > 0 ? (
                       // Show OpenAI-generated perspectives with proper formatting
-                      TextFormatter.formatPerspectives(perspectives).map((perspective, index) => {
+                      TextFormatter.formatPerspectives(perspectives).map((perspective: any, index: number) => {
                         // Use different colors for different viewpoints
                         const colors = [
                           'bg-red-600 hover:bg-red-700',
@@ -880,7 +906,7 @@ export default function ArticlePage() {
                     {perspectives && perspectives.length > 0 ? (
                       // Create conflicting info from perspectives with conflictSource and conflictQuote
                       <div className="space-y-8">
-                        {perspectives.filter(p => p.conflictSource && p.conflictQuote).map((perspective, index) => (
+                        {perspectives.filter((p: any) => p.conflictSource && p.conflictQuote).map((perspective: any, index: number) => (
                           <div key={index} className="border-b border-gray-200 pb-8">
                             <h3 className="font-semibold text-black mb-6 text-xl">{perspective.viewpoint}</h3>
                             
