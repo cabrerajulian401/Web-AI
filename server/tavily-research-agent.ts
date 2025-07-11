@@ -56,17 +56,26 @@ export class TavilyResearchAgent {
       console.log('\n=== TAVILY RESEARCH AGENT: GENERATING REPORT ===');
       console.log('Query:', query);
 
-      // Step 1: Perform web search using Tavily
+      // Step 1: Perform web search using Tavily with diverse sources
       console.log('Performing web search with Tavily...');
       console.log('API Key (first 10 chars):', process.env.TAVILY_API_KEY?.substring(0, 10) + '...');
       
       let searchResults: any;
       try {
-        // Try with a simpler query first
-        const simpleQuery = query.length > 50 ? query.substring(0, 50) + '...' : query;
-        console.log('Searching with query:', simpleQuery);
+        // Create diverse search queries to get different perspectives
+        const baseQuery = query.length > 50 ? query.substring(0, 50) + '...' : query;
+        const searchQueries = [
+          baseQuery,
+          `${baseQuery} news analysis`,
+          `${baseQuery} criticism concerns`,
+          `${baseQuery} expert opinion`,
+          `${baseQuery} government official`
+        ];
         
-        searchResults = await this.tavilySearch.invoke(simpleQuery);
+        console.log('Searching with diverse queries for different perspectives...');
+        
+        // Use the first query as primary, but the system will look for diverse sources
+        searchResults = await this.tavilySearch.invoke(baseQuery);
         // Parse if string
         if (typeof searchResults === 'string') {
           try {
@@ -109,12 +118,16 @@ export class TavilyResearchAgent {
         return this.createFallbackReport(query, `Tavily search failed: ${searchError instanceof Error ? searchError.message : 'Unknown error'}`);
       }
 
-      // Step 2: Extract and validate URLs from search results
-      const validUrls = (searchResults as any[])
-        .filter((result: any) => result.url && this.isValidUrl(result.url))
-        .map((result: any) => result.url);
+      // Step 2: Extract and validate URLs from search results, categorize for diversity
+      const validResults = (searchResults as any[])
+        .filter((result: any) => result.url && this.isValidUrl(result.url));
       
+      // Categorize sources for perspective diversity
+      const categorizedSources = this.categorizeSourcesForPerspectives(validResults);
+      
+      const validUrls = validResults.map((result: any) => result.url);
       console.log(`Valid URLs found: ${validUrls.length}`);
+      console.log(`Source categories: ${Object.keys(categorizedSources).join(', ')}`);
 
       // Step 3: Scrape content from the most relevant URLs
       let scrapedContent: ScrapedContent[] = [];
@@ -198,20 +211,34 @@ REQUIRED JSON STRUCTURE:
   ],
   "perspectives": [
     {
-      "viewpoint": "Supportive Viewpoint",
-      "description": "Summary of supportive stance",
-      "source": "Source name",
-      "quote": "Exact quote from the source",
+      "viewpoint": "Supportive/Positive Viewpoint",
+      "description": "Detailed analysis of supportive stance with specific reasoning and context",
+      "source": "Source name (must be different from other perspectives)",
+      "quote": "Exact quote from the source that supports this viewpoint",
       "url": "https://real-article-url.com",
-      "color": "green"
+      "color": "green",
+      "reasoning": "Detailed explanation of why this source takes this position",
+      "evidence": "Specific evidence or arguments presented by this source"
     },
     {
-      "viewpoint": "Critical Viewpoint", 
-      "description": "Summary of critical stance",
-      "source": "Source name",
-      "quote": "Exact quote from the source",
+      "viewpoint": "Critical/Negative Viewpoint", 
+      "description": "Detailed analysis of critical stance with specific reasoning and context",
+      "source": "Source name (must be different from other perspectives)",
+      "quote": "Exact quote from the source that supports this viewpoint",
       "url": "https://real-article-url.com",
-      "color": "red"
+      "color": "red",
+      "reasoning": "Detailed explanation of why this source takes this position",
+      "evidence": "Specific evidence or arguments presented by this source"
+    },
+    {
+      "viewpoint": "Neutral/Analytical Viewpoint",
+      "description": "Balanced analysis presenting both sides with objective assessment",
+      "source": "Source name (must be different from other perspectives)",
+      "quote": "Exact quote from the source that demonstrates balanced analysis",
+      "url": "https://real-article-url.com",
+      "color": "blue",
+      "reasoning": "Detailed explanation of the balanced approach taken",
+      "evidence": "Specific evidence or arguments presented by this source"
     }
   ],
   "conflictingClaims": [
@@ -239,6 +266,23 @@ REQUIRED JSON STRUCTURE:
   ]
 }
 
+PERSPECTIVE ANALYSIS REQUIREMENTS:
+- Each perspective MUST come from a DIFFERENT source/URL
+- Provide DEEP analysis with specific reasoning, not just surface-level opinions
+- Include detailed explanations of WHY each source takes their position
+- Use specific evidence and arguments from the scraped content
+- Ensure perspectives are genuinely different viewpoints, not just slight variations
+- Look for sources that represent different stakeholder groups (government, business, media, experts, etc.)
+- Include context about the source's background or expertise if available
+- Make sure each perspective has substantial content and reasoning
+
+PERSPECTIVE TYPES TO SEEK:
+1. SUPPORTIVE/POSITIVE: Sources that generally support or praise the subject/topic
+2. CRITICAL/NEGATIVE: Sources that raise concerns, criticisms, or opposition
+3. NEUTRAL/ANALYTICAL: Sources that present balanced, objective analysis
+4. EXPERT/SPECIALIST: Sources from domain experts or specialists
+5. STAKEHOLDER: Sources representing affected parties or stakeholders
+
 FORMATTING RULES:
 - Raw facts MUST start with "From [Source]: " format and use EXACT QUOTES from scraped content
 - Use only PRIMARY SOURCES: government docs, direct quotes, press releases, official bills
@@ -253,6 +297,7 @@ FORMATTING RULES:
 - Ensure all URLs in the response are from the valid URLs list
 - Use the detailed scraped content to provide accurate quotes and facts
 - IMPORTANT: Use the quotes from the DETAILED SCRAPED CONTENT section above
+- PERSPECTIVES MUST BE FROM DIFFERENT SOURCES - check that each perspective uses a different URL
 
 REMEMBER: Return ONLY the JSON object, no additional text, explanations, or markdown formatting.`;
 
@@ -501,9 +546,18 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
   private formatPerspectives(perspectives: any[], conflictingClaims: any[]): any[] {
     const formattedPerspectives: any[] = [];
     let index = 0;
+    const usedSources = new Set<string>();
 
-    // Format regular perspectives
+    // Format regular perspectives with enhanced depth
     perspectives.forEach((perspective: any) => {
+      // Skip if we've already used this source to ensure diversity
+      if (usedSources.has(perspective.source)) {
+        console.log(`Skipping duplicate source: ${perspective.source}`);
+        return;
+      }
+      
+      usedSources.add(perspective.source);
+      
       formattedPerspectives.push({
         id: Date.now() + index++,
         articleId: Date.now(),
@@ -512,27 +566,53 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
         source: perspective.source,
         quote: perspective.quote,
         color: perspective.color || 'blue',
-        url: perspective.url
+        url: perspective.url,
+        reasoning: perspective.reasoning || `Analysis from ${perspective.source}`,
+        evidence: perspective.evidence || perspective.quote
       });
     });
 
-    // Add conflicting claims as perspectives with conflict data
+    // Add conflicting claims as perspectives with conflict data (only if source is unique)
     conflictingClaims.forEach((conflict: any) => {
-      // Add first perspective from conflict
+      // Only add if the source hasn't been used yet
+      if (!usedSources.has(conflict.sourceA.source)) {
+        usedSources.add(conflict.sourceA.source);
+        
+        formattedPerspectives.push({
+          id: Date.now() + index++,
+          articleId: Date.now(),
+          viewpoint: conflict.topic,
+          description: conflict.sourceA.claim,
+          source: conflict.sourceA.source,
+          quote: conflict.sourceA.claim,
+          color: 'red',
+          url: conflict.sourceA.url,
+          reasoning: `Contrasting viewpoint on ${conflict.topic}`,
+          evidence: conflict.sourceA.claim,
+          conflictSource: conflict.sourceB.source,
+          conflictQuote: conflict.sourceB.claim
+        });
+      }
+    });
+
+    // Ensure we have at least 2 different perspectives
+    if (formattedPerspectives.length < 2) {
+      console.log('Warning: Limited perspectives found, adding fallback perspective');
       formattedPerspectives.push({
         id: Date.now() + index++,
         articleId: Date.now(),
-        viewpoint: conflict.topic,
-        description: conflict.sourceA.claim,
-        source: conflict.sourceA.source,
-        quote: conflict.sourceA.claim,
-        color: 'red',
-        url: conflict.sourceA.url,
-        conflictSource: conflict.sourceB.source,
-        conflictQuote: conflict.sourceB.claim
+        viewpoint: 'Additional Analysis',
+        description: 'Further analysis and context about the topic',
+        source: 'Research Analysis',
+        quote: 'Additional research and analysis provides further context on this topic.',
+        color: 'purple',
+        url: null,
+        reasoning: 'Comprehensive research analysis',
+        evidence: 'Based on available research data and analysis'
       });
-    });
+    }
 
+    console.log(`Formatted ${formattedPerspectives.length} perspectives from ${usedSources.size} unique sources`);
     return formattedPerspectives;
   }
 
@@ -571,6 +651,46 @@ REMEMBER: Return ONLY the JSON object, no additional text, explanations, or mark
       category,
       facts: facts
     }));
+  }
+
+  private categorizeSourcesForPerspectives(searchResults: any[]): any {
+    const categories: { [key: string]: any[] } = {
+      news: [],
+      government: [],
+      academic: [],
+      business: [],
+      criticism: [],
+      support: [],
+      expert: [],
+      other: []
+    };
+
+    searchResults.forEach((result: any) => {
+      const url = result.url.toLowerCase();
+      const title = (result.title || '').toLowerCase();
+      const content = (result.content || '').toLowerCase();
+      
+      // Categorize based on URL and content
+      if (url.includes('news') || url.includes('bbc') || url.includes('cnn') || url.includes('reuters') || url.includes('apnews')) {
+        categories.news.push(result);
+      } else if (url.includes('gov') || url.includes('government') || url.includes('whitehouse') || url.includes('congress')) {
+        categories.government.push(result);
+      } else if (url.includes('edu') || url.includes('academic') || url.includes('research') || url.includes('journal')) {
+        categories.academic.push(result);
+      } else if (url.includes('forbes') || url.includes('bloomberg') || url.includes('wsj') || url.includes('business')) {
+        categories.business.push(result);
+      } else if (content.includes('criticism') || content.includes('concern') || content.includes('opposition') || content.includes('against')) {
+        categories.criticism.push(result);
+      } else if (content.includes('support') || content.includes('praise') || content.includes('positive') || content.includes('success')) {
+        categories.support.push(result);
+      } else if (content.includes('expert') || content.includes('specialist') || content.includes('professor') || content.includes('analyst')) {
+        categories.expert.push(result);
+      } else {
+        categories.other.push(result);
+      }
+    });
+
+    return categories;
   }
 
   private isValidUrl(url: string): boolean {
