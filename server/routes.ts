@@ -1,8 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { enhancedWebSearchAgent } from "./enhanced-web-search-agent";
+import { tavilyResearchAgent } from "./tavily-research-agent";
 import { pexelsService } from "./pexels-service";
+// import langChainNewRoutes from "./routes-langchain-new";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all articles for feed
@@ -33,7 +34,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Generate research report
+  // Generate research report (current simple web search agent)
   app.post("/api/research", async (req, res) => {
     try {
       const { query } = req.body;
@@ -48,7 +49,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const heroImageUrl = await pexelsService.searchImageByTopic(query, 0);
       console.log(`Fetched hero image from Pexels: ${heroImageUrl}`);
       
-      const researchReport = await enhancedWebSearchAgent.generateResearchReport(query, heroImageUrl);
+      const researchReport = await tavilyResearchAgent.generateResearchReport(query, heroImageUrl);
       
       // Store the generated report in our storage
       await storage.storeResearchReport(researchReport.article.slug, researchReport);
@@ -57,6 +58,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error generating research report:", error);
       res.status(500).json({ message: "Failed to generate research report" });
+    }
+  });
+
+  // LangChain New Research Agent routes (commented out to use Tavily instead)
+  // app.use("/api/langchain", langChainNewRoutes);
+
+  // Tavily Research Agent test route
+  app.post("/api/tavily/research", async (req, res) => {
+    try {
+      const { query } = req.body;
+      
+      if (!query || typeof query !== 'string') {
+        return res.status(400).json({ message: "Query is required" });
+      }
+
+      console.log(`Testing Tavily research agent with query: ${query}`);
+      
+      // Fetch relevant image from Pexels based on the query (index 0 for main article)
+      const heroImageUrl = await pexelsService.searchImageByTopic(query, 0);
+      console.log(`Fetched hero image from Pexels: ${heroImageUrl}`);
+      
+      const researchReport = await tavilyResearchAgent.generateResearchReport(query, heroImageUrl);
+      
+      // Store the generated report in our storage
+      await storage.storeResearchReport(researchReport.article.slug, researchReport);
+      
+      res.json({ 
+        slug: researchReport.article.slug,
+        message: "Tavily research report generated successfully",
+        sourceCount: researchReport.article.sourceCount
+      });
+    } catch (error) {
+      console.error("Error generating Tavily research report:", error);
+      res.status(500).json({ message: "Failed to generate Tavily research report", error: error instanceof Error ? error.message : 'Unknown error' });
     }
   });
 

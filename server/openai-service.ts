@@ -356,8 +356,8 @@ export class OpenAIResearchService {
         console.log('✓ Direct repair produced valid JSON');
       } catch (testError) {
         console.log('✗ Direct repair failed, trying JSON formatter service');
-        console.log('Parse error:', testError.message);
-        console.log('Error at position:', testError.message.match(/position (\d+)/)?.[1]);
+        console.log('Parse error:', testError instanceof Error ? testError.message : 'Unknown error');
+        console.log('Error at position:', testError instanceof Error ? testError.message.match(/position (\d+)/)?.[1] : 'Unknown');
         
         try {
           cleanContent = await jsonFormatterService.formatToValidJSON(cleanContent);
@@ -400,11 +400,11 @@ export class OpenAIResearchService {
         }
       } catch (parseError) {
         console.error('JSON parse error:', parseError);
-        console.error('Error message:', parseError.message);
-        console.error('Error at position:', parseError.message.match(/position (\d+)/)?.[1]);
+        console.error('Error message:', parseError instanceof Error ? parseError.message : 'Unknown error');
+        console.error('Error at position:', parseError instanceof Error ? parseError.message.match(/position (\d+)/)?.[1] : 'Unknown');
         
         // Show the problematic area
-        if (parseError.message.includes('position')) {
+        if (parseError instanceof Error && parseError.message.includes('position')) {
           const pos = parseInt(parseError.message.match(/position (\d+)/)?.[1] || '0');
           const start = Math.max(0, pos - 50);
           const end = Math.min(cleanContent.length, pos + 50);
@@ -494,7 +494,9 @@ export class OpenAIResearchService {
         executiveSummary: {
           id: Date.now(),
           articleId: Date.now(),
-          summary: reportData.article.executiveSummary || "No executive summary available."
+          points: reportData.article.executiveSummary ? 
+            reportData.article.executiveSummary.split(/[•\-\n]/).map((p: string) => p.trim()).filter((p: string) => p.length > 0) : 
+            ["No executive summary available."]
         },
         timelineItems: (reportData.timelineItems || []).map((item: any, index: number) => ({
           id: Date.now() + index,
