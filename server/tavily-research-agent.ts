@@ -79,17 +79,17 @@ export class TavilyResearchAgent {
       }
 
       // Step 2: Parallel web scraping (limit to 10 URLs for testing)
-      const validUrls = searchResults.slice(0, 10).map((result: any) => result.url).filter(Boolean);
-      console.log(`Step 2: Starting parallel scraping of ${validUrls.length} URLs...`);
+      const searchResultsToScrape = searchResults.slice(0, 10);
+      console.log(`Step 2: Starting parallel scraping of ${searchResultsToScrape.length} URLs...`);
       
       const [scrapedContent, sourceImages] = await Promise.all([
-        this.parallelWebScraping(validUrls),
-        this.parallelImageFetching(searchResults.slice(0, 10)) // Fetch images in parallel for 10 sources
+        this.parallelWebScraping(searchResultsToScrape), // pass search results
+        this.parallelImageFetching(searchResultsToScrape) // Fetch images in parallel for 10 sources
       ]);
 
       // Step 3: Generate optimized report with truncated content
       console.log('Step 3: Generating optimized AI report...');
-      const reportData = await this.generateOptimizedAIReport(query, searchResults, scrapedContent, validUrls);
+      const reportData = await this.generateOptimizedAIReport(query, searchResults, scrapedContent, searchResultsToScrape.map(r => r.url));
 
       // Step 4: Build final report with pre-fetched images
       console.log('Step 4: Building final report...');
@@ -321,7 +321,8 @@ export class TavilyResearchAgent {
           reasoning: `Position from ${conflict.sourceA.source}`,
           evidence: conflict.sourceA.claim,
           conflictSource: conflict.sourceB.source,
-          conflictQuote: conflict.sourceB.claim
+          conflictQuote: conflict.sourceB.claim,
+          conflictUrl: conflict.sourceB.url
         };
         formattedPerspectives.push(perspectiveA);
         console.log(`Created new perspective A for: ${conflict.sourceA.source}`);
@@ -329,6 +330,7 @@ export class TavilyResearchAgent {
         // Update existing perspective with conflict information
         perspectiveA.conflictSource = conflict.sourceB.source;
         perspectiveA.conflictQuote = conflict.sourceB.claim;
+        perspectiveA.conflictUrl = conflict.sourceB.url;
         console.log(`Updated existing perspective A for: ${conflict.sourceA.source}`);
       }
       
@@ -353,7 +355,8 @@ export class TavilyResearchAgent {
           reasoning: `Position from ${conflict.sourceB.source}`,
           evidence: conflict.sourceB.claim,
           conflictSource: conflict.sourceA.source,
-          conflictQuote: conflict.sourceA.claim
+          conflictQuote: conflict.sourceA.claim,
+          conflictUrl: conflict.sourceA.url
         };
         formattedPerspectives.push(perspectiveB);
         console.log(`Created new perspective B for: ${conflict.sourceB.source}`);
@@ -361,6 +364,7 @@ export class TavilyResearchAgent {
         // Update existing perspective with conflict information
         perspectiveB.conflictSource = conflict.sourceA.source;
         perspectiveB.conflictQuote = conflict.sourceA.claim;
+        perspectiveB.conflictUrl = conflict.sourceA.url;
         console.log(`Updated existing perspective B for: ${conflict.sourceB.source}`);
       }
     });
@@ -516,15 +520,18 @@ export class TavilyResearchAgent {
   }
 
   // Parallel web scraping with concurrent requests
-  private async parallelWebScraping(urls: string[]): Promise<ScrapedContent[]> {
+  private async parallelWebScraping(searchResults: any[]): Promise<ScrapedContent[]> {
+    const urls = searchResults.map(r => r.url).filter(Boolean);
     console.log(`🚀 Starting parallel scraping of ${urls.length} URLs...`);
-    const scrapingPromises = urls.map(async (url, index) => {
+    
+    const scrapingPromises = searchResults.map(async (result, index) => {
       try {
-        const domain = new URL(url).hostname;
-        const sourceName = `Source ${index + 1} (${domain})`;
+        const url = result.url;
+        // Use the search result title as the sourceName, fallback to domain
+        const sourceName = result.title || new URL(url).hostname;
         return await webScraperService.scrapeUrl(url, sourceName);
       } catch (error) {
-        console.warn(`Failed to scrape ${url}:`, error);
+        console.warn(`Failed to scrape ${result.url}:`, error);
         return { success: false, error: error instanceof Error ? error.message : 'Unknown error' } as ScrapingResult;
       }
     });
@@ -597,14 +604,13 @@ CONTENT SUMMARY: ${content.content}
 `;
     }).join('\n');
 
+    const hasConflictingInfo = await this.checkForConflictingInfo(sourceQuotesInfo);
+
     const systemPrompt = `SYSTEM ROLE: You are a fast, efficient research assistant. Create a comprehensive research report based ONLY on the provided search results and scraped content.
 
-🚫 CRITICAL QUOTE REQUIREMENTS:
-- You MUST ONLY use quotes that are explicitly provided in the "AVAILABLE QUOTES FROM THIS SOURCE" sections below
-- You MUST NEVER generate, create, or fabricate any quotes
-- Every quote MUST be copied EXACTLY as provided from the scraped content
-- You MUST attribute each quote to its exact source name and URL
-- If no suitable quotes are available for a perspective, then do not include that perspective.
+🚫 CRITICAL INSTRUCTIONS:
+- NO SAME-SOURCE CONFLICTS: For the "conflictingClaims" section, sourceA and sourceB MUST originate from different and distinct sources. Do NOT use the same source for both claims under any circumstances. For example, if Source A is from "Wikipedia", Source B cannot also be from "Wikipedia".
+- REAL QUOTES ONLY: You MUST ONLY use quotes that are explicitly provided in the "AVAILABLE QUOTES FROM THIS SOURCE" sections below. Never generate, create, or fabricate any quotes. Every quote MUST be copied EXACTLY as provided and attributed to its source.
 
 TASK: Create a detailed research report on: ${query}
 
@@ -615,22 +621,22 @@ ${searchResults.slice(0, 10).map((result: any, index: number) =>
 
 ${sourceQuotesInfo}
 
-STRICT QUOTE USAGE RULES:
-1. Only use quotes from the "AVAILABLE QUOTES FROM THIS SOURCE" sections above
-2. Copy quotes EXACTLY as they appear - no modifications or paraphrasing
-3. Always attribute quotes to the exact source name and URL provided
-4. Never combine quotes from different sources
-5. If you need a quote but none are available, write "No direct quotes available from this source"
-6. Use varying quotes. Do not use the same quote more than once.
+STRICT JSON AND QUOTE USAGE RULES:
+1. Only use quotes from the "AVAILABLE QUOTES FROM THIS SOURCE" sections above.
+2. Copy quotes EXACTLY as they appear—no modifications or paraphrasing.
+3. Always attribute quotes to the exact source name and URL provided.
+4. Never combine quotes from different sources.
+5. For "conflictingClaims", sourceA and sourceB MUST come from different sources.
+6. Use varied quotes. Do not use the same quote more than once.
 
 SPEED REQUIREMENTS:
-- Generate report efficiently with available data
+- Generate report efficiently with available data.
 - Focus on key insights and conflicts using ONLY real quotes
 - Provide factual, well-structured content
 - Use concise but comprehensive analysis
 - Incorporate multiple and various sources
 
-${this.getOptimizedJSONStructure(validUrls.length)}`;
+${this.getOptimizedJSONStructure(validUrls.length, hasConflictingInfo)}`;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4.1", // Use faster model for speed
@@ -704,7 +710,60 @@ ${this.getOptimizedJSONStructure(validUrls.length)}`;
     console.log('🔍 Quote validation completed');
   }
 
-  private getOptimizedJSONStructure(sourceCount: number): string {
+  private async checkForConflictingInfo(sourceQuotesInfo: string): Promise<boolean> {
+    console.log('🧐 Checking for conflicting information...');
+    try {
+      const systemPrompt = `Analyze the provided source information and determine if there are any conflicting claims or viewpoints.
+Respond with a JSON object containing a single boolean field "hasConflictingInfo".
+- If you find opposing or contradictory information, set "hasConflictingInfo" to true.
+- If all information is aligned or discusses different aspects of the same topic without contradiction, set "hasConflictingInfo" to false.`;
+
+      const userPrompt = `Here is the source information:
+${sourceQuotesInfo}
+
+Does this information contain conflicting claims?`;
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o", // Using a capable model for analysis
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt }
+        ],
+        max_tokens: 100,
+        response_format: { type: "json_object" },
+        temperature: 0.0
+      });
+
+      const result = JSON.parse(response.choices[0].message.content || '{}');
+      const hasConflicts = result.hasConflictingInfo === true;
+      
+      console.log(`🤖 Conflict check result: ${hasConflicts}`);
+      return hasConflicts;
+
+    } catch (error) {
+      console.error('Error checking for conflicting info:', error);
+      return false; // Default to false in case of an error
+    }
+  }
+
+  private getOptimizedJSONStructure(sourceCount: number, includeConflictingClaims: boolean): string {
+    const conflictingClaimsStructure = includeConflictingClaims ? `
+  "conflictingClaims": [
+    {
+      "topic": "Conflicting issue from sources",
+      "sourceA": {
+        "claim": "EXACT quote from Source A's AVAILABLE QUOTES",
+        "source": "Source A Name (exactly as provided)",
+        "url": "https://exact-source-a-url.com"
+      },
+      "sourceB": {
+        "claim": "EXACT quote from Source B's AVAILABLE QUOTES",
+        "source": "Source B Name (exactly as provided)", 
+        "url": "https://exact-source-b-url.com"
+      }
+    }
+  ],` : '';
+    
     return `
 REQUIRED JSON STRUCTURE (optimized):
 {
@@ -745,21 +804,7 @@ REQUIRED JSON STRUCTURE (optimized):
       "color": "green"
     }
   ],
-  "conflictingClaims": [
-    {
-      "topic": "Conflicting issue from sources",
-      "sourceA": {
-        "claim": "EXACT quote from Source A's AVAILABLE QUOTES",
-        "source": "Source A Name (exactly as provided)",
-        "url": "https://exact-source-a-url.com"
-      },
-      "sourceB": {
-        "claim": "EXACT quote from Source B's AVAILABLE QUOTES",
-        "source": "Source B Name (exactly as provided)", 
-        "url": "https://exact-source-b-url.com"
-      }
-    }
-  ],
+  ${conflictingClaimsStructure}
   "citedSources": [
     {
       "name": "Source name (exactly as provided)",
@@ -780,6 +825,37 @@ REQUIRED JSON STRUCTURE (optimized):
     sourceImages: string[]
   ): Promise<ResearchReport> {
     const slug = this.createSlug(reportData.article.title);
+
+    // Filter out conflicting claims with "No quote" placeholders
+    if (reportData.conflictingClaims && Array.isArray(reportData.conflictingClaims)) {
+      const originalCount = reportData.conflictingClaims.length;
+      const invalidQuotePhrase = "No direct quotes available";
+
+      reportData.conflictingClaims = reportData.conflictingClaims.filter((claim: any) => {
+        const claimA = claim.sourceA?.claim || '';
+        const claimB = claim.sourceB?.claim || '';
+        const isAInvalid = claimA.includes(invalidQuotePhrase);
+        const isBInvalid = claimB.includes(invalidQuotePhrase);
+
+        if (isAInvalid || isBInvalid) {
+          console.log(`Filtering out conflicting claim topic "${claim.topic}" due to missing quote.`);
+          return false;
+        }
+
+        // Also filter if the claims are identical
+        if (claimA.trim() === claimB.trim()) {
+          console.log(`Filtering out conflicting claim topic "${claim.topic}" due to identical quotes.`);
+          return false;
+        }
+
+        return true;
+      });
+
+      const removedCount = originalCount - reportData.conflictingClaims.length;
+      if (removedCount > 0) {
+        console.log(`Removed ${removedCount} conflicting claims with invalid quotes.`);
+      }
+    }
 
     const report: ResearchReport = {
       article: {

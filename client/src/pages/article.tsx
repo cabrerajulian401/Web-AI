@@ -933,13 +933,13 @@ export default function ArticlePage() {
                               <div className="space-y-4 lg:col-start-2 lg:row-start-1">
                                 <div className="flex items-center space-x-3">
                                   <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">B</div>
-                                  <span className="font-semibold text-black text-sm uppercase tracking-wide">{perspective.conflictSource}</span>
+                                  <a href={perspective.conflictUrl} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                                    <span className="font-semibold text-black text-sm uppercase tracking-wide">{perspective.conflictSource}</span>
+                                  </a>
                                 </div>
-                                <div className="border-l-4 border-gray-400 pl-4">
-                                  <blockquote className="text-gray-800 italic text-base leading-relaxed">
-                                    "{perspective.conflictQuote}"
-                                  </blockquote>
-                                </div>
+                                <p className="text-gray-600 italic mt-2">
+                                  "{perspective.conflictQuote}"
+                                </p>
                               </div>
                             </div>
                           </div>

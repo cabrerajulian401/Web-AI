@@ -60,8 +60,11 @@ export const perspectives = pgTable("perspectives", {
   quote: text("quote"),
   color: text("color").notNull(), // 'green', 'yellow', 'blue', etc.
   url: text("url"),
+  reasoning: text("reasoning"),
+  evidence: text("evidence"),
   conflictSource: text("conflict_source"), // The opposing source
   conflictQuote: text("conflict_quote"), // The opposing quote
+  conflictUrl: text("conflict_url"), // The opposing URL
 });
 
 export const insertArticleSchema = createInsertSchema(articles).omit({
@@ -88,6 +91,23 @@ export const insertPerspectiveSchema = createInsertSchema(perspectives).omit({
   id: true,
 });
 
+// This is the interface used by the frontend and some services, not the drizzle schema
+export interface Perspective {
+  id: number;
+  articleId: number;
+  viewpoint: string;
+  description: string;
+  source: string;
+  quote: string;
+  color: string;
+  url: string | null;
+  reasoning: string | null;
+  evidence: string | null;
+  conflictSource: string | null;
+  conflictQuote: string | null;
+  conflictUrl: string | null;
+}
+
 export type Article = typeof articles.$inferSelect;
 export type InsertArticle = z.infer<typeof insertArticleSchema>;
 export type ExecutiveSummary = typeof executiveSummary.$inferSelect;
@@ -98,8 +118,10 @@ export type CitedSource = typeof citedSources.$inferSelect;
 export type InsertCitedSource = z.infer<typeof insertCitedSourceSchema>;
 export type RawFacts = typeof rawFacts.$inferSelect;
 export type InsertRawFacts = z.infer<typeof insertRawFactsSchema>;
-export type Perspective = typeof perspectives.$inferSelect;
+// This is the type inferred from the drizzle schema
+export type DrizzlePerspective = typeof perspectives.$inferSelect;
 export type InsertPerspective = z.infer<typeof insertPerspectiveSchema>;
+
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
