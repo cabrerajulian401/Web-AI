@@ -1,19 +1,10 @@
 import OpenAI from "openai";
-import type { Article, TimelineItem, CitedSource, RawFacts, Perspective, ExecutiveSummary } from "@shared/schema";
+import type { Article, TimelineItem, CitedSource, RawFacts, Perspective, ExecutiveSummary, ResearchReport } from "@shared/schema";
 import { pexelsService } from "./pexels-service";
 import { RSSService } from "./rss-service";
 import { jsonFormatterService } from "./json-formatter-service";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-export interface ResearchReport {
-  article: Article;
-  executiveSummary: ExecutiveSummary;
-  timelineItems: TimelineItem[];
-  citedSources: CitedSource[];
-  rawFacts: RawFacts[];
-  perspectives: Perspective[];
-}
 
 export class OpenAIResearchService {
 
@@ -49,6 +40,7 @@ export class OpenAIResearchService {
   // Extract and collect all cited sources from the report
   async collectCitedSources(reportData: any): Promise<CitedSource[]> {
     try {
+      const articleId = reportData.article?.id || Date.now();
       // If OpenAI directly provided citedSources, use those
       if (reportData.citedSources && Array.isArray(reportData.citedSources) && reportData.citedSources.length > 0) {
         const citedSourcesWithImages = await Promise.all(
@@ -57,7 +49,7 @@ export class OpenAIResearchService {
 
             return {
               id: Date.now() + index,
-              articleId: Date.now(),
+              articleId: articleId,
               name: source.name,
               type: source.type,
               description: source.description,
@@ -163,7 +155,7 @@ export class OpenAIResearchService {
 
           return {
             id: Date.now() + index,
-            articleId: Date.now(),
+            articleId: articleId,
             name: source.name,
             type: source.type,
             description: source.description,
@@ -182,292 +174,30 @@ export class OpenAIResearchService {
   }
 
   async generateResearchReport(query: string, heroImageUrl?: string): Promise<ResearchReport> {
-    const startTime = Date.now();
     try {
-      console.log('\n=== GENERATING RESEARCH REPORT ===');
+      console.log('\n=== GENERATING RESEARCH REPORT (2-step process) ===');
       console.log('Query:', query);
-      console.log('Generating comprehensive report with cited sources...');
 
-    
+      // Step 1: Perform web search to get unstructured data
+      const unstructuredResearch = await this.performWebSearch(query);
 
-            const systemPrompt = `SYSTEM ROLE: You are a real-time, non-partisan research assistant with live web browsing capability. You NEVER fabricate data, quotes, articles, or URLs. You will ONLY write content based on real articles and real public sources accessed live through your browsing ability.
-
-      TASK: Create a real-time research report on the broader news story behind: ${query}
-
-      ✅ REQUIRED FIRST STEP: Use your browsing capability to search "${query}". Do not proceed until you've located at least 3 credible live sources that can be quoted or linked.
-
-      ⛔ If you cannot access live data or URLs, STOP. Return this exact error structure:
-      {
-        "error": true,
-        "message": "ERROR: Live browsing failed. No report generated."
+      // Handle case where search fails
+      if (!unstructuredResearch || unstructuredResearch.length < 50) {
+        console.error('Web search returned insufficient data.');
+        throw new Error('Failed to gather sufficient information from web search.');
       }
 
-      You must return ONLY valid JSON with this exact structure:
+      // Step 2: Structure the data using a second model call
+      const reportData = await this.structureResearchData(unstructuredResearch, query);
 
-      {
-        "article": {
-          "title": "Clear, factual title based on search results",
-          "executiveSummary": "• Short summary of what happened in bullet points\n• Plain English, easy to understand\n•Each bullet point on a sepperate line,
-          "content": "Comprehensive article with all research findings",
-          "category": "Research",
-          "publishedAt": "${new Date().toISOString()}",
-          "readTime": 8,
-          "sourceCount": [actual number of unique sources used]
-        },
-        "rawFacts": [
-          {
-            "category": "Primary Sources",
-            "fact": "From [Source Name]: [exact quote or fact as found]",
-            "source": "White House Press Release",
-            "url": "https://exact-url-from-search.com"
-          }
-        ],
-        "timelineItems": [
-          {
-            "date": "YYYY-MM-DD",
-            "title": "Event title",
-            "description": "Event details - bullet point format",
-            "source": "Source name",
-            "url": "https://real-url-from-search.com"
-          }
-        ],
-        "perspectiveGroups": [
-          {
-            "viewpointHeadline": "Pro-Policy Supporters",
-            "tone": "supportive",
-            "articles": [
-              {
-                "stance": "1-line summary of stance",
-                "publisher": "Publisher name",
-                "quote": "Short exact quote from article",
-                "url": "https://real-article-url.com"
-              }
-            ]
-          },
-          {
-            "viewpointHeadline": "Critics and Opposition",
-            "tone": "critical",
-            "articles": [
-              {
-                "stance": "1-line summary of stance",
-                "publisher": "Publisher name",
-                "quote": "Short exact quote from article",
-                "url": "https://real-article-url.com"
-              }
-            ]
-          }
-        ],
-        "conflictingClaims": [
-          {
-            "topic": "Number of casualties",
-            "conflict": "[Source A URL] claims 50 vs [Source B URL] claims 75",
-            "sourceA": {
-              "claim": "50 casualties reported",
-              "url": "https://source-a-url.com"
-            },
-            "sourceB": {
-              "claim": "75 casualties reported",
-              "url": "https://source-b-url.com"
-            }
-          }
-        ],
-        "citedSources": [
-          {
-            "name": "Source organization name",
-            "type": "Primary Source",
-            "description": "Government document on...",
-            "url": "https://real-url.com"
-          }
-        ]
-      }
-
-      FORMATTING RULES:
-      - Raw facts MUST start with "From [Source]: " format
-      - Use only PRIMARY SOURCES: government docs, direct quotes, press releases, official bills
-      - No secondhand citations (no Wikipedia, no summaries)
-      - If quoting legislation, include name of bill and section
-      - Group perspectives by viewpoint, not individual articles
-      - 🚫 NEVER invent article titles, outlets, quotes, or URLs
-      - If you cannot find real sources for a section, use empty array []`;
-
-            const response = await openai.chat.completions.create({
-              model: "gpt-4o-search-preview",
-              web_search_options: {
-                user_location: {
-                  type: "approximate",
-                  approximate: {
-                    country: "US",
-                    city: "Dallas",
-                    region: "Texas",
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-                  }
-                }
-              },
-              messages: [
-                {
-                  role: "system",
-                  content: systemPrompt
-                },
-                {
-                  role: "user",
-                  content: `Research and create a comprehensive report about: ${query}`
-                }
-              ],
-              max_tokens: 4000
-            });
-
-      // Extract response
-      const { message } = response.choices[0];
-      console.log('Raw response length:', message.content?.length);
-
-      // Parse JSON response
-      let cleanContent = message.content || '{}';
-
-      // Remove markdown code blocks if present
-      if (cleanContent.includes('```json')) {
-        cleanContent = cleanContent.replace(/```json\n?/, '').replace(/\n?```$/, '');
-      }
-
-      // Extract JSON from the response
-      const jsonStart = cleanContent.indexOf('{');
-      const jsonEnd = cleanContent.lastIndexOf('}');
-
-      if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
-        cleanContent = cleanContent.substring(jsonStart, jsonEnd + 1);
-      }
-
-      // Apply direct fix for the specific newline issue
-      console.log('=== ATTEMPTING DIRECT JSON REPAIR ===');
-      console.log('Before repair, first 50 chars:', cleanContent.substring(0, 50));
-      
-      // Handle the specific case where JSON starts with "{\n"
-      if (cleanContent.startsWith('{\n')) {
-        cleanContent = cleanContent.replace(/^{\n/, '{');
-        console.log('✓ Fixed opening brace newline issue');
-      }
-      
-      // Apply comprehensive newline fixes
-      cleanContent = this.fixJsonNewlines(cleanContent);
-      console.log('After repair, first 50 chars:', cleanContent.substring(0, 50));
-      
-      // Test if the repaired content can be parsed
-      try {
-        JSON.parse(cleanContent);
-        console.log('✓ Direct repair produced valid JSON');
-      } catch (testError) {
-        console.log('✗ Direct repair failed, trying JSON formatter service');
-        console.log('Parse error:', testError.message);
-        console.log('Error at position:', testError.message.match(/position (\d+)/)?.[1]);
-        
-        try {
-          cleanContent = await jsonFormatterService.formatToValidJSON(cleanContent);
-          console.log('✓ JSON formatter service successful');
-        } catch (formatterError) {
-          console.log('✗ JSON formatter service failed, using aggressive repair');
-          cleanContent = this.aggressiveJsonRepair(cleanContent);
-        }
-      }
-
-      let reportData;
-      try {
-        reportData = JSON.parse(cleanContent);
-        console.log('Parsed report data successfully');
-
-        // Check for error response
-        if (reportData.error) {
-          console.error('AI reported browsing failure:', reportData.message);
-          reportData = {
-            article: {
-              title: `Research Report: ${query}`,
-              excerpt: "Live browsing failed. No report generated.",
-              content: "ERROR: Live browsing failed. No report generated.",
-              category: "Research",
-              publishedAt: new Date().toISOString(),
-              readTime: 1,
-              sourceCount: 0,
-              executiveSummary: "Live browsing failed. No executive summary available."
-            },
-            rawFacts: [],
-            timelineItems: [],
-            perspectiveGroups: [],
-            conflictingClaims: [],
-            citedSources: []
-          };
-        } else {
-          console.log('Number of cited sources:', reportData.citedSources?.length || 0);
-          console.log('Number of raw facts:', reportData.rawFacts?.length || 0);
-          console.log('Number of perspective groups:', reportData.perspectiveGroups?.length || 0);
-        }
-      } catch (parseError) {
-        console.error('JSON parse error:', parseError);
-        console.error('Error message:', parseError.message);
-        console.error('Error at position:', parseError.message.match(/position (\d+)/)?.[1]);
-        
-        // Show the problematic area
-        if (parseError.message.includes('position')) {
-          const pos = parseInt(parseError.message.match(/position (\d+)/)?.[1] || '0');
-          const start = Math.max(0, pos - 50);
-          const end = Math.min(cleanContent.length, pos + 50);
-          console.error('Context around error:', cleanContent.substring(start, end));
-        }
-
-        // Try to fix JSON issues
-        let fixedContent = cleanContent;
-
-        // Try multiple repair strategies
-        try {
-          // Strategy 1: Fix control characters
-          fixedContent = this.fixControlCharacters(fixedContent);
-          
-          // Strategy 2: Fix common JSON issues
-          fixedContent = this.repairMalformedJson(fixedContent);
-          
-          reportData = JSON.parse(fixedContent);
-          console.log('Successfully parsed after JSON repair');
-        } catch (e) {
-          console.error('Failed after all repair attempts:', e);
-          
-          // Try extracting just the basic structure
-          try {
-            const basicStructure = this.extractBasicStructure(cleanContent);
-            reportData = JSON.parse(basicStructure);
-            console.log('Successfully parsed basic structure');
-          } catch (e2) {
-            console.error('Failed to extract basic structure:', e2);
-          }
-        }
-
-        // If still failing, create error response
-        if (!reportData) {
-          reportData = {
-            article: {
-              title: `Research Report: ${query}`,
-              excerpt: "Unable to generate report due to technical issues.",
-              content: "ERROR: Live browsing failed. No report generated.",
-              category: "Research",
-              publishedAt: new Date().toISOString(),
-              readTime: 1,
-              sourceCount: 0,
-              executiveSummary: "Unable to generate executive summary due to technical issues."
-            },
-            rawFacts: [],
-            timelineItems: [],
-            perspectiveGroups: [],
-            conflictingClaims: [],
-            citedSources: []
-          };
-        }
-      }
+      const articleId = Date.now();
 
       // Process conflicting claims if present
-      const conflictingClaimsText = reportData.conflictingClaims?.map((conflict: any) => 
-        `\n\n**Conflicting Claims - ${conflict.topic}:**\n${conflict.conflict}\n\n${conflict.sourceA.claim} ([${conflict.sourceA.url}](${conflict.sourceA.url}))\nvs.\n${conflict.sourceB.claim} ([${conflict.sourceB.url}](${conflict.sourceB.url}))`
-      ).join('') || '';
-
-      // Add conflicting claims to article content if present
-      if (conflictingClaimsText) {
-        reportData.article.content += conflictingClaimsText;
-      }
+      const conflictingClaims = (reportData.conflictingClaims || []).map((claim: any, index: number) => ({
+        ...claim,
+        id: Date.now() + index,
+        articleId: articleId,
+      }));
 
       // Create slug from title
       const slug = this.createSlug(reportData.article.title);
@@ -475,15 +205,21 @@ export class OpenAIResearchService {
       // Get hero image
       const heroImageFromPexels = heroImageUrl || await pexelsService.searchImageByTopic(reportData.article.title, 0);
 
+      const summaryText = reportData.article.executiveSummary || '';
+      const summaryPoints = summaryText
+        .split('\n')
+        .map((point: string) => point.replace(/^•\s*/, '').trim())
+        .filter((point: string) => point.length > 0);
+
       // Format the response
       const report: ResearchReport = {
         article: {
-          id: Date.now(),
+          id: articleId,
           slug,
           title: reportData.article.title,
           content: reportData.article.content,
           category: reportData.article.category || "Research",
-          excerpt: reportData.article.excerpt,
+          excerpt: reportData.article.executiveSummary, // Using executiveSummary as excerpt
           heroImageUrl: heroImageFromPexels,
           publishedAt: reportData.article.publishedAt || new Date().toISOString(),
           readTime: reportData.article.readTime || 8,
@@ -493,12 +229,12 @@ export class OpenAIResearchService {
         },
         executiveSummary: {
           id: Date.now(),
-          articleId: Date.now(),
-          summary: reportData.article.executiveSummary || "No executive summary available."
+          articleId: articleId,
+          points: summaryPoints.length > 0 ? summaryPoints : ["No executive summary available."]
         },
         timelineItems: (reportData.timelineItems || []).map((item: any, index: number) => ({
           id: Date.now() + index,
-          articleId: Date.now(),
+          articleId: articleId,
           date: item.date,
           title: item.title,
           description: item.description,
@@ -509,7 +245,7 @@ export class OpenAIResearchService {
         citedSources: reportData.citedSources ? await Promise.all(
           reportData.citedSources.map(async (source: any, index: number) => ({
             id: Date.now() + index,
-            articleId: Date.now(),
+            articleId: articleId,
             name: source.name,
             type: source.type,
             description: source.description,
@@ -518,14 +254,205 @@ export class OpenAIResearchService {
           }))
         ) : await this.collectCitedSources({ ...reportData, query }),
         rawFacts: this.groupRawFactsByCategory(reportData.rawFacts || []),
-        perspectives: this.extractPerspectivesFromGroups(reportData.perspectiveGroups || reportData.perspectives || [])
+        perspectives: this.extractPerspectivesFromGroups(reportData.perspectiveGroups || reportData.perspectives || []),
+        conflictingClaims: conflictingClaims
       };
 
+      if (report.conflictingClaims && report.conflictingClaims.length > 0) {
+        const conflictPerspectives = report.conflictingClaims.map((claim, index) => ({
+          id: Date.now() + index + 1000,
+          articleId: report.article.id,
+          viewpoint: `Conflict: ${claim.topic}`,
+          description: claim.conflict,
+          source: claim.sourceA.url,
+          quote: claim.sourceA.claim,
+          url: claim.sourceA.url,
+          conflictSource: claim.sourceB.url,
+          conflictQuote: claim.sourceB.claim,
+          color: 'red',
+          isConflict: true
+        }));
+        report.perspectives.push(...conflictPerspectives);
+      }
+
       return report;
-    } catch (error) {
+    } catch (error: any) {
       console.error('OpenAI Research Service Error:', error);
-      throw new Error('Failed to generate research report');
+      return this.createErrorReport(query, error.message);
     }
+  }
+
+  private async performWebSearch(query: string): Promise<string> {
+    console.log('--- Step 1: Performing web search ---');
+    const searchPrompt = `SYSTEM ROLE: You are a world-class researcher with live web browsing capability.
+
+    TASK: Conduct a comprehensive, non-partisan web search on the following topic: "${query}". Retrieve multiple articles and sources.
+
+    OUTPUT:
+    - Synthesize your findings into a detailed, unstructured report.
+    - Crucially, you MUST include the URLs of all sources you reference directly in your text. For example: "According to a report from the WHO (https://www.who.int/...), ..."
+    - Do not structure the output in JSON. Just provide a text-based summary of all the information you found.
+    - Cover multiple perspectives if they exist.
+    - Actively look for and report on any conflicting claims or data between sources. Highlight these discrepancies clearly.`;
+
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-search-preview",
+        web_search_options: {
+          user_location: {
+            type: "approximate",
+            approximate: {
+              country: "US",
+              city: "Dallas",
+              region: "Texas",
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+            }
+          }
+        },
+        messages: [
+          { role: "system", content: searchPrompt },
+          { role: "user", content: `Please begin your research on: ${query}` }
+        ],
+        max_tokens: 4000
+      });
+
+      const searchResult = response.choices[0].message.content || '';
+      console.log('--- Web search completed. Result length:', searchResult.length, '---');
+      return searchResult;
+
+    } catch (error) {
+      console.error('Error during web search step:', error);
+      throw new Error('OpenAI API call for web search failed.');
+    }
+  }
+
+  private async structureResearchData(researchData: string, query: string): Promise<any> {
+    console.log('--- Step 2: Structuring research data ---');
+    const structuringPrompt = `SYSTEM ROLE: You are a data structuring expert. Your sole purpose is to convert unstructured text into a specific JSON format. You do not add new information or fabricate data. You only use the information provided to you.
+
+    TASK: Convert the following research text into the JSON structure provided below.
+    - Extract all entities like facts, sources, timeline events, and perspectives from the text.
+    - If information for a specific field is not present in the text, use an empty array [] or an appropriate empty value.
+    - NEVER invent data.
+    - The "executiveSummary" should be a series of bullet points, each on a new line, like "• Point 1\\n• Point 2".
+
+    You must return ONLY valid JSON with this exact structure:
+
+    {
+      "article": {
+        "title": "Clear, factual title based on the research text",
+        "executiveSummary": "• Short summary of what happened in bullet points, derived from the text\\\\n• Each bullet point on a separate line",
+        "content": "Comprehensive article synthesized from the research text",
+        "category": "Research",
+        "publishedAt": "\${new Date().toISOString()}",
+        "readTime": 8,
+        "sourceCount": [actual number of unique sources found in the text]
+      },
+      "rawFacts": [
+        {
+          "category": "Primary Sources",
+          "fact": "From [Source Name]: [exact quote or fact as found in the text]",
+          "source": "Source Name from text",
+          "url": "https://exact-url-from-text.com"
+        }
+      ],
+      "timelineItems": [
+        {
+          "date": "YYYY-MM-DD",
+          "title": "Event title from text",
+          "description": "Event details from text - bullet point format",
+          "source": "Source name from text",
+          "url": "https://real-url-from-text.com"
+        }
+      ],
+      "perspectiveGroups": [
+        {
+          "viewpointHeadline": "Viewpoint from text",
+          "tone": "supportive | critical | neutral",
+          "articles": [
+            {
+              "stance": "1-line summary of stance from text",
+              "publisher": "Publisher name from text",
+              "quote": "Short exact quote from text",
+              "url": "https://real-article-url-from-text.com"
+            }
+          ]
+        }
+      ],
+      "conflictingClaims": [
+        {
+          "topic": "Topic of conflict from text",
+          "conflict": "[Source A URL] claims X vs [Source B URL] claims Y",
+          "sourceA": {
+            "claim": "Claim from source A",
+            "url": "https://source-a-url.com"
+          },
+          "sourceB": {
+            "claim": "Claim from source B",
+            "url": "https://source-b-url.com"
+          }
+        }
+      ],
+      "citedSources": [
+        {
+          "name": "Source organization name from text",
+          "type": "Primary Source",
+          "description": "Description of the source based on context",
+          "url": "https://real-url-from-text.com"
+        }
+      ]
+    }
+    `;
+
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: structuringPrompt },
+          { role: "user", content: `Here is the research text for the query "${query}":\n\n---START OF TEXT---\n\n${researchData}\n\n---END OF TEXT---\n\nPlease structure this text into the required JSON format.` }
+        ],
+        max_tokens: 4000
+      });
+
+      const structuredContent = response.choices[0].message.content || '{}';
+      console.log('--- Full structured response from model ---', structuredContent);
+      console.log('--- Structuring completed. ---');
+      return JSON.parse(structuredContent);
+
+    } catch (error) {
+      console.error('Error during data structuring step:', error);
+      throw new Error('OpenAI API call for data structuring failed.');
+    }
+  }
+
+  private createErrorReport(query: string, errorMessage: string = "Failed to generate research report"): ResearchReport {
+    return {
+      article: {
+        id: Date.now(),
+        slug: this.createSlug(query),
+        title: `Research Report Failed: ${query}`,
+        content: `ERROR: ${errorMessage}`,
+        category: "Error",
+        excerpt: "An error occurred while generating the report.",
+        heroImageUrl: '',
+        publishedAt: new Date(),
+        readTime: 1,
+        sourceCount: 0,
+        authorName: "System",
+        authorTitle: "Error Handler"
+      },
+      executiveSummary: {
+        id: Date.now(),
+        articleId: Date.now(),
+        points: ["Could not generate an executive summary due to an error."]
+      },
+      timelineItems: [],
+      citedSources: [],
+      rawFacts: [],
+      perspectives: [],
+      conflictingClaims: []
+    };
   }
 
   private extractPerspectivesFromGroups(perspectiveGroups: any[]): any[] {
@@ -607,204 +534,10 @@ export class OpenAIResearchService {
     }));
   }
 
-  private fixControlCharacters(content: string): string {
-    // Remove control characters that break JSON parsing
-    return content
-      .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
-      .replace(/\\n/g, ' ') // Replace escaped newlines with spaces
-      .replace(/\\r/g, '') // Remove escaped carriage returns
-      .replace(/\\t/g, ' ') // Replace escaped tabs with spaces
-      .replace(/\\/g, '\\\\') // Escape remaining backslashes
-      .replace(/"/g, '\\"') // Escape quotes
-      .replace(/\\\\"/g, '\\"'); // Fix over-escaped quotes
-  }
-
-  private repairMalformedJson(content: string): string {
-    let repaired = content;
-    
-    // Fix common JSON issues
-    repaired = repaired
-      .replace(/,\s*}/g, '}')  // Remove trailing commas in objects
-      .replace(/,\s*]/g, ']')  // Remove trailing commas in arrays
-      .replace(/([{,]\s*)"([^"]+)":\s*"([^"]*)"([^,}\]]*)/g, '$1"$2":"$3"')  // Fix unescaped quotes in strings
-      .replace(/\\n/g, '\\\\n')  // Fix newlines
-      .replace(/\\r/g, '\\\\r')  // Fix carriage returns
-      .replace(/\\t/g, '\\\\t');  // Fix tabs
-    
-    return repaired;
-  }
-
-  private extractBasicStructure(content: string): string {
-    // Extract just the basic JSON structure with minimal content
-    const basicStructure = {
-      article: {
-        title: "Research Report",
-        executiveSummary: "Unable to parse full report due to technical issues.",
-        content: "Partial data retrieved.",
-        category: "Research",
-        publishedAt: new Date().toISOString(),
-        readTime: 1,
-        sourceCount: 0
-      },
-      rawFacts: [],
-      timelineItems: [],
-      perspectiveGroups: [],
-      conflictingClaims: [],
-      citedSources: []
-    };
-    
-    return JSON.stringify(basicStructure);
-  }
-
-  // Comprehensive JSON response cleaning
-  private cleanJsonResponse(content: string): string {
-    let cleaned = content.trim();
-    
-    // Fix smart quotes and special characters first
-    cleaned = cleaned
-      .replace(/"/g, '"')
-      .replace(/"/g, '"')
-      .replace(/'/g, "'")
-      .replace(/'/g, "'")
-      .replace(/…/g, '...')
-      .replace(/–/g, '-')
-      .replace(/—/g, '-')
-      // Remove control characters
-      .replace(/[\u0000-\u001f\u007f-\u009f]/g, '');
-    
-    // Fix malformed JSON structure patterns
-    cleaned = cleaned
-      // Fix stray commas at the beginning
-      .replace(/^\s*,/, '')
-      .replace(/{\s*,/g, '{')
-      .replace(/\[\s*,/g, '[')
-      // Fix duplicate commas
-      .replace(/,\s*,/g, ',')
-      // Fix trailing commas
-      .replace(/,\s*}/g, '}')
-      .replace(/,\s*]/g, ']')
-      // Fix missing commas between objects/arrays
-      .replace(/}\s*{/g, '},{')
-      .replace(/]\s*\[/g, '],[')
-      .replace(/"\s*"([^:])/g, '","$1')
-      // Fix property names and values
-      .replace(/([^,{\[])\s*"/g, '$1,"')
-      .replace(/([^,{\[])\s*\{/g, '$1,{')
-      .replace(/([^,{\[])\s*\[/g, '$1,[')
-      // Fix broken string concatenations
-      .replace(/(["}])\s*"([^:])/g, '$1,"$2')
-      .replace(/(["}])\s*\{/g, '$1,{')
-      .replace(/(["}])\s*\[/g, '$1,[')
-      .replace(/([}\]])\s*"([^:])/g, '$1,"$2')
-      .replace(/([}\]])\s*\{/g, '$1,{')
-      .replace(/([}\]])\s*\[/g, '$1,[');
-    
-    // Escape special characters properly
-    cleaned = cleaned
-      .replace(/\n/g, '\\n')
-      .replace(/\r/g, '\\r')
-      .replace(/\t/g, '\\t');
-    
-    return cleaned;
-  }
-
-  // Aggressive JSON repair for severe malformation
-  private aggressiveJsonRepair(content: string): string {
-    // Remove all problematic characters first
-    let repaired = content
-      .replace(/[""]/g, '"')
-      .replace(/['']/g, "'")
-      .replace(/[…]/g, '...')
-      .replace(/[–—]/g, '-')
-      // Remove all stray commas
-      .replace(/,+/g, ',')
-      .replace(/^,|,$/g, '')
-      .replace(/,(\s*[}\]])/g, '$1')
-      .replace(/([{\[])\s*,/g, '$1')
-      // Fix property syntax
-      .replace(/([{,]\s*),/g, '$1')
-      .replace(/,(\s*[,}\]])/g, '$1');
-    
-    // Reconstruct basic structure
-    if (repaired.startsWith('{ ,')) {
-      repaired = repaired.replace(/^{ ,/, '{');
-    }
-    
-    return repaired;
-  }
-
-  // Reconstruct JSON from fragments
-  private reconstructFromFragments(content: string): string {
-    // Extract key-value pairs using regex
-    const pairs = [];
-    const keyValuePattern = /"([^"]+)"\s*:\s*("[^"]*"|[^,}]+)/g;
-    let match;
-    
-    while ((match = keyValuePattern.exec(content)) !== null) {
-      pairs.push(`"${match[1]}": ${match[2]}`);
-    }
-    
-    if (pairs.length === 0) {
-      throw new Error('No valid key-value pairs found');
-    }
-    
-    return `{ ${pairs.join(', ')} }`;
-  }
-
-  // Direct JSON newline fixes
-  private fixJsonNewlines(content: string): string {
-    // Step 1: Remove all newlines that are not within string values
-    let fixed = '';
-    let inString = false;
-    let escaped = false;
-    
-    for (let i = 0; i < content.length; i++) {
-      const char = content[i];
-      
-      if (escaped) {
-        fixed += char;
-        escaped = false;
-        continue;
-      }
-      
-      if (char === '\\' && inString) {
-        escaped = true;
-        fixed += char;
-        continue;
-      }
-      
-      if (char === '"') {
-        inString = !inString;
-        fixed += char;
-        continue;
-      }
-      
-      if (char === '\n' && !inString) {
-        // Skip newlines outside of strings
-        continue;
-      }
-      
-      if (char === '\n' && inString) {
-        // Escape newlines inside strings
-        fixed += '\\n';
-        continue;
-      }
-      
-      fixed += char;
-    }
-    
-    // Step 2: Apply additional fixes
-    return fixed
-      .replace(/[""]/g, '"')
-      .replace(/['']/g, "'")
-      .replace(/\r/g, '')
-      .replace(/\t/g, '\\t')
-      .replace(/,\s*}/g, '}')
-      .replace(/,\s*]/g, ']')
-      .replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3');
-  }
-
   private createSlug(title: string): string {
+    if (!title) {
+      return `report-${Date.now()}`;
+    }
     return title
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')

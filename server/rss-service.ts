@@ -258,6 +258,10 @@ export class RSSService {
       return this.getSampleEventData();
     }
   }
+  
+  async getFeed(): Promise<Article[]> {
+    return this.fetchArticles();
+  }
 
   private createSlug(title: string): string {
     return title

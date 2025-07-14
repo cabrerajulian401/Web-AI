@@ -64,6 +64,17 @@ export const perspectives = pgTable("perspectives", {
   conflictQuote: text("conflict_quote"), // The opposing quote
 });
 
+export const conflictingClaims = pgTable("conflicting_claims", {
+  id: serial("id").primaryKey(),
+  articleId: integer("article_id").notNull().references(() => articles.id),
+  topic: text("topic").notNull(),
+  conflict: text("conflict").notNull(),
+  sourceA_claim: text("source_a_claim").notNull(),
+  sourceA_url: text("source_a_url"),
+  sourceB_claim: text("source_b_claim").notNull(),
+  sourceB_url: text("source_b_url"),
+});
+
 export const insertArticleSchema = createInsertSchema(articles).omit({
   id: true,
 });
@@ -88,17 +99,99 @@ export const insertPerspectiveSchema = createInsertSchema(perspectives).omit({
   id: true,
 });
 
-export type Article = typeof articles.$inferSelect;
+export interface Article {
+  id: number;
+  slug: string;
+  title: string;
+  content: string;
+  category: string;
+  excerpt: string;
+  heroImageUrl: string;
+  publishedAt: Date;
+  readTime: number;
+  sourceCount: number;
+  authorName: string;
+  authorTitle: string;
+}
+
+export interface ExecutiveSummary {
+  id: number;
+  articleId: number;
+  points: string[];
+}
+
+export interface TimelineItem {
+  id: number;
+  articleId: number;
+  date: Date;
+  title: string;
+  description: string;
+  type: string; // 'announcement', 'release', etc.
+  sourceLabel: string;
+  sourceUrl: string;
+}
+
+export interface CitedSource {
+  id: number;
+  articleId: number;
+  name: string;
+  type: string; // e.g., "Government Document", "News Article", "Official Statement"
+  description: string;
+  url: string;
+  imageUrl: string;
+}
+
+export interface RawFacts {
+  id: number;
+  articleId: number;
+  category: string;
+  facts: string[];
+}
+
+export interface Perspective {
+  id: number;
+  articleId: number;
+  viewpoint: string;
+  description: string;
+  source: string;
+  quote: string;
+  color: string; // 'green', 'yellow', 'blue', etc.
+  url: string;
+  conflictSource: string; // The opposing source
+  conflictQuote: string; // The opposing quote
+}
+
+export interface ConflictingClaim {
+  id: number;
+  articleId: number;
+  topic: string;
+  conflict: string;
+  sourceA: {
+    claim: string;
+    url: string;
+  };
+  sourceB: {
+    claim: string;
+    url: string;
+  };
+}
+
+// Full report structure
+export interface ResearchReport {
+  article: Article;
+  executiveSummary: ExecutiveSummary;
+  timelineItems: TimelineItem[];
+  citedSources: CitedSource[];
+  rawFacts: RawFacts[];
+  perspectives: Perspective[];
+  conflictingClaims?: ConflictingClaim[];
+}
+
 export type InsertArticle = z.infer<typeof insertArticleSchema>;
-export type ExecutiveSummary = typeof executiveSummary.$inferSelect;
 export type InsertExecutiveSummary = z.infer<typeof insertExecutiveSummarySchema>;
-export type TimelineItem = typeof timelineItems.$inferSelect;
 export type InsertTimelineItem = z.infer<typeof insertTimelineItemSchema>;
-export type CitedSource = typeof citedSources.$inferSelect;
 export type InsertCitedSource = z.infer<typeof insertCitedSourceSchema>;
-export type RawFacts = typeof rawFacts.$inferSelect;
 export type InsertRawFacts = z.infer<typeof insertRawFactsSchema>;
-export type Perspective = typeof perspectives.$inferSelect;
 export type InsertPerspective = z.infer<typeof insertPerspectiveSchema>;
 
 export const users = pgTable("users", {

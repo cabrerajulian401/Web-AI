@@ -19,18 +19,13 @@ import {
   type RawFacts,
   type InsertRawFacts,
   type Perspective,
-  type InsertPerspective
+  type InsertPerspective,
+  type ResearchReport,
+  type ConflictingClaim
 } from "@shared/schema";
 import { RSSService } from "./rss-service";
 
-interface ArticleData {
-  article: Article;
-  executiveSummary: ExecutiveSummary;
-  timelineItems: TimelineItem[];
-  citedSources: CitedSource[];
-  rawFacts: RawFacts[];
-  perspectives: Perspective[];
-}
+interface ArticleData extends ResearchReport {}
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -99,7 +94,7 @@ export class MemStorage implements IStorage {
         description: "OpenAI announces o3 model with advanced reasoning capabilities",
         type: "announcement",
         sourceLabel: "Source 9",
-        sourceUrl: null
+        sourceUrl: ""
       },
       {
         id: 2,
@@ -109,7 +104,7 @@ export class MemStorage implements IStorage {
         description: "OpenAI CEO Sam Altman announces GPT-4.5 (\"Orion\") as the last model without full chain-of-thought reasoning",
         type: "announcement",
         sourceLabel: "Source 9",
-        sourceUrl: null
+        sourceUrl: ""
       },
       {
         id: 3,
@@ -119,7 +114,7 @@ export class MemStorage implements IStorage {
         description: "OpenAI delays GPT-5 release due to technical issues and high demand. Confirms work on new models o3 and o4-mini",
         type: "announcement",
         sourceLabel: "Source 9",
-        sourceUrl: null
+        sourceUrl: ""
       },
       {
         id: 4,
@@ -129,7 +124,7 @@ export class MemStorage implements IStorage {
         description: "OpenAI releases o3-pro API, its most expensive AI model to date",
         type: "release",
         sourceLabel: "Source 9",
-        sourceUrl: null
+        sourceUrl: ""
       }
     ];
 
@@ -192,21 +187,36 @@ export class MemStorage implements IStorage {
         articleId: 1,
         viewpoint: "Industry Experts",
         description: "Praise the advancement in AI reasoning capabilities and potential applications",
-        color: "green"
+        color: "green",
+        source: "AI News Daily",
+        quote: "This is a monumental leap forward.",
+        url: "/article/openai-next-model",
+        conflictSource: "",
+        conflictQuote: ""
       },
       {
         id: 2,
         articleId: 1,
         viewpoint: "AI Safety Researchers",
         description: "Emphasize the need for robust safety measures and ethical considerations",
-        color: "yellow"
+        color: "yellow",
+        source: "TechCrunch",
+        quote: "We must proceed with caution.",
+        url: "/article/future-ai-reasoning",
+        conflictSource: "",
+        conflictQuote: ""
       },
       {
         id: 3,
         articleId: 1,
         viewpoint: "Tech Analysts",
         description: "Analyze potential market impact and competitive positioning",
-        color: "blue"
+        color: "blue",
+        source: "The Verge",
+        quote: "The market will never be the same.",
+        url: "/article/ai-market-impact",
+        conflictSource: "",
+        conflictQuote: ""
       }
     ];
 
@@ -216,7 +226,8 @@ export class MemStorage implements IStorage {
       timelineItems: sampleTimelineItems,
       citedSources: sampleCitedSources,
       rawFacts: sampleRawFacts,
-      perspectives: samplePerspectives
+      perspectives: samplePerspectives,
+      conflictingClaims: []
     });
 
     // Add dummy "One Big Beautiful Bill" report
@@ -248,196 +259,120 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
         "President Trump signed the 'One Big Beautiful Bill' into law on July 4, 2025",
         "Bill includes various tax cuts for both individuals and businesses",
         "Large reductions to Medicaid, SNAP, and ACA; millions may lose insurance",
-        "Massive funding boost for border enforcement, ICE, and defense",
-        "Rolls back clean energy incentives, boosts fossil fuels",
-        "Protests and political backlash began immediately after passage"
+        "CBO projects the bill will add $1.2 trillion to the national debt"
       ]
     };
 
     const dummyTimelineItems: TimelineItem[] = [
       {
-        id: 999,
-        articleId: 999,
-        date: new Date("2025-05-22T00:00:00Z"),
-        title: "House Initial Passage",
-        description: "House passes initial version 215-214",
-        type: "legislative",
-        sourceLabel: "Congressional Record",
-        sourceUrl: "https://www.congress.gov/congressional-record"
-      },
-      {
         id: 1000,
         articleId: 999,
-        date: new Date("2025-06-16T00:00:00Z"),
-        title: "Senate Committee Action",
-        description: "Senate Finance Committee releases final text and summary",
-        type: "legislative",
-        sourceLabel: "Senate Finance Committee",
-        sourceUrl: "https://www.finance.senate.gov/"
+        date: new Date("2025-07-04T00:00:00Z"),
+        title: "'One Big Beautiful Bill' Signed into Law",
+        description: "The bill is signed amid significant controversy and market uncertainty.",
+        type: 'legislation',
+        sourceLabel: 'Source 1',
+        sourceUrl: ""
       },
       {
         id: 1001,
         articleId: 999,
-        date: new Date("2025-07-01T00:00:00Z"),
-        title: "Senate Passage",
-        description: "Senate passes revised bill 51-50, VP breaks tie",
-        type: "legislative",
-        sourceLabel: "Senate Clerk",
-        sourceUrl: "https://www.senate.gov/legislative/LIS/roll_call_lists/vote_menu_117_1.htm"
+        date: new Date("2025-07-10T00:00:00Z"),
+        title: "CBO Releases Initial Score",
+        description: "The CBO projects the bill will add $1.2 trillion to the national debt over 10 years.",
+        type: 'report',
+        sourceLabel: 'Source 2',
+        sourceUrl: ""
       },
       {
         id: 1002,
         articleId: 999,
-        date: new Date("2025-07-02T00:00:00Z"),
-        title: "House Final Passage",
-        description: "House passes final bill 218-214",
-        type: "legislative",
-        sourceLabel: "House Clerk",
-        sourceUrl: "https://clerk.house.gov/Votes"
+        date: new Date("2025-08-01T00:00:00Z"),
+        title: "Protests Erupt in Major Cities",
+        description: "Protests against the bill's cuts to social programs occur nationwide.",
+        type: 'protest',
+        sourceLabel: 'Source 3',
+        sourceUrl: ""
       },
-      {
-        id: 1003,
-        articleId: 999,
-        date: new Date("2025-07-04T00:00:00Z"),
-        title: "Presidential Signature",
-        description: "Trump signs the bill into law on Independence Day",
-        type: "signing",
-        sourceLabel: "White House",
-        sourceUrl: "https://www.whitehouse.gov/briefing-room/presidential-actions/"
-      },
-      {
-        id: 1004,
-        articleId: 999,
-        date: new Date("2025-07-05T00:00:00Z"),
-        title: "Protests Begin",
-        description: "Protests and rallies against the law begin in major cities",
-        type: "protest",
-        sourceLabel: "Associated Press",
-        sourceUrl: "https://apnews.com/"
-      }
     ];
 
     const dummyCitedSources: CitedSource[] = [
       {
-        id: 999,
+        id: 1003,
         articleId: 999,
         name: "Congressional Budget Office",
-        type: "Government Analysis",
-        description: "Official cost estimates and coverage projections for healthcare provisions",
-        url: "https://www.cbo.gov/cost-estimates",
-        imageUrl: "/assets/gettyimages-2223448615_wide-7ca202551a6122dfb03f2969e5d59c36d278e323_1751754477125.jpg"
+        type: "Government Report",
+        description: "Non-partisan analysis of the bill's fiscal impact.",
+        url: "",
+        imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120"
       },
       {
-        id: 1000,
+        id: 1004,
         articleId: 999,
-        name: "White House Press Office",
-        type: "Official Statement",
-        description: "Presidential statements and administration policy announcements",
-        url: null,
-        imageUrl: "/assets/capitol_building.png"
-      },
-      {
-        id: 1001,
-        articleId: 999,
-        name: "America First Policy Institute",
-        type: "Policy Analysis",
-        description: "Conservative policy research and legislative analysis",
-        url: null,
-        imageUrl: "/assets/big_beautiful_bill_logo.png"
-      },
-      {
-        id: 1002,
-        articleId: 999,
-        name: "Wall Street Journal",
+        name: "The New York Times",
         type: "News Analysis",
-        description: "Business community reactions and economic impact reporting",
-        url: null,
-        imageUrl: "/assets/placeholder_1751663094502.jpg"
+        description: "In-depth coverage of the bill's passage and public reaction.",
+        url: "",
+        imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120"
+      },
+      {
+        id: 1005,
+        articleId: 999,
+        name: "Associated Press",
+        type: "News Report",
+        description: "Reports on nationwide protests against the legislation.",
+        url: "",
+        imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120"
       }
     ];
 
     const dummyRawFacts: RawFacts[] = [
       {
-        id: 999,
+        id: 1000,
         articleId: 999,
-        category: "From the Bill Text (H.R.1, 119th Congress)",
+        category: "Key Provisions",
         facts: [
-          "Permanently extends individual tax rates from the 2017 Tax Cuts and Jobs Act",
-          "Raises cap on state and local tax (SALT) deduction to $40,000 for incomes under $500,000 (reverts after 5 years)",
-          "Creates temporary tax deductions for tips, overtime, auto loans; expires in 2028",
-          "Permanent $200 increase in child tax credit",
-          "Imposes 1% tax on remittances, increases tax on investment income from college endowments",
-          "Phases out clean energy tax credits from the Inflation Reduction Act",
-          "Increases fossil fuel incentives; opens federal land/water for oil and gas drilling",
-          "Raises debt ceiling by $5 trillion",
-          "Cuts Medicaid and Medicare spending",
-          "Expands work requirements for SNAP; shifts some costs to states",
-          "$150 billion new defense spending; $150 billion for border enforcement",
-          "ICE funding increased from $10 billion to over $100 billion by 2029"
+          "Permanent extension of 2017 tax cuts",
+          "Elimination of taxes on tips and overtime",
+          "$930 billion in cuts to healthcare programs"
         ]
       },
       {
-        id: 1000,
+        id: 1001,
         articleId: 999,
-        category: "Congressional Budget Office (CBO)",
+        category: "CBO Projections",
         facts: [
-          "Estimated the bill will increase the deficit by $2.8 trillion by 2034",
-          "10.9 million Americans projected to lose health insurance coverage",
-          "Largest cuts to Medicaid in history",
-          "Disproportionate impact on low-income and rural Americans",
-          "Cuts to Medicaid and CHIP would reduce enrollment by 10.5 million by 2034"
+          "12 million to lose health insurance by 2034",
+          "$1.2 trillion added to national debt",
+          "0.5% decrease in GDP growth by 2030"
         ]
       }
     ];
 
     const dummyPerspectives: Perspective[] = [
       {
-        id: 999,
-        articleId: 999,
-        viewpoint: "Who Benefits Most from the Bill?",
-        description: "White House vs Critics",
-        source: "White House",
-        quote: "The largest percentage tax reduction goes to low-income and working-class Americans, putting over $10,000 a year back in the pockets of typical hardworking families.",
-        color: "red",
-        url: "https://whitehouse.gov",
-        conflictSource: "Al Jazeera, Rolling Stone, KFF",
-        conflictQuote: "Critics and independent analysts argue the bill's tax cuts disproportionately benefit the wealthy, and that the middle class and poor see far smaller gains, especially when factoring in cuts to Medicaid and social programs."
-      },
-      {
         id: 1000,
         articleId: 999,
-        viewpoint: "Impact on Medicaid and Health Coverage",
-        description: "Administration vs Independent Analysis",
-        source: "White House",
-        quote: "There will be no cuts to Medicaid and the bill protects and strengthens Medicaid for those who rely on it.",
-        color: "blue",
-        url: "https://whitehouse.gov",
-        conflictSource: "H.R.1 bill text, KFF, Rolling Stone",
-        conflictQuote: "The bill text and independent estimates show a 12% cut to Medicaid, with the Congressional Budget Office projecting over 10 million Americans will lose health insurance."
+        viewpoint: "Supporters",
+        description: "Argue that tax cuts stimulate economic growth and job creation.",
+        color: "green",
+        source: "",
+        quote: "",
+        url: "",
+        conflictSource: "",
+        conflictQuote: ""
       },
       {
         id: 1001,
         articleId: 999,
-        viewpoint: "Economic Impact and Deficit",
-        description: "Treasury vs Budget Analysts",
-        source: "Treasury Department, White House",
-        quote: "The bill delivers historic levels of mandatory savings and reduces deficits by over $2 trillion by increasing economic growth and cutting waste, fraud, and abuse.",
-        color: "green",
-        url: "https://treasury.gov",
-        conflictSource: "Al Jazeera, CBO via KFF",
-        conflictQuote: "Multiple analyses, including the CBO, estimate the bill will increase the deficit by $2.8 to $3 trillion over the next decade."
-      },
-      {
-        id: 1002,
-        articleId: 999,
-        viewpoint: "Immigration Enforcement Funding",
-        description: "ICE vs Human Rights Groups",
-        source: "ICE, White House",
-        quote: "Unprecedented funding for border enforcement is essential for national security and protecting American communities.",
-        color: "orange",
-        url: "https://ice.gov",
-        conflictSource: "CBS News, Governor Wes Moore",
-        conflictQuote: "Critics warn the funding enables mass deportations and could lead to inhumane conditions at detention facilities."
+        viewpoint: "Opponents",
+        description: "Warn that the bill will increase inequality and harm vulnerable populations.",
+        color: "red",
+        source: "",
+        quote: "",
+        url: "",
+        conflictSource: "",
+        conflictQuote: ""
       }
     ];
 
@@ -447,313 +382,291 @@ Key provisions include permanent extension of the 2017 Tax Cuts and Jobs Act, el
       timelineItems: dummyTimelineItems,
       citedSources: dummyCitedSources,
       rawFacts: dummyRawFacts,
-      perspectives: dummyPerspectives
+      perspectives: dummyPerspectives,
+      conflictingClaims: []
     });
 
-    // Add more sample articles for the feed
-    const article2: Article = {
-      id: 2,
-      title: "Meta's LLaMA 3 Achieves Breakthrough in Multimodal AI",
-      slug: "meta-llama-3-multimodal",
-      excerpt: "Meta's latest LLaMA 3 model demonstrates significant improvements in understanding and generating content across text, images, and audio modalities.",
-      content: `<p>Meta's LLaMA 3 represents a major advancement in multimodal AI capabilities, offering unprecedented performance across various content types.</p>`,
-      category: "Technology",
-      publishedAt: new Date("2024-12-18T14:30:00Z"),
-      readTime: 7,
-      sourceCount: 15,
-      heroImageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
-      authorName: "AI Research Team",
-      authorTitle: "Meta AI Correspondents"
-    };
+    // Add more dummy reports here...
+    this.articles.set("meta-llama-3-multimodal", this.createDummyReport(
+      3,
+      "Meta's Llama 3 Goes Multimodal, Challenging GPT-4o",
+      "meta-llama-3-multimodal",
+      "Meta AI has announced that its Llama 3 model now supports multimodal inputs, enabling it to process both text and images. This move positions Llama 3 as a direct competitor to OpenAI's recently released GPT-4o.",
+      `<p>Meta AI has announced a significant upgrade to its Llama 3 model, which now supports multimodal inputs, allowing it to understand and process both text and images. This development places Llama 3 in direct competition with OpenAI's GPT-4o, which has been lauded for its advanced multimodal capabilities.</p><p>According to Meta, the new Llama 3 model demonstrates strong performance on a range of multimodal benchmarks, though it currently does not support audio or video inputs. The update is being rolled out to developers and will be integrated into Meta's products, including Ray-Ban Meta smart glasses.</p>`,
+      "Technology",
+      new Date("2024-05-18T00:00:00Z"),
+      ["Llama 3 now supports text and image inputs", "Direct competitor to OpenAI's GPT-4o", "No audio or video support yet"],
+      [
+        { date: new Date("2024-04-18T00:00:00Z"), title: "Llama 3 (text-only) released", description: "Meta releases the text-only version of Llama 3.", type: 'release', sourceLabel: 'Meta AI', sourceUrl: "" },
+        { date: new Date("2024-05-13T00:00:00Z"), title: "OpenAI launches GPT-4o", description: "OpenAI launches its flagship multimodal model, GPT-4o.", type: 'release', sourceLabel: 'OpenAI', sourceUrl: "" },
+        { date: new Date("2024-05-18T00:00:00Z"), title: "Llama 3 becomes multimodal", description: "Meta announces multimodal capabilities for Llama 3.", type: 'update', sourceLabel: 'Meta AI', sourceUrl: "" },
+      ],
+      [
+        { name: "The Verge", type: "Tech News", description: "Coverage of Meta's announcement and its competitive implications.", url: "", imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120" },
+        { name: "TechCrunch", type: "Tech News", description: "Analysis of the new Llama 3 capabilities.", url: "", imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120" },
+      ],
+      [
+        { category: "Capabilities", facts: ["Processes text and images", "Performs well on multimodal benchmarks"] },
+      ],
+      [
+        { viewpoint: "Pro-Meta", description: "Highlights the rapid innovation and competition Meta is bringing to the AI space.", color: "green", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+        { viewpoint: "Pro-OpenAI", description: "Points out that GPT-4o still holds an edge with audio and video support.", color: "blue", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+      ]
+    ));
 
-    const article3: Article = {
-      id: 3,
-      title: "Google's Gemini Ultra Sets New Benchmarks in Code Generation",
-      slug: "google-gemini-ultra-coding",
-      excerpt: "Google's Gemini Ultra model achieves state-of-the-art performance on coding benchmarks, surpassing previous models in complex programming tasks.",
-      content: `<p>Google's Gemini Ultra has established new standards for AI-assisted code generation with remarkable accuracy and efficiency.</p>`,
-      category: "Technology",
-      publishedAt: new Date("2024-12-17T09:15:00Z"),
-      readTime: 6,
-      sourceCount: 8,
-      heroImageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
-      authorName: "Tech Analysis Team",
-      authorTitle: "Google AI Reporters"
-    };
+    this.articles.set("google-gemini-ultra-coding", this.createDummyReport(
+      4,
+      "Google's Gemini 1.5 Pro Masters Advanced Coding Tasks",
+      "google-gemini-ultra-coding",
+      "Google's latest model, Gemini 1.5 Pro, is demonstrating exceptional performance in complex coding challenges, surpassing previous models in understanding and generating sophisticated code.",
+      "<p>Google's Gemini 1.5 Pro is making waves in the developer community with its advanced coding capabilities. The model can translate entire codebases between languages, solve complex algorithmic challenges, and even suggest architectural improvements for existing software.</p><p>It integrates with Project IDX, Google's web-based development environment, to provide real-time coding assistance. This development signals Google's intent to capture a larger share of the AI-powered developer tools market.</p>",
+      "Technology",
+      new Date("2024-05-15T00:00:00Z"),
+      ["Gemini 1.5 Pro excels at complex coding", "Translates entire codebases", "Integrates with Project IDX"],
+      [
+        { date: new Date("2024-02-15T00:00:00Z"), title: "Gemini 1.5 Pro announced", description: "Google announces Gemini 1.5 Pro with a 1 million token context window.", type: 'announcement', sourceLabel: 'Google AI', sourceUrl: "" },
+        { date: new Date("2024-05-14T00:00:00Z"), title: "Google I/O 2024", description: "Google showcases Gemini's advanced coding and agent capabilities at its annual developer conference.", type: 'event', sourceLabel: 'Google', sourceUrl: "" },
+      ],
+      [
+        { name: "VentureBeat", type: "Tech News", description: "Report on Gemini's coding prowess showcased at Google I/O.", url: "", imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120" },
+      ],
+      [
+        { category: "Features", facts: ["Codebase translation", "Algorithmic problem-solving", "Architectural suggestions"] },
+      ],
+      [
+        { viewpoint: "Developers", description: "Express excitement about the potential productivity gains from using Gemini for coding.", color: "green", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+        { viewpoint: "Competitors", description: "Note that while impressive, real-world performance across diverse coding languages remains to be seen.", color: "yellow", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+      ]
+    ));
 
-    const article4: Article = {
-      id: 4,
-      title: "Anthropic's Claude 3.5 Introduces Advanced Safety Features",
-      slug: "anthropic-claude-safety",
-      excerpt: "Anthropic unveils Claude 3.5 with enhanced safety mechanisms and improved alignment capabilities for enterprise applications.",
-      content: `<p>Anthropic's Claude 3.5 focuses on responsible AI development with robust safety features and alignment improvements.</p>`,
-      category: "AI Safety",
-      publishedAt: new Date("2024-12-16T11:45:00Z"),
-      readTime: 4,
-      sourceCount: 6,
-      heroImageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
-      authorName: "Safety Research Team",
-      authorTitle: "AI Ethics Correspondents"
-    };
+    this.articles.set("anthropic-claude-safety", this.createDummyReport(
+      5,
+      "Anthropic Prioritizes Safety in Latest Claude 3.1 Release",
+      "anthropic-claude-safety",
+      "Anthropic's newest model, Claude 3.1, is being released with a strong emphasis on safety and ethical AI, featuring advanced techniques to prevent misuse and reduce harmful outputs.",
+      "<p>Anthropic continues to champion its 'constitutional AI' approach with the release of Claude 3.1. The company has published extensive research on the model's safety guardrails, which include methods for detecting and mitigating bias, preventing the generation of dangerous content, and ensuring the model's outputs align with a predefined set of ethical principles.</p><p>While Claude 3.1 may not top every performance benchmark, Anthropic is betting that its focus on safety will be a key differentiator for enterprise customers concerned with brand reputation and AI ethics.</p>",
+      "AI Safety",
+      new Date("2024-05-10T00:00:00Z"),
+      ["Claude 3.1 released with focus on safety", "Advanced misuse prevention techniques", "Constitutional AI approach"],
+      [
+        { date: new Date("2024-03-04T00:00:00Z"), title: "Claude 3 Family Released", description: "Anthropic releases the Claude 3 model family (Opus, Sonnet, Haiku).", type: 'release', sourceLabel: 'Anthropic', sourceUrl: "" },
+        { date: new Date("2024-05-10T00:00:00Z"), title: "Claude 3.1 Announced", description: "Anthropic announces Claude 3.1 with enhanced safety features.", type: 'announcement', sourceLabel: 'Anthropic', sourceUrl: "" },
+      ],
+      [
+        { name: "Wired", type: "Magazine", description: "An article exploring Anthropic's unique approach to AI safety.", url: "", imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120" },
+      ],
+      [
+        { category: "Safety Features", facts: ["Bias detection and mitigation", "Dangerous content prevention", "Ethical principle alignment"] },
+      ],
+      [
+        { viewpoint: "Ethicists", description: "Applaud Anthropic's commitment to building safe and responsible AI.", color: "green", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+        { viewpoint: "Performance Enthusiasts", description: "Argue that the focus on safety may come at the cost of raw performance compared to other models.", color: "yellow", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+      ]
+    ));
 
-    const article5: Article = {
-      id: 5,
-      title: "Microsoft Copilot Integration Transforms Enterprise Workflows",
-      slug: "microsoft-copilot-enterprise",
-      excerpt: "Microsoft's Copilot AI integration across Office 365 and Azure services is revolutionizing how enterprises approach productivity and automation.",
-      content: `<p>Microsoft Copilot's enterprise integration is transforming business workflows with intelligent automation and productivity enhancements.</p>`,
-      category: "Enterprise",
-      publishedAt: new Date("2024-12-15T16:20:00Z"),
-      readTime: 5,
-      sourceCount: 10,
-      heroImageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
-      authorName: "Enterprise AI Team",
-      authorTitle: "Microsoft Correspondents"
-    };
+    this.articles.set("microsoft-copilot-enterprise", this.createDummyReport(
+      6,
+      "Microsoft Expands Copilot for Enterprise with Customization Features",
+      "microsoft-copilot-enterprise",
+      "Microsoft is doubling down on its enterprise AI strategy with new customization options for Copilot, allowing businesses to create tailored AI assistants using their own data.",
+      "<p>At its recent Build conference, Microsoft announced a suite of new tools for its Copilot platform, aimed squarely at enterprise customers. The new 'Copilot Studio' allows businesses to build, test, and publish custom copilots that are grounded in their own internal data, such as documents, emails, and databases.</p><p>This move is seen as a direct challenge to other players in the enterprise AI space, as Microsoft leverages its deep integration with its Azure cloud platform and Office 365 suite to offer a compelling, all-in-one solution.</p>",
+      "Enterprise AI",
+      new Date("2024-05-21T00:00:00Z"),
+      ["New customization options for Copilot", "Copilot Studio allows building assistants on private data", "Leverages Azure and Office 365 integration"],
+      [
+        { date: new Date("2023-11-01T00:00:00Z"), title: "Microsoft 365 Copilot GA", description: "Copilot becomes generally available for Microsoft 365 enterprise customers.", type: 'release', sourceLabel: 'Microsoft', sourceUrl: "" },
+        { date: new Date("2024-05-21T00:00:00Z"), title: "Microsoft Build 2024", description: "Microsoft announces Copilot Studio and deeper enterprise customization.", type: 'event', sourceLabel: 'Microsoft', sourceUrl: "" },
+      ],
+      [
+        { name: "ZDNet", type: "Tech News", description: "Analysis of Microsoft's enterprise AI strategy from the Build conference.", url: "", imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120" },
+      ],
+      [
+        { category: "New Features", facts: ["Custom copilot creation", "Grounding in internal business data", "Integration with Power Platform"] },
+      ],
+      [
+        { viewpoint: "IT Administrators", description: "Welcome the increased control and customization, which allows for better governance and security.", color: "green", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+        { viewpoint: "Data Privacy Advocates", description: "Raise concerns about the potential for misuse of sensitive company data if not properly managed.", color: "red", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+      ]
+    ));
 
-    const article6: Article = {
-      id: 6,
-      title: "Startup Raises $50M for Revolutionary AI Hardware Architecture",
-      slug: "ai-hardware-startup-funding",
-      excerpt: "A Silicon Valley startup secures major funding to develop next-generation AI chips designed specifically for transformer architectures.",
-      content: `<p>The startup's innovative approach to AI hardware promises significant improvements in performance and energy efficiency for large language models.</p>`,
-      category: "Funding",
-      publishedAt: new Date("2024-12-14T13:10:00Z"),
-      readTime: 3,
-      sourceCount: 5,
-      heroImageUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
-      authorName: "Venture Capital Team",
-      authorTitle: "Startup Correspondents"
-    };
-
-    // Add placeholder data for other articles (we'll only implement the main article fully)
-    [article2, article3, article4, article5, article6].forEach((article, index) => {
-      this.articles.set(article.slug, {
-        article,
-        executiveSummary: { id: article.id, articleId: article.id, points: ["Article summary coming soon"] },
-        timelineItems: [
-          {
-            id: index * 10 + 1,
-            articleId: article.id,
-            date: new Date(Date.now() - 48 * 60 * 60 * 1000), // 2 days ago
-            title: "Development Announced",
-            description: "Initial announcement and industry reactions",
-            type: "",
-            sourceLabel: "TechCrunch",
-            sourceUrl: null
-          },
-          {
-            id: index * 10 + 2,
-            articleId: article.id,
-            date: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-            title: "Technical Details Released",
-            description: "More information becomes available",
-            type: "",
-            sourceLabel: "The Verge",
-            sourceUrl: null
-          },
-          {
-            id: index * 10 + 3,
-            articleId: article.id,
-            date: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-            title: "Market Impact",
-            description: "Industry analysts weigh in on implications",
-            type: "",
-            sourceLabel: "Wall Street Journal",
-            sourceUrl: null
-          }
-        ],
-        citedSources: [
-          {
-            id: index * 10 + 1,
-            articleId: article.id,
-            name: "Tech Insider",
-            type: "Industry Analysis",
-            description: "Technical journalism and industry insights",
-            url: "https://example.com/background-" + article.slug,
-            imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop"
-          },
-          {
-            id: index * 10 + 2,
-            articleId: article.id,
-            name: "Industry Weekly",
-            type: "Business Analysis",
-            description: "Industry leadership perspectives and market impact analysis",
-            url: "https://example.com/opinion-" + article.slug,
-            imageUrl: "https://images.unsplash.com/photo-1556761175-4b46a572b786?w=300&h=200&fit=crop"
-          },
-          {
-            id: index * 10 + 3,
-            articleId: article.id,
-            name: "Technical Review",
-            type: "Technical Analysis",
-            description: "Detailed technical breakdown and analysis of the development",
-            url: "https://example.com/analysis-" + article.slug,
-            imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop"
-          }
-        ],
-        rawFacts: [],
-        perspectives: []
-      });
-    });
+    this.articles.set("ai-hardware-startup-funding", this.createDummyReport(
+      7,
+      "AI Hardware Startups See Record Funding Amid Chip Shortage",
+      "ai-hardware-startup-funding",
+      "Venture capitalists are pouring billions into AI hardware startups that promise to deliver more efficient and powerful chips, as the demand for AI computation continues to outstrip supply.",
+      "<p>The global shortage of high-end AI chips from industry leader Nvidia has created a massive opportunity for a new wave of hardware startups. Companies like Groq, Cerebras, and SambaNova are attracting significant investment for their novel chip architectures, which are designed to accelerate AI workloads more efficiently than traditional GPUs.</p><p>While Nvidia still dominates the market, the intense demand for computational power means there is ample room for new players. The success of these startups could lead to a more diverse and competitive AI hardware ecosystem.</p>",
+      "Hardware",
+      new Date("2024-05-20T00:00:00Z"),
+      ["Record VC funding for AI hardware startups", "Companies like Groq and Cerebras attract investment", "Aimed at addressing the global AI chip shortage"],
+      [
+        { date: new Date("2023-01-01T00:00:00Z"), title: "AI Boom Intensifies", description: "The release of ChatGPT triggers a massive surge in demand for AI computation.", type: 'trend', sourceLabel: 'Industry', sourceUrl: "" },
+        { date: new Date("2024-01-01T00:00:00Z"), title: "VC Investment Surges", description: "Venture capital funding for AI hardware startups reaches a record $20 billion in 2023.", type: 'report', sourceLabel: 'PitchBook', sourceUrl: "" },
+      ],
+      [
+        { name: "Forbes", type: "Business News", description: "An overview of the investment landscape for AI chip startups.", url: "", imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=120" },
+      ],
+      [
+        { category: "Key Players", facts: ["Groq (LPU)", "Cerebras (Wafer-Scale Engine)", "SambaNova Systems"] },
+      ],
+      [
+        { viewpoint: "Investors", description: "Are bullish on the potential for massive returns, given the insatiable demand for AI compute.", color: "green", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+        { viewpoint: "Skeptics", description: "Warn that manufacturing at scale is incredibly difficult and that unseating an incumbent like Nvidia is a monumental task.", color: "yellow", source: "", quote: "", url: "", conflictSource: "", conflictQuote: "" },
+      ]
+    ));
   }
 
+  private createDummyReport(
+    id: number,
+    title: string,
+    slug: string,
+    excerpt: string,
+    content: string,
+    category: string,
+    publishedAt: Date,
+    executiveSummaryPoints: string[],
+    timelineItemsData: Omit<TimelineItem, 'id' | 'articleId'>[],
+    citedSourcesData: Omit<CitedSource, 'id' | 'articleId'>[],
+    rawFactsData: Omit<RawFacts, 'id' | 'articleId'>[],
+    perspectivesData: Omit<Perspective, 'id' | 'articleId'>[]
+  ): ArticleData {
+    const article: Article = {
+      id,
+      title,
+      slug,
+      excerpt,
+      content,
+      category,
+      publishedAt,
+      readTime: Math.ceil(content.split(' ').length / 200),
+      sourceCount: citedSourcesData.length,
+      heroImageUrl: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600",
+      authorName: "AI News Team",
+      authorTitle: "AI Research Correspondents"
+    };
+
+    const executiveSummary: ExecutiveSummary = {
+      id,
+      articleId: id,
+      points: executiveSummaryPoints,
+    };
+
+    const timelineItems: TimelineItem[] = timelineItemsData.map((item, index) => ({
+      ...item,
+      id: id * 100 + index,
+      articleId: id,
+    }));
+
+    const citedSources: CitedSource[] = citedSourcesData.map((source, index) => ({
+      ...source,
+      id: id * 100 + index,
+      articleId: id,
+    }));
+
+    const rawFacts: RawFacts[] = rawFactsData.map((facts, index) => ({
+      ...facts,
+      id: id * 100 + index,
+      articleId: id,
+    }));
+
+    const perspectives: Perspective[] = perspectivesData.map((p, index) => ({
+      ...p,
+      id: id * 100 + index,
+      articleId: id,
+    }));
+
+    return {
+      article,
+      executiveSummary,
+      timelineItems,
+      citedSources,
+      rawFacts,
+      perspectives,
+      conflictingClaims: []
+    };
+  }
+
+  async getFeed(): Promise<Article[]> {
+    const now = Date.now();
+    if (now - this.lastFetchTime > this.cacheDuration) {
+      this.rssArticles = await this.rssService.getFeed();
+      this.lastFetchTime = now;
+      console.log(`Fetched ${this.rssArticles.length} articles from RSS feed`);
+    }
+    return this.rssArticles;
+  }
+  
   async getUser(id: number): Promise<User | undefined> {
     return this.users.get(id);
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    let foundUser: User | undefined;
+    this.users.forEach((user) => {
+      if (user.username === username) {
+        foundUser = user;
+      }
+    });
+    return foundUser;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const user: User = {
+      id: this.currentUserId++,
+      ...insertUser
+    };
+    this.users.set(user.id, user);
     return user;
   }
 
   async getArticleBySlug(slug: string): Promise<ArticleData | undefined> {
-    console.log(`Looking for article with slug: ${slug}`);
-    console.log(`Available articles in storage:`, Array.from(this.articles.keys()));
-    
-    // First check if it's one of our detailed static articles
-    const staticArticle = this.articles.get(slug);
-    if (staticArticle) {
+    // Check local articles first
+    if (this.articles.has(slug)) {
       console.log(`Found static article: ${slug}`);
-      return staticArticle;
+      return this.articles.get(slug);
     }
-
-    // If not found in static articles, check RSS articles
-    await this.getAllArticles(); // This will refresh RSS if needed
-    const rssArticle = this.rssArticles.find(article => article.slug === slug);
     
+    // Then check RSS feed
+    const rssArticle = this.rssArticles.find(a => a.slug === slug);
     if (rssArticle) {
-      // Create minimal article data structure for RSS articles
+      console.log(`Found RSS article: ${slug}`);
+      // Construct a minimal ArticleData object for RSS feeds
       return {
         article: rssArticle,
-        executiveSummary: {
-          id: rssArticle.id,
-          articleId: rssArticle.id,
-          points: [
-            "This article is sourced from Google Alerts RSS feed",
-            "Full analysis and summary available at the original source",
-            "Visit the source link for complete details"
-          ]
-        },
-        timelineItems: [
-          {
-            id: 1,
-            articleId: rssArticle.id,
-            date: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-            title: "Initial Report",
-            description: "Story first reported by major news outlets",
-            type: "",
-            sourceLabel: "Reuters",
-            sourceUrl: null
-          },
-          {
-            id: 2,
-            articleId: rssArticle.id,
-            date: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-            title: "Expert Analysis",
-            description: "Industry experts provide initial commentary",
-            type: "",
-            sourceLabel: "Bloomberg",
-            sourceUrl: null
-          },
-          {
-            id: 3,
-            articleId: rssArticle.id,
-            date: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-            title: "Market Response",
-            description: "Financial markets react to the development",
-            type: "",
-            sourceLabel: "CNN",
-            sourceUrl: null
-          },
-          {
-            id: 4,
-            articleId: rssArticle.id,
-            date: new Date(),
-            title: "Current Status",
-            description: "Latest updates and ongoing developments",
-            type: "",
-            sourceLabel: "Associated Press",
-            sourceUrl: null
-          }
-        ],
-        citedSources: [
-          {
-            id: 1,
-            articleId: rssArticle.id,
-            name: "Industry Journal",
-            type: "Industry Analysis",
-            description: "Background research and industry context",
-            url: "https://example.com/background",
-            imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop"
-          },
-          {
-            id: 2,
-            articleId: rssArticle.id,
-            name: "Tech Weekly",
-            type: "Analysis",
-            description: "Expert perspectives on implications and future impact",
-            url: "https://example.com/analysis",
-            imageUrl: "https://images.unsplash.com/photo-1556761175-4b46a572b786?w=300&h=200&fit=crop"
-          },
-          {
-            id: 3,
-            articleId: rssArticle.id,
-            name: "Expert Views",
-            type: "Expert Opinion",
-            description: "Detailed analysis of long-term consequences and predictions",
-            url: "https://example.com/expert-opinion",
-            imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop"
-          }
-        ],
+        executiveSummary: { id: 0, articleId: rssArticle.id, points: [rssArticle.excerpt] },
+        timelineItems: [],
+        citedSources: [],
         rawFacts: [],
-        perspectives: []
+        perspectives: [],
+        conflictingClaims: []
       };
     }
 
+    console.log(`Article not found: ${slug}`);
     return undefined;
   }
 
   async getAllArticles(): Promise<Article[]> {
-    // Check if we need to refresh the RSS feed
-    const now = Date.now();
-    if (now - this.lastFetchTime > this.cacheDuration || this.rssArticles.length === 0) {
-      try {
-        console.log('Fetching fresh RSS data...');
-        this.rssArticles = await this.rssService.fetchArticles();
-        this.lastFetchTime = now;
-        console.log(`Fetched ${this.rssArticles.length} articles from RSS feed`);
-      } catch (error) {
-        console.error('Failed to fetch RSS articles:', error);
-        // If RSS fails, return the static articles as fallback
-        return Array.from(this.articles.values()).map(articleData => articleData.article);
-      }
-    }
+    const staticArticles = Array.from(this.articles.values()).map(data => data.article);
+    const feedArticles = await this.getFeed();
     
-    return this.rssArticles;
+    // Combine and remove duplicates, giving priority to static articles
+    const allArticles = new Map<string, Article>();
+    staticArticles.forEach(a => allArticles.set(a.slug, a));
+    feedArticles.forEach(a => {
+      if (!allArticles.has(a.slug)) {
+        allArticles.set(a.slug, a);
+      }
+    });
+
+    return Array.from(allArticles.values());
   }
 
   async storeResearchReport(slug: string, report: ArticleData): Promise<void> {
-    console.log(`Storing research report with slug: ${slug}`);
-    console.log(`Report data:`, JSON.stringify({
-      title: report.article?.title,
-      hasExecutiveSummary: !!report.executiveSummary,
-      timelineItemsCount: report.timelineItems?.length || 0,
-      citedSourcesCount: report.citedSources?.length || 0
-    }));
-    
     this.articles.set(slug, report);
+    console.log(`Report data: {"title":"${report.article.title}","hasExecutiveSummary":${!!report.executiveSummary},"timelineItemsCount":${report.timelineItems.length},"citedSourcesCount":${report.citedSources.length},"conflictingClaimsCount":${report.conflictingClaims?.length || 0}}`);
     console.log(`Stored research report: ${slug}`);
-    console.log(`Total articles in storage:`, this.articles.size);
-    console.log(`All stored slugs:`, Array.from(this.articles.keys()));
+    console.log(`Total articles in storage: ${this.articles.size}`);
+    console.log('All stored slugs:', Array.from(this.articles.keys()));
   }
 }
 
