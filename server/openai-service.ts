@@ -5,6 +5,7 @@ import { RSSService } from "./rss-service";
 import { jsonFormatterService } from "./json-formatter-service";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const perplexity = new OpenAI({ apiKey: process.env.PERPLEXITY_API_KEY, baseURL: "https://api.perplexity.ai" });
 
 export class OpenAIResearchService {
 
@@ -283,8 +284,8 @@ export class OpenAIResearchService {
   }
 
   private async performWebSearch(query: string): Promise<string> {
-    console.log('--- Step 1: Performing web search ---');
-    const searchPrompt = `SYSTEM ROLE: You are a world-class researcher with live web browsing capability.
+    console.log('--- Step 1: Performing web search with Perplexity Sonar Pro ---');
+    const searchPrompt = `SYSTEM ROLE: You are a world-class researcher.
 
     TASK: Conduct a comprehensive, non-partisan web search on the following topic: "${query}". Retrieve multiple articles and sources.
 
@@ -296,33 +297,22 @@ export class OpenAIResearchService {
     - Actively look for and report on any conflicting claims or data between sources. Highlight these discrepancies clearly.`;
 
     try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-search-preview",
-        web_search_options: {
-          user_location: {
-            type: "approximate",
-            approximate: {
-              country: "US",
-              city: "Dallas",
-              region: "Texas",
-              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-            }
-          }
-        },
-        messages: [
-          { role: "system", content: searchPrompt },
-          { role: "user", content: `Please begin your research on: ${query}` }
-        ],
-        max_tokens: 4000
-      });
+        const response = await perplexity.chat.completions.create({
+            model: 'sonar-pro',
+            messages: [
+                { role: 'system', content: searchPrompt },
+                { role: 'user', content: `Please begin your research on: ${query}` }
+            ],
+            max_tokens: 4000
+        });
 
-      const searchResult = response.choices[0].message.content || '';
-      console.log('--- Web search completed. Result length:', searchResult.length, '---');
-      return searchResult;
+        const searchResult = response.choices[0].message.content || '';
+        console.log('--- Web search completed. Result length:', searchResult.length, '---');
+        return searchResult;
 
     } catch (error) {
       console.error('Error during web search step:', error);
-      throw new Error('OpenAI API call for web search failed.');
+      throw new Error('Perplexity API call for web search failed.');
     }
   }
 
