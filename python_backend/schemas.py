@@ -35,12 +35,12 @@ class TimelineItem(CamelCaseModel):
     source_url: Optional[str] = None
 
 class CitedSource(CamelCaseModel):
-    article_id: int
     name: str
     type: str
     description: str
-    url: Optional[str] = None
-    image_url: str
+    url: str
+    image_url: Optional[str] = None
+    article_id: int
 
 class RawFacts(CamelCaseModel):
     article_id: int

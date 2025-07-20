@@ -40,9 +40,7 @@ def pexels_tool(query: str) -> List[Dict[str, Any]]:
         return []
     try:
         search_photos = pexels_api.search_photos(query, page=1, per_page=5)
-        # The library returns a dictionary; the photos are in a list of dicts under the 'photos' key.
-        # The URL is in the 'src' dictionary under the 'original' key.
-        return [{"url": photo['src']['original']} for photo in search_photos.get('photos', [])]
+        return [{"url": photo['src']['original']} for photo in search_photos['photos']]
     except Exception as e:
         print(f"--- PEXELS API ERROR: {e} ---")
         return []
@@ -87,15 +85,13 @@ example_for_cited_sources = [
         "name": "Texas Division of Emergency Management (TDEM)",
         "type": "Government Agency",
         "description": "Provides official information and updates on disaster response and recovery efforts for major flooding events in Texas.",
-        "url": "https://tdem.texas.gov/disasters",
-        "image_url": "https://p-cdn.com/tdem-logo.png"
+        "url": "https://tdem.texas.gov/disasters"
     },
     {
         "name": "Wikipedia: July 2025 Central Texas floods",
         "type": "Encyclopedia",
         "description": "A collaborative article detailing the causes, timeline, and impact of the deadly July 2025 floods.",
-        "url": "https://en.wikipedia.org/wiki/July_2025_Central_Texas_floods",
-        "image_url": "https://p-cdn.com/wikipedia-logo.png"
+        "url": "https://en.wikipedia.org/wiki/July_2025_Central_Texas_floods"
     }
 ]
 
@@ -249,11 +245,6 @@ def image_fetcher_node(state: AgentState):
 
     # Fetch source images
     source_images = []
-    # This logic has a flaw: it depends on the 'cited_sources' which are generated in parallel.
-    # The image fetcher should run *after* the cited_sources are available.
-    # For now, we will leave this as is, but a more robust solution would be to
-    # make this node dependent on the cited_sources_writer node.
-    
     research_report = state.get('research_report', {})
     if 'cited_sources' in research_report:
         for source in research_report['cited_sources']:
@@ -415,6 +406,8 @@ async def research(request: ResearchRequest):
             for i, source in enumerate(final_report_data['cited_sources']):
                 if i < len(final_state['image_urls']['source_images']):
                     source['image_url'] = final_state['image_urls']['source_images'][i]
+                else:
+                    source['image_url'] = "https://p-cdn.com/generic-source-logo.png"
 
 
     print("--- 📝 ASSEMBLING FINAL REPORT ---")
