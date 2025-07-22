@@ -45,86 +45,137 @@ def pexels_tool(query: str) -> List[Dict[str, Any]]:
         print(f"--- PEXELS API ERROR: {e} ---")
         return []
 
-# --- Examples for Prompts ---
+# --- Research Prompt Template ---
+# This is the main research prompt that enforces real-time, non-partisan research
+RESEARCH_PROMPT_TEMPLATE = """You are a real-time, non-partisan research assistant with live web browsing capability. You NEVER fabricate data, quotes, articles, or URLs. Today you are researching "[QUERY]" You only can output two types of responses:
+1. Content based on real articles, real public sources accessed live through your browsing ability with cited urls.
+2. Should there be issues with type 1, you will say "Error accessing web articles" or "No web article found"
+
+Quote guide: Any content you write within "" must never be paraphrased or rewritten, while content you write outside of "" can be paraphrased. They must be shown exactly as originally published. The only permitted edits to a quote are:
+    a. Ellipses: to remove extraneous content and make quote more concise
+    b. Square brackets: to clarify a word or replace a pronoun with noun for better readability
+
+You strictly follow this format, and provide no extra info outside of it:
+
+Executive Summary:
+Short, simple, easy to read, bullet point summary of event in plain English. Don't use complete sentences.
+
+Raw facts:
+1. Determine the raw facts on the topic primary sources ONLY
+Ex: Direct quote of what exactly was said, literal concrete propositions of a bill or policy from the document in question, statements from those involved, etc.
+Direct data or statements from government documents, public officials, or original press releases, NOT wikipedia. You may go to intermediary sites in your research, but get your data from their sources. No middle man organizations should be cited.
+If your researching a proposed law or bill, include raw facts directly from the document in question. Cite the name of the exact document or speaker they came from, + source
+Places you can find US law text & congress hearings:
+https://www.congress.gov/
+https://www.govinfo.gov/
+Official statements from White House:
+https://www.whitehouse.gov/news/
+2. Return all the raw facts you find in a bullet point list. Organize the list by source.
+
+Timeline:
+Bullet point timeline of events if relevant
+
+Different perspectives – summarize how the story is being covered by outlets with different perspectives on the story. Include REAL quotes and the outlet names. How are people and outlets interpreting the raw info from section 2?
+a. Research articles with opposing or different takes to this article
+-Consider what different views on this may be, and use search terms that would bring them up
+b. Organize them into distinct, differing, and opposing groups based on their perspective. Begin each viewpoint group with one clear headline labeling, write it as if it were a snappy headline the outlets in the group could've posted. Avoid using the word viewpoint in titles.
+c. Formatting:
+Viewpoint Title 1 (No "")
+- 1 bullet point summary of view
+- Publisher Name
+- Short Quote
+
+Conflicting Info:
+a. Determine if there are conflicts between any of the viewpoints you found
+b. If none return "No conflicts detected"
+c. IF you find conflicts:
+i. Clearly identify what the conflict or misconception is.
+ii. After each conflict list the conflicting sources as follows: [Source(s)] vs [Opposing Sources(s)]
+- Link
+- [Repeat if multiple articles under this viewpoint]
+- [Don't waste words on section titles like "Publisher Name:" or "Quote"]"""
+
+# --- Examples for Structured Output ---
+# These examples show the AI exactly what format to output for each section
 example_for_article = {
-    "title": "The Unrelenting Fury of Texas Floods",
-    "excerpt": "This report provides a comprehensive overview of the recent and historical flooding events in Texas, highlighting the devastating impact on communities and the ongoing efforts in flood management and response.",
-    "content": "Texas has long been battered by severe weather, but the recurring and intensifying floods have become a defining challenge for the state. From the catastrophic deluges of 1998 to the recent deadly events of July 2025, the impact has been immense... The narrative of Texas's struggle with flooding is one of tragedy, resilience, and a constant search for better preparedness.",
-    "hero_image_url": "https://images.pexels.com/photos/12345/flood-image.jpg"
+    "title": "Research Report on [QUERY]",
+    "excerpt": "Comprehensive analysis based on real-time web research and primary sources.",
+    "content": "This report provides a detailed analysis based on live web research and primary source verification.",
+    "hero_image_url": "https://images.pexels.com/photos/12345/research-image.jpg"
 }
 
 example_for_executive_summary = {
     "points": [
-        "Texas has faced multiple catastrophic flood events, with notable occurrences in 1998, 2018, and 2025, leading to significant loss of life and property.",
-        "State agencies like the Texas Division of Emergency Management (TDEM) actively monitor and respond to flood threats, utilizing advanced tools like the TxGIO Flood Viewer.",
-        "Despite technological advancements, the unpredictability and severity of these weather events pose ongoing challenges to flood management and community safety."
+        "Key finding 1 based on primary sources",
+        "Key finding 2 with direct citation",
+        "Key finding 3 from official documents"
     ]
 }
 
 example_for_timeline_items = [
     {
-        "date": "1998-10-17T00:00:00Z",
-        "title": "Historic Central Texas Flood",
-        "description": "A stalled front causes up to 30 inches of rain, leading to devastating floods along the San Marcos and Guadalupe rivers.",
-        "type": "Historical Event",
-        "source_label": "TexasFlood.org",
-        "source_url": "https://www.texasflood.org/"
-    },
-    {
-        "date": "2025-07-04T00:00:00Z",
-        "title": "July Fourth Catastrophe",
-        "description": "Thunderstorms stall over Central Texas, causing deadly flash floods, particularly along the Guadalupe River, resulting in over 130 fatalities.",
-        "type": "Recent Disaster",
-        "source_label": "CNN",
-        "source_url": "https://www.cnn.com/2025/07/06/us/victims-texas-flash-flooding-death"
+        "date": "2024-01-01T00:00:00Z",
+        "title": "Event Title",
+        "description": "Description with direct quote from source",
+        "type": "Event Type",
+        "source_label": "Official Source Name",
+        "source_url": "https://official-source.gov/document"
     }
 ]
 
 example_for_cited_sources = [
     {
-        "name": "Texas Division of Emergency Management (TDEM)",
-        "type": "Government Agency",
-        "description": "Provides official information and updates on disaster response and recovery efforts for major flooding events in Texas.",
-        "url": "https://tdem.texas.gov/disasters"
-    },
-    {
-        "name": "Wikipedia: July 2025 Central Texas floods",
-        "type": "Encyclopedia",
-        "description": "A collaborative article detailing the causes, timeline, and impact of the deadly July 2025 floods.",
-        "url": "https://en.wikipedia.org/wiki/July_2025_Central_Texas_floods"
+        "name": "Official Government Agency",
+        "type": "Primary Source",
+        "description": "Direct source of information",
+        "url": "https://official-source.gov"
     }
 ]
 
 example_for_raw_facts = [
     {
-        "category": "1998 Flood Statistics",
+        "category": "Primary Source: [Source Name]",
         "facts": [
-            "Up to 30 inches of rain fell in two days.",
-            "Historic flooding occurred along the San Marcos, Guadalupe, and San Antonio rivers."
-        ]
-    },
-    {
-        "category": "2025 Flood Impact",
-        "facts": [
-            "Over 130 deaths were reported.",
-            "Recovery efforts were launched for approximately 100 missing persons."
+            "Direct quote from source",
+            "Literal statement from official document"
         ]
     }
 ]
 
 example_for_perspectives = [
     {
-        "viewpoint": "The Human Cost",
-        "description": "Focuses on the tragic loss of life and the personal stories of survivors, emphasizing the emotional and social toll of the floods.",
-        "source": "CNN",
-        "quote": "Survivors recounted horrific experiences, highlighting the speed and unpredictability of the floodwaters.",
-        "color": "yellow",
-        "url": "https://www.cnn.com/2025/07/06/us/victims-texas-flash-flooding-death",
-        "reasoning": "This perspective underscores the immediate and personal impact of the disaster.",
-        "evidence": "Survivor testimonies and reports on fatalities.",
-        "conflict_source": "TDEM",
-        "conflict_quote": "State emergency response resources were activated in anticipation of increased flood threats.",
-        "conflict_url": "https://tdem.texas.gov/"
+        "viewpoint": "Perspective Headline",
+        "description": "Summary of this perspective",
+        "source": "Publisher Name",
+        "quote": "Exact quote from article",
+        "color": "blue",
+        "url": "https://publisher.com/article",
+        "reasoning": "Why this perspective matters",
+        "evidence": "Supporting evidence",
+        "conflict_source": "Opposing Source",
+        "conflict_quote": "Exact conflicting quote",
+        "conflict_url": "https://opposing-source.com/article"
+    }
+]
+example_for_conflicting_info = [
+    {
+        "conflict_id": "conflict_001",
+        "conflict_type": "factual_dispute",
+        "conflict_description": "Description of the specific conflict or contradiction",
+        "source_a": {
+            "name": "First Source Name",
+            "quote": "Exact quote from first source",
+            "url": "https://first-source.com/article",
+            "claim": "What this source claims"
+        },
+        "source_b": {
+            "name": "Opposing Source Name", 
+            "quote": "Exact conflicting quote from opposing source",
+            "url": "https://opposing-source.com/article",
+            "claim": "What the opposing source claims"
+        },
+        "resolution_status": "unresolved",
+        "severity": "high"
     }
 ]
 
@@ -134,8 +185,11 @@ examples_map = {
     "timeline_items": example_for_timeline_items,
     "cited_sources": example_for_cited_sources,
     "raw_facts": example_for_raw_facts,
-    "perspectives": example_for_perspectives
+    "perspectives": example_for_perspectives,
+    "conflicting_info": example_for_conflicting_info
 }
+
+
 
 
 # Define a reducer function for merging dictionaries
@@ -184,19 +238,25 @@ def agent_node(state, agent, name):
     return {"messages": [result]}
 
 # --- Research Agent ---
-RESEARCH_PROMPT = """You are a research agent. Your goal is to use the Tavily Search tool to find relevant articles for the user's query.
-You must return a list of 15 URLs. Do not scrape them yet."""
-research_agent = create_agent(llm, [tavily_tool], RESEARCH_PROMPT)
+# Use the comprehensive research prompt template
+def create_research_prompt(query: str) -> str:
+    return RESEARCH_PROMPT_TEMPLATE.replace("[QUERY]", query)
+
+research_agent = create_agent(llm, [tavily_tool], create_research_prompt("placeholder"))
 def research_node(state: AgentState):
     print("--- 🔬 RESEARCHING ---")
+    # Create dynamic research prompt with the actual query
+    dynamic_prompt = create_research_prompt(state['query'])
+    dynamic_research_agent = create_agent(llm, [tavily_tool], dynamic_prompt)
+    
     state['messages'] = [HumanMessage(content=state['query'])]
-    result = research_agent.invoke(state)
+    result = dynamic_research_agent.invoke(state)
     print("--- ✅ RESEARCH COMPLETE ---")
     return {"messages": [result]}
 
 # --- Scraper Agent ---
 def scraper_node(state: AgentState):
-    print("---  scraping WEB ---")
+    print("--- 🔍 SCRAPING WEB FOR PRIMARY SOURCES ---")
     urls = []
     scraped_content = []
     if state['messages'][-1].tool_calls:
@@ -210,18 +270,49 @@ def scraper_node(state: AgentState):
         
         if query:
             print(f"--- EXECUTING TAVILY SEARCH for: {query} ---")
-            tavily_results = tavily_tool.invoke(query)
+            # Prioritize primary sources: government sites, official documents, direct statements
+            enhanced_query = f"{query} site:gov OR site:congress.gov OR site:whitehouse.gov OR site:govinfo.gov OR official statement OR primary source"
+            tavily_results = tavily_tool.invoke(enhanced_query)
+            print(f"--- 🔍 TAVILY RESULTS TYPE: {type(tavily_results)} ---")
+            if isinstance(tavily_results, str):
+                print(f"--- 🔍 TAVILY RESULTS PREVIEW: {tavily_results[:200]}... ---")
             
-            # The tool now returns a list of dictionaries, so we can iterate directly
-            results_list = tavily_results if isinstance(tavily_results, list) else tavily_results.get('results', [])
+            # Handle different return types from TavilySearch tool
+            if isinstance(tavily_results, list):
+                results_list = tavily_results
+            elif isinstance(tavily_results, dict):
+                results_list = tavily_results.get('results', [])
+            elif isinstance(tavily_results, str):
+                # If it's a string, try to parse it as JSON
+                try:
+                    parsed_results = json.loads(tavily_results)
+                    if isinstance(parsed_results, list):
+                        results_list = parsed_results
+                    elif isinstance(parsed_results, dict):
+                        results_list = parsed_results.get('results', [])
+                    else:
+                        results_list = []
+                except json.JSONDecodeError:
+                    print(f"--- ⚠️ COULD NOT PARSE TAVILY RESULTS AS JSON: {tavily_results[:100]}... ---")
+                    results_list = []
+            else:
+                print(f"--- ⚠️ UNEXPECTED TAVILY RESULTS TYPE: {type(tavily_results)} ---")
+                results_list = []
 
-            for res in results_list[:10]:
+            for res in results_list[:15]:  # Increased to 15 for better coverage
+                try:
+                    if isinstance(res, dict) and 'url' in res and 'content' in res:
                 scraped_content.append({"url": res['url'], "content": res['content']})
                 urls.append(res['url'])
+                    else:
+                        print(f"--- ⚠️ SKIPPING INVALID RESULT FORMAT: {type(res)} ---")
+                except Exception as e:
+                    print(f"--- ⚠️ ERROR PROCESSING RESULT: {e} ---")
+                    continue
         else:
              print("--- NO TAVILY SEARCH TOOL CALL FOUND ---")
 
-    print(f"--- SCRAPING {len(urls)} URLS ---")
+    print(f"--- SCRAPING {len(urls)} PRIMARY SOURCE URLS ---")
     # The new TavilySearch tool scrapes content automatically, so we don't need to do it manually here.
     # The 'scraped_content' is already populated from the tavily_results.
         
@@ -266,7 +357,11 @@ def create_writer_agent(section_name: str):
     # need to be escaped to avoid being interpreted as template variables.
     example_str = json.dumps(example, indent=2).replace("{", "{{").replace("}", "}}")
 
-    prompt = f"""You are an expert writing agent. Your sole purpose is to generate a specific section of a research report based on provided web content.
+    prompt = f"""You are an expert writing agent focused on real-time, non-partisan research. Your sole purpose is to generate a specific section of a research report based on provided web content.
+
+IMPORTANT: You NEVER fabricate data, quotes, articles, or URLs. You only work with real content from the provided sources.
+
+Quote guide: Any content you write within "" must never be paraphrased or rewritten, while content you write outside of "" can be paraphrased. They must be shown exactly as originally published.
 
 You MUST generate a valid JSON output that strictly follows the structure and field names of the example below.
 Do not add any commentary, explanations, or any text outside of the JSON output.
@@ -276,18 +371,423 @@ Do not add any commentary, explanations, or any text outside of the JSON output.
 {example_str}
 ```
 
-Now, using the provided web content, generate the '{section_name}' section of the report. Adhere to the example format precisely.
+Now, using the provided web content, generate the '{section_name}' section of the report. Adhere to the example format precisely and ensure all quotes are exact from the sources.
+"""
+    return create_agent(llm, [], prompt)
+
+# Create specialized conflicting info agent
+def create_conflicting_info_agent():
+    example_str = json.dumps(example_for_conflicting_info, indent=2).replace("{", "{{").replace("}", "}}")
+    
+    prompt = f"""You are a specialized conflict detection agent focused on identifying and analyzing conflicts between different sources in research data.
+
+Your primary goal is to find factual disputes, contradictions, opposing claims, and conflicting interpretations in the provided web content.
+
+IMPORTANT: You NEVER fabricate conflicts or sources. You only identify real conflicts from the provided content.
+
+CONTENT REQUIREMENTS:
+- Provide AT LEAST 2 different conflicts on the subject when conflicts exist
+- Each conflict should represent a distinct factual dispute or contradiction
+- Focus on finding significant conflicts that highlight different viewpoints or interpretations
+- Ensure each conflict has a clear, distinct description of what is being disputed
+- Avoid redundant or similar conflicts
+
+CRITICAL QUOTE AND SOURCE DEDUPLICATION RULE: 
+- You MUST ensure that quotes used in the conflicting_info section are DIFFERENT from quotes used in other sections (raw_facts, perspectives, etc.)
+- You MUST also ensure that NO QUOTE is repeated within the conflicting_info section itself
+- You MUST ensure that NO SOURCE is reused within the conflicting_info section itself
+- Each conflict must use completely unique quotes AND unique sources that have not been used in any other conflict
+- If a quote or source has already been used anywhere else, find alternative quotes from different sources
+- Focus on finding unique, distinct quotes and sources that highlight the specific conflicts
+- Avoid using the same quote OR the same source in multiple conflict sections
+- Each source can only appear once in the entire conflicting_info section
+
+Conflict Types to Look For:
+1. Factual Disputes: Different numbers, dates, statistics, or verifiable facts
+2. Interpretive Differences: Different conclusions drawn from the same data
+3. Methodological Conflicts: Different research approaches or methodologies
+4. Bias Patterns: Systematic differences in reporting or presentation
+5. Source Credibility: Conflicts between authoritative vs. non-authoritative sources
+
+You MUST generate a valid JSON output that strictly follows the structure and field names of the example below.
+Do not add any commentary, explanations, or any text outside of the JSON output.
+
+### EXAMPLE FORMAT ###
+```json
+{example_str}
+```
+
+Now, analyze the provided web content to identify at least 2 different conflicts when they exist. For each conflict found:
+- Clearly describe what the conflict is about
+- Provide exact quotes from both sides (ensuring they are different from other sections AND from other conflicts in this section)
+- Include source URLs for verification
+- Categorize the conflict type
+- Assess the severity of the conflict
+- Ensure quote uniqueness within the conflicting_info section
+- NEVER use the same quote in multiple conflicts within this section
+- Each quote must be completely unique across all conflicts
+
+If no conflicts are found, return an empty array [].
+"""
+    return create_agent(llm, [], prompt)
+
+# Create specialized executive summary agent with limited points
+def create_executive_summary_agent():
+    example_str = json.dumps(example_for_executive_summary, indent=2).replace("{", "{{").replace("}", "}}")
+    
+    prompt = f"""You are a specialized executive summary agent focused on creating concise, bullet-point summaries of research findings.
+
+Your goal is to provide a brief, easy-to-read summary of the most important findings from the research.
+
+IMPORTANT: You NEVER fabricate data, quotes, articles, or URLs. You only work with real content from the provided sources.
+
+CONTENT LIMITATIONS:
+- Provide ONLY 4-6 bullet points maximum
+- Each bullet point should be concise and focused on the most critical information
+- Avoid redundant or overlapping information
+- Focus on the most newsworthy or significant findings
+
+You MUST generate a valid JSON output that strictly follows the structure and field names of the example below.
+Do not add any commentary, explanations, or any text outside of the JSON output.
+
+### EXAMPLE FORMAT ###
+```json
+{example_str}
+```
+
+Now, analyze the provided web content to create a concise executive summary with 4-6 key points.
+"""
+    return create_agent(llm, [], prompt)
+
+# Create specialized raw facts agent with limited facts
+def create_raw_facts_agent():
+    example_str = json.dumps(example_for_raw_facts, indent=2).replace("{", "{{").replace("}", "}}")
+    
+    prompt = f"""You are a specialized raw facts agent focused on extracting direct, verifiable facts from primary sources.
+
+Your goal is to identify the most important factual statements from the provided sources.
+
+IMPORTANT: You NEVER fabricate data, quotes, articles, or URLs. You only work with real content from the provided sources.
+
+CONTENT LIMITATIONS:
+- Provide ONLY 6 facts maximum across all sources
+- Focus on the most significant, verifiable facts
+- Avoid redundant or similar facts from the same source
+- Prioritize facts that are directly quoted or clearly stated
+- Organize by source, but limit to 6 total facts
+
+You MUST generate a valid JSON output that strictly follows the structure and field names of the example below.
+Do not add any commentary, explanations, or any text outside of the JSON output.
+
+### EXAMPLE FORMAT ###
+```json
+{example_str}
+```
+
+Now, analyze the provided web content to extract the 6 most important raw facts from primary sources.
+"""
+    return create_agent(llm, [], prompt)
+
+# Create specialized perspectives agent with minimum 2 perspectives
+def create_perspectives_agent():
+    example_str = json.dumps(example_for_perspectives, indent=2).replace("{", "{{").replace("}", "}}")
+    
+    prompt = f"""You are a specialized perspectives agent focused on identifying different viewpoints and interpretations of research findings.
+
+Your goal is to find contrasting perspectives on the topic from different sources and outlets.
+
+IMPORTANT: You NEVER fabricate data, quotes, articles, or URLs. You only work with real content from the provided sources.
+
+CONTENT REQUIREMENTS:
+- Provide AT LEAST 2 different perspectives on the subject
+- Each perspective should represent a distinct viewpoint or interpretation
+- Focus on finding opposing or contrasting viewpoints when possible
+- Include real quotes from the sources to support each perspective
+- Ensure each perspective has a clear, distinct headline
+- Avoid redundant or similar perspectives
+
+You MUST generate a valid JSON output that strictly follows the structure and field names of the example below.
+Do not add any commentary, explanations, or any text outside of the JSON output.
+
+### EXAMPLE FORMAT ###
+```json
+{example_str}
+```
+
+Now, analyze the provided web content to identify at least 2 different perspectives on the subject.
 """
     return create_agent(llm, [], prompt)
 
 writer_agents = {
     "article": create_writer_agent("article"),
-    "executive_summary": create_writer_agent("executive_summary"),
+    "executive_summary": create_executive_summary_agent(),
     "timeline_items": create_writer_agent("timeline_items"),
     "cited_sources": create_writer_agent("cited_sources"),
-    "raw_facts": create_writer_agent("raw_facts"),
-    "perspectives": create_writer_agent("perspectives"),
+    "raw_facts": create_raw_facts_agent(),
+    "perspectives": create_perspectives_agent(),
+    "conflicting_info": create_conflicting_info_agent(),
 }
+
+def deduplicate_conflicting_quotes(conflicting_info_data, research_report):
+    """
+    Ensures quotes in conflicting_info section are different from other sections AND within itself.
+    Also prevents source reuse and source swapping.
+    This function is called only for the conflicting_info agent.
+    """
+    if not conflicting_info_data or not isinstance(conflicting_info_data, list):
+        return conflicting_info_data
+    
+    # Collect all quotes from other sections
+    existing_quotes = set()
+    
+    # Check raw_facts section
+    if 'raw_facts' in research_report:
+        for fact_group in research_report['raw_facts']:
+            if 'facts' in fact_group:
+                for fact in fact_group['facts']:
+                    # Extract quotes (text between quotes)
+                    quotes = re.findall(r'"([^"]*)"', fact)
+                    existing_quotes.update(quotes)
+    
+    # Check perspectives section
+    if 'perspectives' in research_report:
+        for perspective in research_report['perspectives']:
+            if 'quote' in perspective:
+                existing_quotes.add(perspective['quote'])
+            if 'conflict_quote' in perspective:
+                existing_quotes.add(perspective['conflict_quote'])
+    
+    # Check timeline_items section
+    if 'timeline_items' in research_report:
+        for item in research_report['timeline_items']:
+            if 'description' in item:
+                quotes = re.findall(r'"([^"]*)"', item['description'])
+                existing_quotes.update(quotes)
+    
+    print(f"--- 🔍 FOUND {len(existing_quotes)} EXISTING QUOTES FROM OTHER SECTIONS ---")
+    
+    # Filter out conflicts that use duplicate quotes from other sections AND within conflicting_info
+    unique_conflicts = []
+    conflicting_quotes_used = set()  # Track quotes used within conflicting_info section
+    conflicting_sources_used = set()  # Track sources used within conflicting_info section
+    
+    # First pass: collect all quotes and sources from conflicting_info to check for internal duplicates
+    all_conflicting_quotes = []
+    all_conflicting_sources = []
+    for conflict in conflicting_info_data:
+        source_a_quote = conflict.get('source_a', {}).get('quote', '')
+        source_b_quote = conflict.get('source_b', {}).get('quote', '')
+        source_a_name = conflict.get('source_a', {}).get('name', '')
+        source_b_name = conflict.get('source_b', {}).get('name', '')
+        
+        if source_a_quote:
+            all_conflicting_quotes.append(source_a_quote)
+        if source_b_quote:
+            all_conflicting_quotes.append(source_b_quote)
+        if source_a_name:
+            all_conflicting_sources.append(source_a_name)
+        if source_b_name:
+            all_conflicting_sources.append(source_b_name)
+    
+    # Check for internal duplicates before processing
+    duplicate_quotes_internal = set()
+    duplicate_sources_internal = set()
+    seen_quotes = set()
+    seen_sources = set()
+    
+    for quote in all_conflicting_quotes:
+        if quote in seen_quotes:
+            duplicate_quotes_internal.add(quote)
+        seen_quotes.add(quote)
+    
+    for source in all_conflicting_sources:
+        if source in seen_sources:
+            duplicate_sources_internal.add(source)
+        seen_sources.add(source)
+    
+    if duplicate_quotes_internal:
+        print(f"--- 🚨 FOUND {len(duplicate_quotes_internal)} INTERNAL DUPLICATE QUOTES IN CONFLICTING_INFO ---")
+        for quote in duplicate_quotes_internal:
+            print(f"   Duplicate Quote: {quote[:100]}...")
+    
+    if duplicate_sources_internal:
+        print(f"--- 🚨 FOUND {len(duplicate_sources_internal)} INTERNAL DUPLICATE SOURCES IN CONFLICTING_INFO ---")
+        for source in duplicate_sources_internal:
+            print(f"   Duplicate Source: {source}")
+    
+    # Second pass: process conflicts and remove duplicates
+    for conflict in conflicting_info_data:
+        source_a_quote = conflict.get('source_a', {}).get('quote', '')
+        source_b_quote = conflict.get('source_b', {}).get('quote', '')
+        source_a_name = conflict.get('source_a', {}).get('name', '')
+        source_b_name = conflict.get('source_b', {}).get('name', '')
+        
+        # Check if either quote is already used in other sections OR within conflicting_info
+        # AND check if either source is already used within conflicting_info
+        if (source_a_quote not in existing_quotes and 
+            source_b_quote not in existing_quotes and
+            source_a_quote not in conflicting_quotes_used and 
+            source_b_quote not in conflicting_quotes_used and
+            source_a_name not in conflicting_sources_used and
+            source_b_name not in conflicting_sources_used):
+            
+            unique_conflicts.append(conflict)
+            # Add these quotes and sources to the tracking sets
+            conflicting_quotes_used.add(source_a_quote)
+            conflicting_quotes_used.add(source_b_quote)
+            conflicting_sources_used.add(source_a_name)
+            conflicting_sources_used.add(source_b_name)
+        else:
+            print(f"--- ⚠️ REMOVING CONFLICT WITH DUPLICATES ---")
+            print(f"Source A: {source_a_name} - {source_a_quote[:50]}...")
+            print(f"Source B: {source_b_name} - {source_b_quote[:50]}...")
+            if source_a_quote in existing_quotes or source_b_quote in existing_quotes:
+                print(f"   Reason: Quote found in other sections")
+            if source_a_quote in conflicting_quotes_used or source_b_quote in conflicting_quotes_used:
+                print(f"   Reason: Quote already used in conflicting_info section")
+            if source_a_name in conflicting_sources_used or source_b_name in conflicting_sources_used:
+                print(f"   Reason: Source already used in conflicting_info section")
+    
+    # Final verification: double-check for any remaining duplicates
+    final_quotes = []
+    final_sources = []
+    for conflict in unique_conflicts:
+        source_a_quote = conflict.get('source_a', {}).get('quote', '')
+        source_b_quote = conflict.get('source_b', {}).get('quote', '')
+        source_a_name = conflict.get('source_a', {}).get('name', '')
+        source_b_name = conflict.get('source_b', {}).get('name', '')
+        
+        if source_a_quote:
+            final_quotes.append(source_a_quote)
+        if source_b_quote:
+            final_quotes.append(source_b_quote)
+        if source_a_name:
+            final_sources.append(source_a_name)
+        if source_b_name:
+            final_sources.append(source_b_name)
+    
+    final_quote_duplicates = len(final_quotes) - len(set(final_quotes))
+    final_source_duplicates = len(final_sources) - len(set(final_sources))
+    
+    if final_quote_duplicates > 0 or final_source_duplicates > 0:
+        print(f"--- 🚨 WARNING: {final_quote_duplicates} DUPLICATE QUOTES AND {final_source_duplicates} DUPLICATE SOURCES STILL FOUND ---")
+        # Find and remove the duplicates
+        seen_final_quotes = set()
+        seen_final_sources = set()
+        final_unique_conflicts = []
+        
+        for conflict in unique_conflicts:
+            source_a_quote = conflict.get('source_a', {}).get('quote', '')
+            source_b_quote = conflict.get('source_b', {}).get('quote', '')
+            source_a_name = conflict.get('source_a', {}).get('name', '')
+            source_b_name = conflict.get('source_b', {}).get('name', '')
+            
+            if (source_a_quote not in seen_final_quotes and 
+                source_b_quote not in seen_final_quotes and
+                source_a_name not in seen_final_sources and 
+                source_b_name not in seen_final_sources):
+                
+                final_unique_conflicts.append(conflict)
+                seen_final_quotes.add(source_a_quote)
+                seen_final_quotes.add(source_b_quote)
+                seen_final_sources.add(source_a_name)
+                seen_final_sources.add(source_b_name)
+            else:
+                print(f"--- 🚨 FINAL REMOVAL: Conflict with duplicate quotes/sources removed ---")
+        
+        unique_conflicts = final_unique_conflicts
+        print(f"--- ✅ FINAL DEDUPLICATION: {len(unique_conflicts)} CONFLICTS RETAINED ---")
+    else:
+        print(f"--- ✅ NO DUPLICATES FOUND IN FINAL VERIFICATION ---")
+    
+    print(f"--- 📊 FINAL QUOTES USED IN CONFLICTING_INFO: {len(set(final_quotes))} ---")
+    print(f"--- 📊 FINAL SOURCES USED IN CONFLICTING_INFO: {len(set(final_sources))} ---")
+    return unique_conflicts
+
+def validate_conflicting_info_quotes(conflicting_info_data):
+    """
+    Manual validation function to check for duplicate quotes and sources in conflicting_info section.
+    Call this function to verify no duplicates exist.
+    """
+    if not conflicting_info_data or not isinstance(conflicting_info_data, list):
+        print("--- ❌ INVALID CONFLICTING_INFO DATA ---")
+        return False
+    
+    all_quotes = []
+    all_sources = []
+    quote_sources = {}  # Track which conflict each quote comes from
+    source_conflicts = {}  # Track which conflict each source comes from
+    
+    # Collect all quotes and sources
+    for i, conflict in enumerate(conflicting_info_data):
+        source_a_quote = conflict.get('source_a', {}).get('quote', '')
+        source_b_quote = conflict.get('source_b', {}).get('quote', '')
+        source_a_name = conflict.get('source_a', {}).get('name', '')
+        source_b_name = conflict.get('source_b', {}).get('name', '')
+        
+        if source_a_quote:
+            all_quotes.append(source_a_quote)
+            if source_a_quote in quote_sources:
+                quote_sources[source_a_quote].append(f"Conflict {i+1} - Source A")
+            else:
+                quote_sources[source_a_quote] = [f"Conflict {i+1} - Source A"]
+        
+        if source_b_quote:
+            all_quotes.append(source_b_quote)
+            if source_b_quote in quote_sources:
+                quote_sources[source_b_quote].append(f"Conflict {i+1} - Source B")
+            else:
+                quote_sources[source_b_quote] = [f"Conflict {i+1} - Source B"]
+        
+        if source_a_name:
+            all_sources.append(source_a_name)
+            if source_a_name in source_conflicts:
+                source_conflicts[source_a_name].append(f"Conflict {i+1} - Source A")
+            else:
+                source_conflicts[source_a_name] = [f"Conflict {i+1} - Source A"]
+        
+        if source_b_name:
+            all_sources.append(source_b_name)
+            if source_b_name in source_conflicts:
+                source_conflicts[source_b_name].append(f"Conflict {i+1} - Source B")
+            else:
+                source_conflicts[source_b_name] = [f"Conflict {i+1} - Source B"]
+    
+    # Check for duplicates
+    unique_quotes = set(all_quotes)
+    unique_sources = set(all_sources)
+    quote_duplicates = len(all_quotes) - len(unique_quotes)
+    source_duplicates = len(all_sources) - len(unique_sources)
+    
+    if quote_duplicates == 0 and source_duplicates == 0:
+        print(f"--- ✅ VALIDATION PASSED: No duplicate quotes or sources found in conflicting_info ---")
+        print(f"--- 📊 Total quotes: {len(all_quotes)}, Unique quotes: {len(unique_quotes)} ---")
+        print(f"--- 📊 Total sources: {len(all_sources)}, Unique sources: {len(unique_sources)} ---")
+        return True
+    else:
+        print(f"--- ❌ VALIDATION FAILED: {quote_duplicates} duplicate quotes and {source_duplicates} duplicate sources found ---")
+        
+        # Find and report the quote duplicates
+        if quote_duplicates > 0:
+            seen_quotes = set()
+            for quote in all_quotes:
+                if quote in seen_quotes:
+                    print(f"--- 🚨 DUPLICATE QUOTE FOUND ---")
+                    print(f"   Quote: {quote[:100]}...")
+                    print(f"   Used in: {quote_sources[quote]}")
+                seen_quotes.add(quote)
+        
+        # Find and report the source duplicates
+        if source_duplicates > 0:
+            seen_sources = set()
+            for source in all_sources:
+                if source in seen_sources:
+                    print(f"--- 🚨 DUPLICATE SOURCE FOUND ---")
+                    print(f"   Source: {source}")
+                    print(f"   Used in: {source_conflicts[source]}")
+                seen_sources.add(source)
+        
+        return False
 
 def writer_node(state: AgentState, agent_name: str):
     print(f"--- ✍️ WRITING SECTION: {agent_name} ---")
@@ -322,6 +822,17 @@ def writer_node(state: AgentState, agent_name: str):
                 data_str = match.group(2)
             
         parsed_json = json.loads(data_str)
+        
+        # Apply quote deduplication specifically for conflicting_info agent
+        if agent_name == "conflicting_info":
+            print(f"--- 🔍 APPLYING QUOTE DEDUPLICATION FOR {agent_name} ---")
+            current_research_report = state.get('research_report', {})
+            parsed_json = deduplicate_conflicting_quotes(parsed_json, current_research_report)
+            
+            # Final validation to ensure no duplicates remain
+            print(f"--- 🔍 FINAL VALIDATION FOR {agent_name} ---")
+            validate_conflicting_info_quotes(parsed_json)
+        
         print(f"--- ✅ SECTION {agent_name} COMPLETE ---")
         return {"research_report": {agent_name: parsed_json}}
     except (json.JSONDecodeError, AttributeError) as e:
@@ -426,7 +937,7 @@ async def research(request: ResearchRequest):
         final_report_data['article']['author_name'] = "AI Agent"
         final_report_data['article']['author_title'] = "Research Specialist"
 
-    for key in ['executive_summary', 'timeline_items', 'cited_sources', 'raw_facts', 'perspectives']:
+    for key in ['executive_summary', 'timeline_items', 'cited_sources', 'raw_facts', 'perspectives', 'conflicting_info']:
         if key in final_report_data:
             if isinstance(final_report_data[key], list):
                 for item in final_report_data[key]:
