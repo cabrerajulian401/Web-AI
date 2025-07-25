@@ -2,6 +2,7 @@ import os
 import re
 import json
 import uuid
+from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional, TypedDict, Annotated
@@ -302,8 +303,8 @@ def scraper_node(state: AgentState):
             for res in results_list[:15]:  # Increased to 15 for better coverage
                 try:
                     if isinstance(res, dict) and 'url' in res and 'content' in res:
-                scraped_content.append({"url": res['url'], "content": res['content']})
-                urls.append(res['url'])
+                        scraped_content.append({"url": res['url'], "content": res['content']})
+                        urls.append(res['url'])
                     else:
                         print(f"--- ⚠️ SKIPPING INVALID RESULT FORMAT: {type(res)} ---")
                 except Exception as e:
@@ -975,8 +976,56 @@ async def get_article(slug: str):
 
 @app.get("/api/feed")
 def get_feed():
+    """Returns hot topics as a list of articles for the frontend."""
     print("--- 📢 /API/FEED ENDPOINT HIT ---")
-    return []
+    
+    # Import the hot topics manager from feed.py
+    try:
+        print("--- TRYING TO IMPORT HOT TOPICS MANAGER ---")
+        from feed import hot_topics_manager
+        print("--- SUCCESSFULLY IMPORTED HOT TOPICS MANAGER ---")
+        topics_data = hot_topics_manager.get_cached_topics()
+        print(f"--- GOT TOPICS DATA: {len(topics_data.get('topics', []))} topics ---")
+        topics = topics_data.get('topics', [])
+        articles = []
+        for topic in topics:
+            # Map backend topic fields to frontend FeedArticle fields
+            article = {
+                "id": topic.get("id", str(uuid.uuid4())),
+                "title": topic.get("headline", "Untitled Topic"),
+                "slug": topic.get("headline", "untitled-topic").lower().replace(" ", "-").replace("/", "-"),
+                "excerpt": topic.get("description", "No description available."),
+                "category": topic.get("category", "General"),
+                "publishedAt": topic.get("generated_at", datetime.now().isoformat()),
+                "readTime": 2,  # Default/fake value
+                "sourceCount": 1,  # Default/fake value
+                "heroImageUrl": topic.get("image_url", "https://images.pexels.com/photos/12345/news-image.jpg"),
+                "authorName": "AI Agent",
+                "authorTitle": "Hot Topics Generator"
+            }
+            articles.append(article)
+        print(f"--- RETURNING {len(articles)} ARTICLES ---")
+        return articles
+    except Exception as e:
+        print(f"Error getting hot topics: {e}")
+        import traceback
+        traceback.print_exc()
+        # Fallback to sample topics if the hot topics manager fails
+        return [
+            {
+                "id": str(uuid.uuid4()),
+                "title": "AI Breakthrough: New Language Model Shows Human-Level Understanding",
+                "slug": "ai-breakthrough-new-language-model-shows-human-level-understanding",
+                "excerpt": "Researchers have developed a new AI model that demonstrates unprecedented understanding of complex human language patterns.",
+                "category": "Technology",
+                "publishedAt": datetime.now().isoformat(),
+                "readTime": 3,
+                "sourceCount": 5,
+                "heroImageUrl": "https://images.pexels.com/photos/8386434/pexels-photo-8386434.jpeg",
+                "authorName": "AI Agent",
+                "authorTitle": "Tech Analyst"
+            }
+        ]
 
 @app.get("/")
 def read_root():

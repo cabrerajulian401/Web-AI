@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Clock, TrendingUp, Eye, ArrowRight, Search, Settings } from "lucide-react";
-import { Link, useLocation } from "wouter";
+import { Clock, TrendingUp, Eye, ArrowRight, Search, Settings, Zap } from "lucide-react";
+import { useLocation } from "wouter";
 import { ThemeController } from "@/components/theme-controller";
 import { useTheme } from "@/hooks/use-theme";
 import { useToast } from "@/hooks/use-toast";
@@ -256,8 +256,7 @@ export default function FeedPage() {
             {/* Articles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 px-4 sm:px-0">
               {articles?.map((article) => (
-                <Link key={article.id} href={`/article/${article.slug}`}>
-                  <Card className="theme-article-card-bg theme-article-card-border theme-article-card-hover border-2 shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer group overflow-hidden h-full">
+                <Card key={article.id} className="theme-article-card-bg theme-article-card-border theme-article-card-hover border-2 shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer group overflow-hidden h-full">
                     {/* Article Image with Overlay */}
                     <div className="relative overflow-hidden">
                       <img 
@@ -277,8 +276,21 @@ export default function FeedPage() {
                       
                       {/* Headline overlay */}
                       <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <p className="text-sm font-medium text-blue-300 mb-1">Research Report:</p>
-                        <h3 className="text-xl font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-200 transition-colors duration-200">
+                        <p className="text-sm font-medium text-blue-300 mb-1 flex items-center">
+                          <Zap className="h-3 w-3 mr-1" />
+                          Research this topic:
+                        </p>
+                        <h3 
+                          className="text-xl font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-200 transition-colors duration-200 cursor-pointer hover:underline"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // Save the article title as the search query
+                            localStorage.setItem('searchQuery', article.title);
+                            // Navigate to research loading page
+                            setLocation('/research-loading');
+                          }}
+                        >
                           {article.title}
                         </h3>
                       </div>
@@ -306,11 +318,24 @@ export default function FeedPage() {
                           </span>
                         </div>
                         
-                        <ArrowRight className="h-4 w-4 text-brand-blue opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-xs"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // Save the article title as the search query
+                            localStorage.setItem('searchQuery', article.title);
+                            // Navigate to research loading page
+                            setLocation('/research-loading');
+                          }}
+                        >
+                          Research
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
-                </Link>
               ))}
             </div>
 
