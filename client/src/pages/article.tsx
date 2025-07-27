@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings, ChevronDown, Search } from "lucide-react";
+import { ArrowLeft, Share2, Clock, TrendingUp, Eye, Settings, ChevronDown, Search, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -1109,6 +1109,13 @@ export default function ArticlePage() {
             <div className="border-t-2 border-gray-300 my-6"></div>
             <CitedSources sources={TextFormatter.formatCitedSources(citedSources)} />
             <div className="border-t-2 border-gray-300 my-6"></div>
+          </div>
+          { /* Disclaimer */}
+          <div className="lg:col-span-8 flex items-center">
+            <TriangleAlert className="h-8 w-8 mr-2 fill-yellow-300" />
+            <p className="text-sm text-gray-500">
+              <strong>TIMIO's AI can make mistakes.</strong> Always verify with original sources.
+            </p>
           </div>
         </div>
       </main>
