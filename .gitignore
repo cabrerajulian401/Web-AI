@@ -5,3 +5,9 @@ server/public
 vite.config.ts.*
 *.tar.gz
 .env
+
+# Byte-compiled / optimized / compiled files
+python_backend/__pycache__/
+*.pyc
+*.pyd
+*.pyo
