@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { ChevronDown, Database, Users } from "lucide-react";
+import { ChevronDown, Database, Users, FileText } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface ExpandableSectionProps {
   title: string;
-  icon: "database" | "users" | "conflict" | "pivot";
+  icon: "database" | "users" | "conflict" | "pivot" | "document";
   content: React.ReactNode;
   customIcon?: string;
   defaultOpen?: boolean;
@@ -25,8 +25,17 @@ export function ExpandableSection({ title, icon, content, customIcon, defaultOpe
         </div>
       );
     }
+
+    const iconMap: Record<ExpandableSectionProps["icon"], React.ElementType> = {
+      database: Database,
+      users: Users,
+      conflict: Users,
+      pivot: Users, // Replace with the correct icon if needed
+      document: FileText,
+    };
     
-    const IconComponent = icon === "database" ? Database : Users;
+    const IconComponent = iconMap[icon] || Users; // Fallback to Users if icon is invalid
+
     return (
       <div className="h-10 w-10 theme-icon-bg rounded-full flex items-center justify-center mr-3">
         <IconComponent className="h-6 w-6 text-white" />

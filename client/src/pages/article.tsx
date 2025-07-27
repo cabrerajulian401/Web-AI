@@ -494,7 +494,7 @@ export default function ArticlePage() {
             <div className="space-y-6 mt-8">
               <ExpandableSection
                 title="Raw Info"
-                icon="database"
+                icon="document"
                 content={
                   <div className="mt-4 space-y-8">
                     {/* Check if dummy mode is enabled */}
