@@ -910,7 +910,7 @@ export default function ArticlePage() {
                           <div key={index} className="border-b border-gray-200 pb-8">
                             <h3 className="font-semibold text-black mb-6 text-xl">{perspective.viewpoint}</h3>
                             
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                            <div className="grid grid-cols-1 lg:grid-cols-[4fr_1fr_4fr] gap-6">
                               {/* Position A */}
                               <div className="space-y-4">
                                 <div className="flex items-center space-x-3">
@@ -925,21 +925,23 @@ export default function ArticlePage() {
                               </div>
                               
                               {/* VS Separator */}
-                              <div className="flex items-center justify-center lg:justify-start">
+                              <div className="flex items-center justify-start lg:justify-center">
                                 <span className="text-gray-400 text-2xl font-bold">VS</span>
                               </div>
                               
                               {/* Position B */}
-                              <div className="space-y-4 lg:col-start-2 lg:row-start-1">
+                              <div className="space-y-4">
                                 <div className="flex items-center space-x-3">
                                   <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm font-bold">B</div>
                                   <a href={perspective.conflictUrl} target="_blank" rel="noopener noreferrer" className="hover:underline">
                                     <span className="font-semibold text-black text-sm uppercase tracking-wide">{perspective.conflictSource}</span>
                                   </a>
                                 </div>
-                                <p className="text-gray-600 italic mt-2">
-                                  "{perspective.conflictQuote}"
-                                </p>
+                                <div className="border-l-4 border-gray-400 pl-4">
+                                  <p className="text-gray-600 italic mt-2">
+                                    "{perspective.conflictQuote}"
+                                  </p>
+                                </div>
                               </div>
                             </div>
                           </div>
