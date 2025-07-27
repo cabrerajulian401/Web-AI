@@ -170,7 +170,7 @@ export default function ResearchLoadingPage() {
               </div>
 
               {/* Expandable Sections Skeleton */}
-              {["Raw Facts", "Different Perspectives", "Conflicting Info"].map((title, index) => (
+              {["Raw Info", "Different Perspectives", "Conflicting Info"].map((title, index) => (
                 <div key={index} className="bg-white rounded-lg border">
                   <div className="p-6 border-b">
                     <div className="flex items-center">

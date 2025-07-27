@@ -493,7 +493,7 @@ export default function ArticlePage() {
             {/* Expandable Sections */}
             <div className="space-y-6 mt-8">
               <ExpandableSection
-                title="Raw Facts"
+                title="Raw Info"
                 icon="database"
                 content={
                   <div className="mt-4 space-y-8">
