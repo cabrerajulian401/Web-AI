@@ -146,10 +146,15 @@ export class NewsSearchService {
     
     for (const article of articles) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
         const response = await fetch(article.url, { 
-          method: 'HEAD', 
-          timeout: 5000 
+          method: 'HEAD',
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
         
         if (response.ok) {
           verified.push(article);
